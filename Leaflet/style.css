@@ -1,4 +1,9 @@
-#map { height: 400px; }
+html, body
+{
+    height: 98%;
+}
+
+ #map { height: 100%; } 
 
 .legend {
     line-height: 18px;

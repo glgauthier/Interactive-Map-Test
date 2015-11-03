@@ -33,8 +33,8 @@ var map = L.map('map').setView([45.4375, 12.3358], 13);
 //            fillOpacity: 0.1,
 //            fillColor: "#2262CC"
 //        };
-
-
+//
+//
 //        // Define what happens to each polygon just before it is loaded on to
 //        // the map. This is Leaflet's special way of goofing around with your
 //        // data, setting styles and regulating user interactions.
@@ -43,15 +43,15 @@ var map = L.map('map').setView([45.4375, 12.3358], 13);
 //            // But stay tuned.
 //            layer.setStyle(defaultStyle);
 //        };
-
+//
 //        // Add the GeoJSON to the layer. `islands` is defined in the external
 //        // GeoJSON file that I've loaded in the <head> of this HTML document.
 //        var featureLayer = L.geoJson(islands, {
 //            // And link up the function to run when loading each feature
 //            onEachFeature: onEachFeature
 //        });
-     // // Finally, add the layer to the map.
-        // map.addLayer(featureLayer);
+//      // Finally, add the layer to the map.
+//         map.addLayer(featureLayer);
 
 // http://leafletjs.com/examples/choropleth.html
 function getColor(d) {
@@ -63,6 +63,7 @@ function getColor(d) {
            d > 20   ? '#FEB24C' :
            d > 10   ? '#FED976' :
                       '#FFEDA0';
+    
 }
 
 function style(feature) {
@@ -78,7 +79,7 @@ function style(feature) {
 
 var geojson;
 geojson = L.geoJson(islands, {style: style}).addTo(map);
-       
+
 function highlightFeature(e) {
     var layer = e.target;
 
@@ -130,9 +131,7 @@ info.onAdd = function (map) {
 info.update = function (props) {
     this._div.innerHTML = '<h4>Demographic Data</h4>' +  (props ?
         '<b>' + props.Nome_Isola + '</b><br />' 
-        + 'Population: ' + props.POP_SEZ + ' people' + '</b><br />' 
-        + 'Island Number: ' + props.Insula_Num + '</b><br />' 
-        + '2011 section: ' + props.SEZ2011 + '</b><br />' 
+        + 'Tract Number: ' + props.POP_SEZ + '</b><br />' 
         : 'Hover over an island');
 };
 
