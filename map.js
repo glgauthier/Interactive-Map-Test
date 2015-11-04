@@ -143,7 +143,7 @@ info.onAdd = function (map) {
 info.update = function (props) {
     this._div.innerHTML = '<h4>Demographic Data</h4>' +  (props ?
         '<b>' + props.Nome_Isola + '</b><br />' 
-        + 'Tract Number: ' + props.POP_SEZ + '</b><br />' 
+        + 'Total Population: ' + props.sum_pop_11 + '</b><br />' 
         : 'Hover over an island');
 };
 
