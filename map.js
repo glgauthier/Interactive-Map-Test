@@ -1,6 +1,6 @@
 var map = L.map('map').setView([45.4375, 12.3358], 13);
 
-		L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6IjZjNmRjNzk3ZmE2MTcwOTEwMGY0MzU3YjUzOWFmNWZhIn0.Y8bhBaUMqFiPrDRW9hieoQ', {
+		L.tileLayer('https://api.tiles.mapbox.com/v4/mapbox.run-bike-hike/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6IjZjNmRjNzk3ZmE2MTcwOTEwMGY0MzU3YjUzOWFmNWZhIn0.Y8bhBaUMqFiPrDRW9hieoQ', {
 			maxZoom: 18,
 	 	attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
 				'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
@@ -53,32 +53,43 @@ var map = L.map('map').setView([45.4375, 12.3358], 13);
 //      // Finally, add the layer to the map.
 //         map.addLayer(featureLayer);
 
-// http://leafletjs.com/examples/choropleth.html
-function getColor(d) {
-    return d > 1000 ? '#800026' :
-           d > 500  ? '#BD0026' :
-           d > 200  ? '#E31A1C' :
-           d > 100  ? '#FC4E2A' :
-           d > 50   ? '#FD8D3C' :
-           d > 20   ? '#FEB24C' :
-           d > 10   ? '#FED976' :
-                      '#FFEDA0';
-    
-}
+ //http://leafletjs.com/examples/choropleth.html
+
+//
+//function getColor(d) {
+//    return d > 1000 ? '#800026' :
+//           d > 500  ? '#BD0026' :
+//           d > 200  ? '#E31A1C' :
+//           d > 100  ? '#FC4E2A' :
+//           d > 50   ? '#FD8D3C' :
+//           d > 20   ? '#FEB24C' :
+//           d > 10   ? '#FED976' :
+//                      '#FFEDA0';
+//    
+//}
 
 function style(feature) {
     return {
-        fillColor: getColor(feature.properties.POP_SEZ),
+        fillColor: '#FEB24C',
         weight: 0,
         opacity: 1,
         color: 'white',
         dashArray: '3',
-        fillOpacity: 0.2
+        fillOpacity: 0.001
     };
 }
 
-var geojson;
-geojson = L.geoJson(islands, {style: style}).addTo(map);
+
+function style2(feature) {
+    return {
+        fillColor: '#FEB24C',
+        weight: 0,
+        opacity: 1,
+        color: 'white',
+        dashArray: '3',
+        fillOpacity: 1.0
+    };
+}
 
 function highlightFeature(e) {
     var layer = e.target;
@@ -110,13 +121,14 @@ function onEachFeature(feature, layer) {
     layer.on({
         mouseover: highlightFeature,
         mouseout: resetHighlight,
-        click: zoomToFeature
+        //click: zoomToFeature
     });
 }
 
 geojson = L.geoJson(islands, {
     style: style,
-    onEachFeature: onEachFeature
+    onEachFeature: onEachFeature,
+    
 }).addTo(map);
 
 var info = L.control();
@@ -137,23 +149,70 @@ info.update = function (props) {
 
 info.addTo(map);
 
-var legend = L.control({position: 'bottomright'});
+//var legend = L.control({position: 'bottomright'});
+//
+//legend.onAdd = function (map) {
+//
+//    var div = L.DomUtil.create('div', 'info legend'),
+//        grades = [0, 10, 20, 50, 100, 200, 500, 1000],
+//        labels = [];
+//
+//    // loop through our density intervals and generate a label with a colored square for each interval
+//    for (var i = 0; i < grades.length; i++) {
+//        div.innerHTML +=
+//            '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
+//            grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+//    }
+//
+//    return div;
+//};
+//legend.addTo(map);
 
-legend.onAdd = function (map) {
+// pull JSON file from CK console
+//var jsonObj;
+//var getReq = $.ajax({
+//  method: "GET",
+//  url: "https://cityknowledge.firebaseio.com/data/17c8183b-26ec-cf1c-64c8-a7b3ddc5ae58.json",
+//  dataType: "jsonp"
+//  async: false
+//});
 
-    var div = L.DomUtil.create('div', 'info legend'),
-        grades = [0, 10, 20, 50, 100, 200, 500, 1000],
-        labels = [];
+// callback function for pulling JSON file, run code related to it in HERE ONLY
+//getReq.done(function(msg) {
+//    jsonObj = msg;
+//    console.log(jsonObj);
+//    
+//        //Create an empty layer where we will load the polygons
+//        var featureLayer = new L.GeoJSON();
+//        
+//        // Add the GeoJSON to the layer. 
+//        var featureLayer = L.geoJson(jsonObj.shape, {
+//            // And link up the function to run when loading each feature
+//            //onEachFeature: onEachFeature,
+//            // Also, set the style to one of the styles defined above
+//            style: style2 // sets to same hover-over esque style as above
+//        }).addTo(map);
+//    
+//    jsonObj.bindPopup("I am a polygon.").openPopup();
+//    
+//});
 
-    // loop through our density intervals and generate a label with a colored square for each interval
-    for (var i = 0; i < grades.length; i++) {
-        div.innerHTML +=
-            '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
-            grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+var jsonList;
+var getReq = $.ajax({
+  method: "GET",
+  url: "https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json",
+  dataType: "jsonp"
+});
+
+getReq.done(function(msg) {
+    jsonList = msg;
+    console.log(jsonList.members);
+    
+    var featureLayer = new L.GeoJSON();
+    
+    for(var obj in jsonList.members){
+       var URL = "https://cityknowledge.firebaseio.com/data/" + obj + ".json";
+        console.log(URL);
     }
-
-    return div;
-};
-
-legend.addTo(map);
+});
 
