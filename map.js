@@ -1,7 +1,7 @@
 var map = L.map('map').setView([45.4375, 12.3358], 13);
 
 		L.tileLayer('https://api.tiles.mapbox.com/v4/mapbox.run-bike-hike/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6IjZjNmRjNzk3ZmE2MTcwOTEwMGY0MzU3YjUzOWFmNWZhIn0.Y8bhBaUMqFiPrDRW9hieoQ', {
-			maxZoom: 18,
+			maxZoom: 18, minZoom: 10,
 	 	attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
 				'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
 				'Imagery © <a href="http://mapbox.com">Mapbox</a>',
@@ -204,6 +204,7 @@ var getReq = $.ajax({
   dataType: "jsonp"
 });
 
+
 getReq.done(function(msg) {
     jsonList = msg;
     console.log(jsonList.members);
@@ -211,8 +212,30 @@ getReq.done(function(msg) {
     var featureLayer = new L.GeoJSON();
     
     for(var obj in jsonList.members){
-       var URL = "https://cityknowledge.firebaseio.com/data/" + obj + ".json";
+        var URL = "https://cityknowledge.firebaseio.com/data/" + obj + ".json";
         console.log(URL);
+        var getEntry = $.ajax({
+            method: "GET",
+            url: URL,
+            dataType: "jsonp",
+           // jsonpCallback: getEntryCallback(msg)
+        });
+        getEntry.done(getEntryCallback);
     }
 });
+
+//Create an empty layer where we will load the polygons
+var BridgeLayer = L.geoJson().addTo(map);
+
+// callback function for pulling JSON file, run code related to it in HERE ONLY
+function getEntryCallback(msg) {
+    var jsonObj = msg;
+    console.log(jsonObj);
+    //myLayer.addData(jsonObj.shape);
+        // Add the GeoJSON to the layer. 
+     BridgeLayer.addData(jsonObj.shape,{style: style2});
+    
+}
+
+//L.control.layers(baseMaps, overlayMaps).addTo(map);
 
