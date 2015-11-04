@@ -125,7 +125,7 @@ function onEachFeature(feature, layer) {
     });
 }
 
-geojson = L.geoJson(islands, {
+var geojson = L.geoJson(islands, {
     style: style,
     onEachFeature: onEachFeature,
     
@@ -237,5 +237,16 @@ function getEntryCallback(msg) {
     
 }
 
-//L.control.layers(baseMaps, overlayMaps).addTo(map);
+//var baseMaps = L.layerGroup(map);
+//var mapOverlays = L.layerGroup(BridgeLayer);
+
+var baseMaps = {
+    "Map": map
+};
+
+var mapOverlays = {
+    "Bridges": BridgeLayer
+};
+
+L.control.layers(baseMaps,mapOverlays).addTo(map);
 
