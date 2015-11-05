@@ -1,26 +1,26 @@
 var map = L.map('map').setView([45.4375, 12.3358], 13);
 
-		L.tileLayer('https://api.tiles.mapbox.com/v4/mapbox.run-bike-hike/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6IjZjNmRjNzk3ZmE2MTcwOTEwMGY0MzU3YjUzOWFmNWZhIn0.Y8bhBaUMqFiPrDRW9hieoQ', {
-			maxZoom: 18, minZoom: 10,
-	 	attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
-				'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-				'Imagery © <a href="http://mapbox.com">Mapbox</a>',
-			id: 'mapbox.streets'
-		}).addTo(map);
+L.tileLayer('https://api.tiles.mapbox.com/v4/mapbox.run-bike-hike/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6IjZjNmRjNzk3ZmE2MTcwOTEwMGY0MzU3YjUzOWFmNWZhIn0.Y8bhBaUMqFiPrDRW9hieoQ', {
+    maxZoom: 18, minZoom: 10,
+    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+        '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+        'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+    id: 'mapbox.streets'
+}).addTo(map);
 
 //		L.marker([45.4375, 12.33]).addTo(map)
 //			.bindPopup("<b>Welcome to Venice!</b><br />I am a popup.").openPopup();
 //
-		var popup = L.popup();
+var popup = L.popup();
 
-		function onMapClick(e) {
-			popup
-				.setLatLng(e.latlng)
-				.setContent("You clicked the map at " + e.latlng.toString())
-				.openOn(map);
-		}
+function onMapClick(e) {
+    popup
+    .setLatLng(e.latlng)
+    .setContent("You clicked the map at " + e.latlng.toString())
+    .openOn(map);
+}
 
-		map.on('click', onMapClick);
+map.on('click', onMapClick);
 
 //// http://palewi.re/posts/2012/03/26/leaflet-recipe-hover-events-features-and-polygons/
 //        // Create an empty layer where we will load the polygons
@@ -198,14 +198,9 @@ info.addTo(map);
 //});
 
 var jsonList;
-var getReq = $.ajax({
-  method: "GET",
-  url: "https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json",
-  dataType: "jsonp"
-});
+var getReq = $.getJSON("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json",getGroupCallback);
 
-
-getReq.done(function(msg) {
+function getGroupCallback(msg) {
     jsonList = msg;
     console.log(jsonList.members);
     
@@ -214,15 +209,9 @@ getReq.done(function(msg) {
     for(var obj in jsonList.members){
         var URL = "https://cityknowledge.firebaseio.com/data/" + obj + ".json";
         console.log(URL);
-        var getEntry = $.ajax({
-            method: "GET",
-            url: URL,
-            dataType: "jsonp",
-           // jsonpCallback: getEntryCallback(msg)
-        });
-        getEntry.done(getEntryCallback);
+        var getEntry = $.getJSON(URL,getEntryCallback);
     }
-});
+}
 
 //Create an empty layer where we will load the polygons
 var BridgeLayer = L.geoJson().addTo(map);
