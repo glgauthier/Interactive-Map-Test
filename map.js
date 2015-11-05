@@ -170,6 +170,7 @@ info.addTo(map);
 //
 //legend.onAdd = function (map) {
 //
+// // Create grades using http://colorbrewer2.org/
 //    var div = L.DomUtil.create('div', 'info legend'),
 //        grades = [0, 10, 20, 50, 100, 200, 500, 1000],
 //        labels = [];
@@ -243,9 +244,42 @@ function getEntryCallback(msg) {
     
 }
 
-//var baseMaps = L.layerGroup(map);
-//var mapOverlays = L.layerGroup(BridgeLayer);
+// add location functionality
+// set this to true to auto-zoom on your location
+map.locate({setView: false, maxZoom: 18});
 
+// create a global var for the location layer - must be global so it can be toggled
+var locationLayer = L.layerGroup().addTo(map); 
+
+// function to excecute when the user's location is found
+function onLocationFound(e) {
+    var radius = e.accuracy / 2;
+    
+    // Create a marker with a popup at the location 
+    var locationMarker =  L.marker(e.latlng);
+        //.bindPopup("You are within " + radius + " meters from this point").openPopup();
+
+    // Create an additional circle showing the approximate radius
+    var locationRadius = L.circle(e.latlng, radius, {
+        color: 'red',
+        fillColor: '#f03',
+        fillOpacity: 0.5 
+    });
+    
+    // add the marker and popup to the location layer
+    locationLayer.addLayer(locationMarker);
+    locationLayer.addLayer(locationRadius);
+    locationMarker.bindPopup("<center><b>You are here!</b><br>Within " + radius + " meters </center>").openPopup();
+}
+map.on('locationfound', onLocationFound);
+
+// function to excecute when the users location isn't found
+function onLocationError(e) {
+    alert(e.message);
+}
+map.on('locationerror', onLocationError);
+
+// define the base and overlay maps so that they can be toggles
 var baseMaps = {
     "Default": defaultLayer,
     "Satellite": satelliteLayer,
@@ -253,8 +287,23 @@ var baseMaps = {
 };
 
 var mapOverlays = {
-    "Bridges": BridgeLayer
+    "Bridges": BridgeLayer,
+    "Current Location": locationLayer
 };
 
+// add in layer control so that you can toggle the layers
 L.control.layers(baseMaps,mapOverlays).addTo(map);
 
+// Displays question mark and vpc logo
+var VPCinfo = L.control({position: "bottomleft"});
+    
+VPCinfo.onAdd = function (map) {
+    this._div = L.DomUtil.create('div', 'VPCinfo'); // create a div with a class "info"
+    this._div.innerHTML = '<div class="info" style="width:auto;">'+
+        '<span ng-click="showAbout()"><img src="about.png"  style="cursor:pointer;padding-right:7px;"></span>'+
+        '<a href="http://veniceprojectcenter.org" target="_blank"><img src="vpc25logo.png"></a>'+
+        '</div>';
+    return this._div;
+};
+
+VPCinfo.addTo(map);
