@@ -1,7 +1,9 @@
+var featureCollections={};
+
 var map = L.map('map').setView([45.4375, 12.3358], 13);
 
 var defaultLayer = L.tileLayer('https://api.tiles.mapbox.com/v4/mapbox.run-bike-hike/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6IjZjNmRjNzk3ZmE2MTcwOTEwMGY0MzU3YjUzOWFmNWZhIn0.Y8bhBaUMqFiPrDRW9hieoQ', {
-    maxZoom: 18, minZoom: 10,
+    maxZoom: 20, minZoom: 10,
     attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
         '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
         'Imagery © <a href="http://mapbox.com">Mapbox</a>',
@@ -9,7 +11,7 @@ var defaultLayer = L.tileLayer('https://api.tiles.mapbox.com/v4/mapbox.run-bike-
 }).addTo(map);
 
 var satelliteLayer = L.tileLayer('https://api.tiles.mapbox.com/v4/mapbox.streets-satellite/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6IjZjNmRjNzk3ZmE2MTcwOTEwMGY0MzU3YjUzOWFmNWZhIn0.Y8bhBaUMqFiPrDRW9hieoQ', {
-    maxZoom: 18, minZoom: 10,
+    maxZoom: 20, minZoom: 10,
     attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
         '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
         'Imagery © <a href="http://mapbox.com">Mapbox</a>',
@@ -17,7 +19,7 @@ var satelliteLayer = L.tileLayer('https://api.tiles.mapbox.com/v4/mapbox.streets
 });
 
 var basicLayer = L.tileLayer('https://api.tiles.mapbox.com/v4/mapbox.outdoors/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6IjZjNmRjNzk3ZmE2MTcwOTEwMGY0MzU3YjUzOWFmNWZhIn0.Y8bhBaUMqFiPrDRW9hieoQ', {
-    maxZoom: 18, minZoom: 10,
+    maxZoom: 20, minZoom: 10,
     attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
         '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
         'Imagery © <a href="http://mapbox.com">Mapbox</a>',
@@ -215,34 +217,83 @@ info.addTo(map);
 //    
 //});
 
-var jsonList;
-var getReq = $.getJSON("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json",getGroupCallback);
+function partial(func /*, 0..n args */) {
+  var args = Array.prototype.slice.call(arguments, 1);
+  return function() {
+    var allArguments = args.concat(Array.prototype.slice.call(arguments));
+    return func.apply(this, allArguments);
+  };
+}
 
-function getGroupCallback(msg) {
+function getGroup(URL,tag){
+    tag = tag || "Feature"+(featureCollections.length+1);
+    //tag = (typeof tag === 'undefined') ? "Feature"+(featureCollections.length+1) : tag;
+    $.getJSON(URL,partial(getGroupCallback,tag));
+}
+
+//var getReq = $.getJSON("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json",getGroupCallback);
+getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json","Bridges");
+//getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canals.json","Canals");
+//getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canal%20Segments.json","Canal Segments");
+//getGroup("https://cityknowledge.firebaseio.com/groups/belltowers%20MAPS%2015.json","Bell Towers");
+
+
+function getGroupCallback(tag,msg) {
     jsonList = msg;
     console.log(jsonList.members);
-    
-    var featureLayer = new L.GeoJSON();
+    tag = tag || "Feature"+(featureCollections.length+1);
     
     for(var obj in jsonList.members){
         var URL = "https://cityknowledge.firebaseio.com/data/" + obj + ".json";
         console.log(URL);
-        var getEntry = $.getJSON(URL,getEntryCallback);
+        $.getJSON(URL,partial(getEntryCallback,tag));
     }
+    
 }
 
 //Create an empty layer where we will load the polygons
 var BridgeLayer = L.geoJson().addTo(map);
+featureCollections["Bridges"]=BridgeLayer;
+//console.log(BridgeLayer)
 
 // callback function for pulling JSON file, run code related to it in HERE ONLY
-function getEntryCallback(msg) {
+function getEntryCallback(tag,msg) {
     var jsonObj = msg;
     console.log(jsonObj);
-    //myLayer.addData(jsonObj.shape);
-        // Add the GeoJSON to the layer. 
-     BridgeLayer.addData(jsonObj.shape,{style: style2});
+    tag = tag || jsonObj.birth_certificate.type || "Feature"+(featureCollections.length+1);
+    
+    BridgeLayer.addData(CKtoGeoJSON(jsonObj),{style: style2});
     
 }
+
+function CKtoGeoJSON(CKjson){
+    var geoJson={
+        type: "Feature",
+        geometry: {},
+        properties:{}
+    };
+    
+    if(CKjson.type){
+        if(CKjson.type=="Feature"||CKjson.type=="FeatureCollection"){
+            return CKjson;
+        }
+    }
+    else{
+        geoJson.geometry = CKjson.shape||CKjson.geometry;
+        for(property in CKjson){
+            if(Object.prototype.hasOwnProperty.call(CKjson, property)){
+                if(property != "shape" && property != "geometry"){
+                    geoJson.properties[property]=CKjson[property];
+                }
+            }
+        }
+    }
+    console.log(geoJson);
+    //console.log(BridgeLayer);
+    return geoJson;
+}
+
+//**********************************************************************************************
 
 // add location functionality
 // set this to true to auto-zoom on your location
@@ -279,20 +330,7 @@ function onLocationError(e) {
 }
 map.on('locationerror', onLocationError);
 
-// define the base and overlay maps so that they can be toggles
-var baseMaps = {
-    "Default": defaultLayer,
-    "Satellite": satelliteLayer,
-    "Basic": basicLayer
-};
-
-var mapOverlays = {
-    "Bridges": BridgeLayer,
-    "Current Location": locationLayer
-};
-
-// add in layer control so that you can toggle the layers
-L.control.layers(baseMaps,mapOverlays).addTo(map);
+//**********************************************************************************************
 
 // Displays question mark and vpc logo
 var VPCinfo = L.control({position: "bottomleft"});
@@ -307,3 +345,20 @@ VPCinfo.onAdd = function (map) {
 };
 
 VPCinfo.addTo(map);
+
+//**********************************************************************************************
+
+// add in layer control so that you can toggle the layers
+L.control.layers(baseMaps,mapOverlays).addTo(map);
+
+// define the base and overlay maps so that they can be toggles
+var baseMaps = {
+    "Default": defaultLayer,
+    "Satellite": satelliteLayer,
+    "Basic": basicLayer
+};
+
+var mapOverlays = {
+    "Bridges": BridgeLayer,
+    "Current Location": locationLayer
+};
