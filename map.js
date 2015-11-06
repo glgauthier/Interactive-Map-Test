@@ -2,6 +2,7 @@ var featureCollections={};
 
 var map = L.map('map').setView([45.4375, 12.3358], 13);
 
+//**********************************************************************************************
 var defaultLayer = L.tileLayer('https://api.tiles.mapbox.com/v4/mapbox.run-bike-hike/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6IjZjNmRjNzk3ZmE2MTcwOTEwMGY0MzU3YjUzOWFmNWZhIn0.Y8bhBaUMqFiPrDRW9hieoQ', {
     maxZoom: 20, minZoom: 10,
     attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
@@ -25,7 +26,7 @@ var basicLayer = L.tileLayer('https://api.tiles.mapbox.com/v4/mapbox.outdoors/{z
         'Imagery © <a href="http://mapbox.com">Mapbox</a>',
     id: 'mapbox.outdoors'
 });
-
+//**********************************************************************************************
 
 //		L.marker([45.4375, 12.33]).addTo(map)
 //			.bindPopup("<b>Welcome to Venice!</b><br />I am a popup.").openPopup();
@@ -41,63 +42,54 @@ function onMapClick(e) {
 
 map.on('click', onMapClick);
 
-//// http://palewi.re/posts/2012/03/26/leaflet-recipe-hover-events-features-and-polygons/
-//        // Create an empty layer where we will load the polygons
-//        var featureLayer = new L.GeoJSON();
-//        // Set a default style for out the polygons will appear
-//        var defaultStyle = {
-//            color: "#2262CC",
-//            weight: 2,
-//            opacity: 0.6,
-//            fillOpacity: 0.1,
-//            fillColor: "#2262CC"
-//        };
-//
-//
-//        // Define what happens to each polygon just before it is loaded on to
-//        // the map. This is Leaflet's special way of goofing around with your
-//        // data, setting styles and regulating user interactions.
-//        var onEachFeature = function(feature, layer) {
-//            // All we're doing for now is loading the default style. 
-//            // But stay tuned.
-//            layer.setStyle(defaultStyle);
-//        };
-//
-//        // Add the GeoJSON to the layer. `islands` is defined in the external
-//        // GeoJSON file that I've loaded in the <head> of this HTML document.
-//        var featureLayer = L.geoJson(islands, {
-//            // And link up the function to run when loading each feature
-//            onEachFeature: onEachFeature
-//        });
-//      // Finally, add the layer to the map.
-//         map.addLayer(featureLayer);
-
- //http://leafletjs.com/examples/choropleth.html
-
-//
-//function getColor(d) {
-//    return d > 1000 ? '#800026' :
-//           d > 500  ? '#BD0026' :
-//           d > 200  ? '#E31A1C' :
-//           d > 100  ? '#FC4E2A' :
-//           d > 50   ? '#FD8D3C' :
-//           d > 20   ? '#FEB24C' :
-//           d > 10   ? '#FED976' :
-//                      '#FFEDA0';
-//    
-//}
+//**********************************************************************************************
+// Styling for making choropleth-like colorations of polygons
+// Create grades using http://colorbrewer2.org/
+function getColor(d) {
+    return d > 3000 ? '#4d004b' :
+           d > 2000 ? '#810f7c' :
+           d > 1000 ? '#88419d' :
+           d > 500  ? '#8c6bb1' :
+           d > 200  ? '#8c96c6' :
+           d > 100  ? '#9ebcda' :
+           d > 50   ? '#bfd3e6' :
+           d > 20   ? '#e0ecf4' :
+           d > 10   ? '#f7fcfd' :
+                      '#f7fcfd';
+    
+}
 
 function style(feature) {
     return {
-        fillColor: '#FEB24C',
+        fillColor: getColor(feature.properties.sum_pop_11),
         weight: 0,
         opacity: 1,
-        color: 'white',
+        color: 'black',
         dashArray: '3',
-        fillOpacity: 0.001
+        fillOpacity: 0.7
     };
 }
 
+// create a legend for the colors
+var legend = L.control({position: 'bottomright'});
+
+legend.onAdd = function (map) {
+ 
+    var div = L.DomUtil.create('div', 'info legend'),
+        grades = [0, 10, 20, 50, 100, 200, 500, 1000, 2000, 3000],
+        labels = [];
+
+    // loop through our density intervals and generate a label with a colored square for each interval
+    for (var i = 0; i < grades.length; i++) {
+        div.innerHTML +=
+            '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
+            grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+    }
+
+    return div;
+};
+legend.addTo(map);
+//**********************************************************************************************
 
 function style2(feature) {
     return {
@@ -112,12 +104,14 @@ function style2(feature) {
 
 function highlightFeature(e) {
     var layer = e.target;
-
+    console.log('hilighted');
+    
     layer.setStyle({
+        fillColor: '#7fcdbb',
         weight: 2,
         color: '#666',
         dashArray: '',
-        fillOpacity: 0.7
+        fillOpacity: 0.3
     });
 
     if (!L.Browser.ie && !L.Browser.opera) {
@@ -167,55 +161,6 @@ info.update = function (props) {
 };
 
 info.addTo(map);
-
-//var legend = L.control({position: 'bottomright'});
-//
-//legend.onAdd = function (map) {
-//
-// // Create grades using http://colorbrewer2.org/
-//    var div = L.DomUtil.create('div', 'info legend'),
-//        grades = [0, 10, 20, 50, 100, 200, 500, 1000],
-//        labels = [];
-//
-//    // loop through our density intervals and generate a label with a colored square for each interval
-//    for (var i = 0; i < grades.length; i++) {
-//        div.innerHTML +=
-//            '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
-//            grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
-//    }
-//
-//    return div;
-//};
-//legend.addTo(map);
-
-// pull JSON file from CK console
-//var jsonObj;
-//var getReq = $.ajax({
-//  method: "GET",
-//  url: "https://cityknowledge.firebaseio.com/data/17c8183b-26ec-cf1c-64c8-a7b3ddc5ae58.json",
-//  dataType: "jsonp"
-//  async: false
-//});
-
-// callback function for pulling JSON file, run code related to it in HERE ONLY
-//getReq.done(function(msg) {
-//    jsonObj = msg;
-//    console.log(jsonObj);
-//    
-//        //Create an empty layer where we will load the polygons
-//        var featureLayer = new L.GeoJSON();
-//        
-//        // Add the GeoJSON to the layer. 
-//        var featureLayer = L.geoJson(jsonObj.shape, {
-//            // And link up the function to run when loading each feature
-//            //onEachFeature: onEachFeature,
-//            // Also, set the style to one of the styles defined above
-//            style: style2 // sets to same hover-over esque style as above
-//        }).addTo(map);
-//    
-//    jsonObj.bindPopup("I am a polygon.").openPopup();
-//    
-//});
 
 function partial(func /*, 0..n args */) {
   var args = Array.prototype.slice.call(arguments, 1);
@@ -321,6 +266,8 @@ function onLocationFound(e) {
     locationLayer.addLayer(locationMarker);
     locationLayer.addLayer(locationRadius);
     locationMarker.bindPopup("<center><b>You are here!</b><br>Within " + radius + " meters </center>").openPopup();
+    // make sure it stays on top of everything else
+    locationLayer.bringToFront();
 }
 map.on('locationfound', onLocationFound);
 
@@ -348,9 +295,6 @@ VPCinfo.addTo(map);
 
 //**********************************************************************************************
 
-// add in layer control so that you can toggle the layers
-L.control.layers(baseMaps,mapOverlays).addTo(map);
-
 // define the base and overlay maps so that they can be toggles
 var baseMaps = {
     "Default": defaultLayer,
@@ -362,3 +306,7 @@ var mapOverlays = {
     "Bridges": BridgeLayer,
     "Current Location": locationLayer
 };
+
+// add in layer control so that you can toggle the layers
+L.control.layers(baseMaps,mapOverlays).addTo(map);
+
