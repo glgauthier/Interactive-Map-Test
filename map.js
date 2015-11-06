@@ -271,7 +271,7 @@ function onLocationFound(e) {
     locationLayer.addLayer(locationRadius);
     locationMarker.bindPopup("<center><b>You are here!</b><br>Within " + radius + " meters </center>").openPopup();
     // make sure it stays on top of everything else
-    locationLayer.bringToFront();
+    //locationLayer.bringToFront();
 }
 map.on('locationfound', onLocationFound);
 
