@@ -176,12 +176,15 @@ function getGroup(URL,tag){
     $.getJSON(URL,partial(getGroupCallback,tag));
 }
 
+// layers with maps
 //var getReq = $.getJSON("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json",getGroupCallback);
 getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json","Bridges");
 //getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canals.json","Canals");
 //getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canal%20Segments.json","Canal Segments");
 //getGroup("https://cityknowledge.firebaseio.com/groups/belltowers%20MAPS%2015.json","Bell Towers");
 
+// layers with just lat/long
+// getGroup("https://cityknowledge.firebaseio.com/groups/Hostels,%20Hotels.json","Hotels");
 
 function getGroupCallback(tag,msg) {
     jsonList = msg;
@@ -212,6 +215,7 @@ function getEntryCallback(tag,msg) {
 }
 
 function CKtoGeoJSON(CKjson){
+    // add functionality for reading in json files that have lat/long instead of shapes
     var geoJson={
         type: "Feature",
         geometry: {},
