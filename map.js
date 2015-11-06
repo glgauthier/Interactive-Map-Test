@@ -104,7 +104,6 @@ function style2(feature) {
 
 function highlightFeature(e) {
     var layer = e.target;
-    console.log('hilighted');
     
     layer.setStyle({
         fillColor: '#7fcdbb',
@@ -161,88 +160,6 @@ info.update = function (props) {
 };
 
 info.addTo(map);
-
-function partial(func /*, 0..n args */) {
-  var args = Array.prototype.slice.call(arguments, 1);
-  return function() {
-    var allArguments = args.concat(Array.prototype.slice.call(arguments));
-    return func.apply(this, allArguments);
-  };
-}
-
-function getGroup(URL,tag){
-    tag = tag || "Feature"+(featureCollections.length+1);
-    //tag = (typeof tag === 'undefined') ? "Feature"+(featureCollections.length+1) : tag;
-    $.getJSON(URL,partial(getGroupCallback,tag));
-}
-
-// layers with maps
-//var getReq = $.getJSON("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json",getGroupCallback);
-getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json","Bridges");
-//getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canals.json","Canals");
-//getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canal%20Segments.json","Canal Segments");
-//getGroup("https://cityknowledge.firebaseio.com/groups/belltowers%20MAPS%2015.json","Bell Towers");
-
-// layers with just lat/long
-// getGroup("https://cityknowledge.firebaseio.com/groups/Hostels,%20Hotels.json","Hotels");
-
-function getGroupCallback(tag,msg) {
-    jsonList = msg;
-    console.log(jsonList.members);
-    tag = tag || "Feature"+(featureCollections.length+1);
-    
-    for(var obj in jsonList.members){
-        var URL = "https://cityknowledge.firebaseio.com/data/" + obj + ".json";
-        console.log(URL);
-        $.getJSON(URL,partial(getEntryCallback,tag));
-    }
-    
-}
-
-//Create an empty layer where we will load the polygons
-var BridgeLayer = L.geoJson().addTo(map);
-featureCollections["Bridges"]=BridgeLayer;
-//console.log(BridgeLayer)
-
-// callback function for pulling JSON file, run code related to it in HERE ONLY
-function getEntryCallback(tag,msg) {
-    var jsonObj = msg;
-    console.log(jsonObj);
-    tag = tag || jsonObj.birth_certificate.type || "Feature"+(featureCollections.length+1);
-    
-    BridgeLayer.addData(CKtoGeoJSON(jsonObj),{style: style2});
-    
-}
-
-function CKtoGeoJSON(CKjson){
-    // add functionality for reading in json files that have lat/long instead of shapes
-    var geoJson={
-        type: "Feature",
-        geometry: {},
-        properties:{}
-    };
-    
-    if(CKjson.type){
-        if(CKjson.type=="Feature"||CKjson.type=="FeatureCollection"){
-            return CKjson;
-        }
-    }
-    else{
-        geoJson.geometry = CKjson.shape||CKjson.geometry;
-        for(property in CKjson){
-            if(Object.prototype.hasOwnProperty.call(CKjson, property)){
-                if(property != "shape" && property != "geometry"){
-                    geoJson.properties[property]=CKjson[property];
-                }
-            }
-        }
-    }
-    console.log(geoJson);
-    //console.log(BridgeLayer);
-    return geoJson;
-}
-
-//**********************************************************************************************
 
 // add location functionality
 // set this to true to auto-zoom on your location
@@ -307,10 +224,223 @@ var baseMaps = {
 };
 
 var mapOverlays = {
-    "Bridges": BridgeLayer,
     "Current Location": locationLayer
 };
 
 // add in layer control so that you can toggle the layers
-L.control.layers(baseMaps,mapOverlays).addTo(map);
+var layerController = L.control.layers(baseMaps,mapOverlays).addTo(map);
+
+//*******************************************************************************************
+
+function partial(func /*, 0..n args */) {
+  var args = Array.prototype.slice.call(arguments, 1);
+  return function() {
+    var allArguments = args.concat(Array.prototype.slice.call(arguments));
+    return func.apply(this, allArguments);
+  };
+}
+
+function getGroup(URL,tag){
+    if(tag){
+        initializeCollection(tag);
+    }
+    
+    $.getJSON(URL,partial(getGroupCallback,tag));
+    
+}
+
+// layers with maps
+//var getReq = $.getJSON("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json",getGroupCallback);
+getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json","Bridges");
+getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canals.json","Canals");
+//getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canal%20Segments.json","Canal Segments");
+//getGroup("https://cityknowledge.firebaseio.com/groups/belltowers%20MAPS%2015.json","Bell Towers");
+
+// layers with just lat/long
+// getGroup("https://cityknowledge.firebaseio.com/groups/Hostels,%20Hotels.json","Hotels");
+
+function getGroupCallback(tag,msg) {
+    jsonList = msg;
+    console.log(jsonList.members);
+    
+    if(tag){
+        initializeCollection(tag);
+    }
+    
+    for(var obj in jsonList.members){
+        var URL = "https://cityknowledge.firebaseio.com/data/" + obj + ".json";
+        console.log(URL);
+        $.getJSON(URL,partial(getEntryCallback,tag));
+    }
+    
+}
+
+// callback function for pulling JSON file, run code related to it in HERE ONLY
+function getEntryCallback(tag,msg) {
+    var jsonObj = msg;
+    console.log(jsonObj);
+    tag = tag || jsonObj.birth_certificate.type || "Feature"+(featureCollections.length+1);
+    
+    initializeCollection(tag);
+    featureCollections[tag].addData(CKtoGeoJSON(jsonObj),{style: style2});
+    
+}
+
+function initializeCollection(tag){
+    if(!featureCollections.hasOwnProperty(tag)){
+        featureCollections[tag]=L.geoJson().addTo(map);
+        layerController.addOverlay(featureCollections[tag],tag);
+        console.log(mapOverlays);
+    }
+}
+
+function CKtoGeoJSON(CKjson){
+    // add functionality for reading in json files that have lat/long instead of shapes
+    var geoJson={
+        type: "Feature",
+        geometry: {},
+        properties:{}
+    };
+    
+    if(isValidGeoJson(CKjson)==true){
+        geoJson = CKjson;
+    }
+    else{
+        geoJson.geometry = CKjson.shape||CKjson.geometry;
+        for(property in CKjson){
+            if(Object.prototype.hasOwnProperty.call(CKjson, property)){
+                if(property != "shape" && property != "geometry"){
+                    geoJson.properties[property]=CKjson[property];
+                }
+            }
+        }
+    }
+    console.log(geoJson);
+    //console.log(BridgeLayer);
+    return geoJson;
+}
+
+function isValidGeoJson(jsonObj){
+    if(jsonObj.type){
+        if(jsonObj.type=="FeatureCollection"){
+            if(jsonObj.hasOwnProperty("features")){
+                for(var i=0;i<jsonObj.features.length;i++){
+                    if(!isValidGeoJson(jsonObj.features[i])){
+                        return false;
+                    }
+                }
+                return true;
+            }
+        }
+        else if(jsonObj.type == "Feature"){
+            if(jsonObj.hasOwnProperty("geometry")&&jsonObj.hasOwnProperty("properties")){
+                if(!isValidGeoJsonGeometry(jsonObj.geometry)){
+                    return false;
+                }
+                return true;
+            }
+        }
+        else{
+            return isValidGeoJsonGeometry(jsonObj)
+        }
+    }
+    return false;
+}
+    
+function isValidGeoJsonGeometry(jsonObj){
+    if(jsonObj.type){
+        
+        if(jsonObj.type == "GeometryCollection"){
+            if(jsonObj.hasOwnProperty("geometries")){
+                for(var i=0;i<jsonObj.geometries.length;i++){
+                    if(!isValidGeoJsonGeometry(jsonObj.geometries[i])){
+                        return false;
+                    }
+                }
+                return true;
+            }
+        }
+        else if(jsonObj.type == "Point"){
+            if(jsonObj.hasOwnProperty("coordinates")){
+                return isValidGeoJsonPosition(jsonObj.coordinates);
+            }
+        }
+        else if(jsonObj.type == "MultiPoint"){
+            if(jsonObj.hasOwnProperty("coordinates")){
+                return isValidGeoJsonCoordinates(jsonObj.coordinates);
+            }
+        }
+        else if(jsonObj.type == "LineString"){
+            if(jsonObj.hasOwnProperty("coordinates")){
+                if(!isValidGeoJsonCoordinates(jsonObj.coordinates)){
+                    return false;
+                }
+                return jsonObj.coordinates.length>1;
+            }
+        }
+        else if(jsonObj.type == "MultiLineString"){
+            if(jsonObj.hasOwnProperty("coordinates")){
+                for(var i=0;i<jsonObj.coordinates.length;i++){
+                    if(!isValidGeoJsonCoordinates(jsonObj.coordinates)){
+                        return false;
+                    }
+                    if(jsonObj.coordinates.length<2){
+                        return false;
+                    }
+                }
+                return true;
+            }
+        }
+        else if(jsonObj.type == "Polygon"){
+            if(jsonObj.hasOwnProperty("coordinates")){
+                if(!isValidGeoJsonLinearRing(jsonObj.coordinates)){
+                    return false;
+                }
+                return true;
+            }
+        }
+        else if(jsonObj.type == "MultiPolygon"){
+            if(jsonObj.hasOwnProperty("coordinates")){
+                for(var i=0;i<jsonObj.coordinates.length;i++){
+                    if(!isValidGeoJsonLinearRing(jsonObj.coordinates)){
+                        return false;
+                    }
+                }
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+function isValidGeoJsonLinearRing(jsonObj){
+    if(!isValidGeoJsonCoordinates(jsonObj)){
+        return false;
+    }
+    if(jsonObj.length<4){
+        return false;
+    }
+    if(jsonObj[0]==jsonObj[jsonObj.length-1]){
+        return true;
+    }
+    return false;
+}
+
+function isValidGeoJsonCoordinates(jsonObj){
+    for(var i=0;i<jsonObj.length;i++){
+        if(!isValidGeoJsonPosition(jsonObj[i])){
+            return false;
+        }
+    }
+    return true;
+}
+
+function isValidGeoJsonPosition(jsonObj){
+    return jsonObj.length<1;
+}
+
+
+//**********************************************************************************************
+
+
 
