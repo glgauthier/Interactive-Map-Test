@@ -1,6 +1,7 @@
-// overlays info box
-// https://raventools.com/blog/create-a-modal-dialog-using-css-and-javascript/ and
-// http://netdna.webdesignerdepot.com/uploads7/creating-a-modal-window-with-html5-and-css3/demo.html#close
+// overlays modal-esque information box on top of the page to show all available info
+
+// https://raventools.com/blog/create-a-modal-dialog-using-css-and-javascript/
+
 // this function is called from the zoomToFeature() function
 function overlay(currentLayer) {
 	el = document.getElementById("overlay");
@@ -35,7 +36,6 @@ function overlay(currentLayer) {
         :''); 
    
     // test for appending additional info
-    var textnode = document.createTextNode("Water");  
     $(document.getElementById("inner")).append('<br /> <br /><a href="http://www.venipedia.org/wiki/index.php?title=Islands"  target="_blank" onMouseOver="return changeImage()" onMouseOut= "return changeImageBack()"> <img name="jsbutton" src="image/venipedia.png" width="80" height="70" border="0" alt="javascript button" align="left"></a>'  
          + '<a href="http://cartography.veniceprojectcenter.org/" target="_blank" class="button">View on a historical map</a>');
     
@@ -64,3 +64,9 @@ function changeImageBack()
     document.images["jsbutton"].src = "image/venipedia.png";
     return true;
 }
+
+/* !!!!!!!! photograph stuff !!!!!!!!
+* if we use http://instafeedjs.com/ all we need to do is sign up for an API key from 
+* instagram and then showing a feed of pictures tagged by location/hashtag is super easy,
+* so that could be an easy way to add photos later on if we want to use it
+*/
