@@ -53,6 +53,8 @@ html, body
 }
 
 /* modal dialog box (island info window) stuff */
+
+/* grey background */
 #overlay {
      visibility: hidden;
      position: absolute;
@@ -60,22 +62,47 @@ html, body
      top: 0px;
      width:100%;
      height:100%;
-     text-align:center;
+     text-align:left;
      z-index: 1000;
      background: rgba(0,0,0,0.2);
     
 }
 
+/*white box for text overlay*/
 #overlay div {
      width:300px;
+     height: 30%;
      margin: 150px auto;
      float: center;
      left:  0px;
-     text-align:center;
+     text-align:left;
      padding: 6px 8px;
      font: 14px/16px Arial, Helvetica, sans-serif;
      background: white;
      background: rgba(255,255,255,0.8);
      box-shadow: 0 0 15px rgba(0,0,0,0.2);
      border-radius: 5px;
+     overflow: auto;
 }
+
+#overlay::first-line { 
+    text-align:center;
+}
+
+/*button (so you can use href with a button set from script)*/
+a.button {
+    border: 5px solid;
+    border-radius: 5px;
+    border-color: white;
+    height: auto;
+    float: right;
+    background-color: white;
+    text-decoration: none;
+    color: initial;
+}
+
+a.button:hover { 
+    background-color: powderblue;
+    border-color: powderblue;    
+}
+

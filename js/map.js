@@ -146,47 +146,6 @@ function onEachFeature(feature, layer) {
         });
 }
 
-
-// overlays info box
-// https://raventools.com/blog/create-a-modal-dialog-using-css-and-javascript/ and
-// http://netdna.webdesignerdepot.com/uploads7/creating-a-modal-window-with-html5-and-css3/demo.html#close
-// this function is called from the zoomToFeature() function
-function overlay(currentLayer) {
-	el = document.getElementById("overlay");
-	el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
-    
-    // toggle the state of the function flag, this affects hilighting 
-    overlayFlag ^= true;
-
-//    currentLayer.setStyle({
-//        fillColor: '#FEB24C',
-//        weight: 0,
-//        opacity: 1,
-//        color: 'white',
-//        dashArray: '3',
-//        fillOpacity: 1.0
-//    });
-    
-    // make life a little easier
-    var properties = currentLayer.feature.properties;
-    // print out whatever info you want to the 'inner' div of the 'overlay' div of index.html
-    document.getElementById("inner").innerHTML=  '<h4>Demographic Data</h4>' +  
-        (properties ?
-        '<b>' + properties.Nome_Isola + '</b><br />' 
-        + 'Codice: ' + properties.Codice + '</b><br />'
-        + 'Island Number: ' + properties.Insula_Num + '</b><br />'
-        + '2011 Census Tract Number: ' + properties.Numero + '</b><br />'
-        + 'Total Population: ' + properties.sum_pop_11 + '</b><br />':''); 
-   
-    // function for getting rid of overlay when you click on the screen
-    // update later to remove only when clicking outside of 'overlay' div
-    $(document).ready(function() {
-        $('#overlay').on('click', function(e) { 
-            overlay();
-        });
-    });
-};
-
 //**********************************************************************************************
 // add base geojson to map with islands data
 var geojson = L.geoJson(islands, {
@@ -211,7 +170,7 @@ populationInfo.update = function (props) {
         '<b>'+ props.Nome_Isola + '</b><br />' 
         + 'Island Number: ' + props.Insula_Num + '</b><br />'
         + 'Total Population: ' + props.sum_pop_11 + '</b><br />' 
-        : 'Hover over an island');
+        : 'Hover over an island <br /> Double click for more info' );
 };
 
 populationInfo.addTo(map);
@@ -250,7 +209,7 @@ map.on('locationfound', onLocationFound);
 
 // function to excecute when the users location isn't found
 function onLocationError(e) {
-    alert(e.message);
+    //alert(e.message);
 }
 map.on('locationerror', onLocationError);
 
@@ -262,8 +221,8 @@ var VPCinfo = L.control({position: "bottomleft"});
 VPCinfo.onAdd = function (map) {
     this._div = L.DomUtil.create('div', 'VPCinfo'); // create a div with a class "info"
     this._div.innerHTML = '<div class="info" style="width:auto;">'+
-        '<span ng-click="showAbout()"><img src="about.png"  style="cursor:pointer;padding-right:7px;"></span>'+
-        '<a href="http://veniceprojectcenter.org" target="_blank"><img src="vpc25logo.png"></a>'+
+        '<span ng-click="showAbout()"><img src="image/about.png"  style="cursor:pointer;padding-right:7px;"></span>'+
+        '<a href="http://veniceprojectcenter.org" target="_blank"><img src="image/vpc25logo.png"></a>'+
         '</div>';
     return this._div;
 };
@@ -308,7 +267,7 @@ function getGroup(URL,tag){
 // layers with maps
 //var getReq = $.getJSON("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json",getGroupCallback);
 getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json","Bridges");
-//getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canals.json","Canals");
+getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canals.json","Canals");
 //getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canal%20Segments.json","Canal Segments");
 //getGroup("https://cityknowledge.firebaseio.com/groups/belltowers%20MAPS%2015.json","Bell Towers");
 
