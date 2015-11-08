@@ -30,13 +30,15 @@ function overlay(currentLayer) {
         + 'Codice: ' + properties.Codice + '</b><br />'
         + 'Island Number: ' + properties.Insula_Num + '</b><br />'
         + '2011 Census Tract Number: ' + properties.Numero + '</b><br />'
-        + 'Total Population: ' + properties.sum_pop_11 + '</b><br />' +
-         '<br /><a href="http://www.venipedia.org/wiki/index.php?title=Islands"  target="_blank" onMouseOver="return changeImage()" onMouseOut= "return changeImageBack()"> <img name="jsbutton" src="image/venipedia.png" width="80" height="70" border="0" alt="javascript button" align="left"></a>'  
-         + '<a href="http://cartography.veniceprojectcenter.org/" target="_blank" class="button">View on a historical map</a>'
-         //+'<br /> <br /> <br /> <br /> <br />'
-         //+ '<b> Overlays: </b>' + layerController._layers
-         :''); 
+        + 'Total Population: ' + properties.sum_pop_11 + '</b><br />' 
+        + '<b><br />Overlays: </b>' + layerController._layers
+        :''); 
    
+    // test for appending additional info
+    var textnode = document.createTextNode("Water");  
+    $(document.getElementById("inner")).append('<br /> <br /><a href="http://www.venipedia.org/wiki/index.php?title=Islands"  target="_blank" onMouseOver="return changeImage()" onMouseOut= "return changeImageBack()"> <img name="jsbutton" src="image/venipedia.png" width="80" height="70" border="0" alt="javascript button" align="left"></a>'  
+         + '<a href="http://cartography.veniceprojectcenter.org/" target="_blank" class="button">View on a historical map</a>');
+    
     // function for getting rid of overlay when you click on the screen
     // update later to remove only when clicking outside of 'overlay' div
     $(document).ready(function() {
