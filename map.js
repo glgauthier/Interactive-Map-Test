@@ -1,5 +1,7 @@
 var featureCollections={};
 
+var overlayFlag = 0;
+
 var map = L.map('map').setView([45.4375, 12.3358], 13);
 
 //**********************************************************************************************
@@ -90,7 +92,7 @@ legend.onAdd = function (map) {
 };
 legend.addTo(map);
 //**********************************************************************************************
-
+// this section contains an alternate styling for polygons
 function style2(feature) {
     return {
         fillColor: '#FEB24C',
@@ -102,6 +104,8 @@ function style2(feature) {
     };
 }
 
+// This section is used to track where the user's cursor is located and perform events based on 
+// its location
 function highlightFeature(e) {
     var layer = e.target;
     
@@ -116,51 +120,103 @@ function highlightFeature(e) {
     if (!L.Browser.ie && !L.Browser.opera) {
         layer.bringToFront();
     }
+    // instead of updating info on one layer, an if statement can be used here to show info
+    // on multiple layers. for more info, see the following:
+    //http://gis.stackexchange.com/questions/68941/how-to-add-remove-legend-with-leaflet-layers-control
+    populationInfo.update(layer.feature.properties);
     
-    info.update(layer.feature.properties);
 }
 
 function resetHighlight(e) {
-    geojson.resetStyle(e.target);
-    info.update();
+        geojson.resetStyle(e.target);
+        populationInfo.update();
 }
 
 function zoomToFeature(e) {
     map.fitBounds(e.target.getBounds());
+    var currentLayer = e.target;
+    overlay(currentLayer);
 }
 
 function onEachFeature(feature, layer) {
-    layer.on({
-        mouseover: highlightFeature,
-        mouseout: resetHighlight,
-        dblclick: zoomToFeature
-    });
+        layer.on({
+            mouseover: highlightFeature,
+            mouseout: resetHighlight,
+            dblclick: zoomToFeature
+        });
 }
 
+
+// overlays info box
+// https://raventools.com/blog/create-a-modal-dialog-using-css-and-javascript/ and
+// http://netdna.webdesignerdepot.com/uploads7/creating-a-modal-window-with-html5-and-css3/demo.html#close
+// this function is called from the zoomToFeature() function
+function overlay(currentLayer) {
+	el = document.getElementById("overlay");
+	el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
+    
+    // toggle the state of the function flag, this affects hilighting 
+    overlayFlag ^= true;
+
+//    currentLayer.setStyle({
+//        fillColor: '#FEB24C',
+//        weight: 0,
+//        opacity: 1,
+//        color: 'white',
+//        dashArray: '3',
+//        fillOpacity: 1.0
+//    });
+    
+    // make life a little easier
+    var properties = currentLayer.feature.properties;
+    // print out whatever info you want to the 'inner' div of the 'overlay' div of index.html
+    document.getElementById("inner").innerHTML=  '<h4>Demographic Data</h4>' +  
+        (properties ?
+        '<b>' + properties.Nome_Isola + '</b><br />' 
+        + 'Codice: ' + properties.Codice + '</b><br />'
+        + 'Island Number: ' + properties.Insula_Num + '</b><br />'
+        + '2011 Census Tract Number: ' + properties.Numero + '</b><br />'
+        + 'Total Population: ' + properties.sum_pop_11 + '</b><br />':''); 
+   
+    // function for getting rid of overlay when you click on the screen
+    // update later to remove only when clicking outside of 'overlay' div
+    $(document).ready(function() {
+        $('#overlay').on('click', function(e) { 
+            overlay();
+        });
+    });
+};
+
+//**********************************************************************************************
+// add base geojson to map with islands data
 var geojson = L.geoJson(islands, {
     style: style,
     onEachFeature: onEachFeature,
     
 }).addTo(map);
 
-var info = L.control();
+//**********************************************************************************************
+// set up an information box for population data
+var populationInfo = L.control();
 
-info.onAdd = function (map) {
+populationInfo.onAdd = function (map) {
     this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
     this.update();
     return this._div;
 };
 
 // method that we will use to update the control based on feature properties passed
-info.update = function (props) {
+populationInfo.update = function (props) {
     this._div.innerHTML = '<h4>Demographic Data</h4>' +  (props ?
-        '<b>' + props.Nome_Isola + '</b><br />' 
+        '<b>'+ props.Nome_Isola + '</b><br />' 
+        + 'Island Number: ' + props.Insula_Num + '</b><br />'
         + 'Total Population: ' + props.sum_pop_11 + '</b><br />' 
         : 'Hover over an island');
 };
 
-info.addTo(map);
+populationInfo.addTo(map);
 
+//**********************************************************************************************
 // add location functionality
 // set this to true to auto-zoom on your location
 map.locate({setView: false, maxZoom: 18});
@@ -186,7 +242,7 @@ function onLocationFound(e) {
     // add the marker and popup to the location layer
     locationLayer.addLayer(locationMarker);
     locationLayer.addLayer(locationRadius);
-    locationMarker.bindPopup("<center><b>You are here!</b><br>Within " + radius + " meters </center>").openPopup();
+    locationMarker.bindPopup("<center><b>You are here!</b><br>Within " + radius + " meters </center>");//.openPopup();
     // make sure it stays on top of everything else
     //locationLayer.bringToFront();
 }
@@ -216,7 +272,7 @@ VPCinfo.addTo(map);
 
 //**********************************************************************************************
 
-// define the base and overlay maps so that they can be toggles
+// define the base and overlay maps so that they can be toggled
 var baseMaps = {
     "Default": defaultLayer,
     "Satellite": satelliteLayer,
@@ -252,7 +308,7 @@ function getGroup(URL,tag){
 // layers with maps
 //var getReq = $.getJSON("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json",getGroupCallback);
 getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json","Bridges");
-getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canals.json","Canals");
+//getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canals.json","Canals");
 //getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canal%20Segments.json","Canal Segments");
 //getGroup("https://cityknowledge.firebaseio.com/groups/belltowers%20MAPS%2015.json","Bell Towers");
 
