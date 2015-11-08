@@ -264,15 +264,32 @@ function getGroup(URL,tag){
     
 }
 
-// layers with maps
+// ~~~~~~~~~~ layers with maps/working points ~~~~~~~~~~~~~
 //var getReq = $.getJSON("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json",getGroupCallback);
 getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json","Bridges");
-getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canals.json","Canals");
+//getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canals.json","Canals");
 //getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canal%20Segments.json","Canal Segments");
 //getGroup("https://cityknowledge.firebaseio.com/groups/belltowers%20MAPS%2015.json","Bell Towers");
+//getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOTELS08_PT_15.json","Hotels");
+//getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOLES_PT_15.json","Sewer Outlets");
 
-// layers with just lat/long
+// ~~~~~~~~ layers with just lat/long ~~~~~~~~~~~~~~~~~~~~~
 // getGroup("https://cityknowledge.firebaseio.com/groups/Hostels,%20Hotels.json","Hotels");
+//getGroup("https://cityknowledge.firebaseio.com/groups/Bed%20&%20Bfast,%20Apartments.json","Bed and Breakfasts");
+//getGroup("https://cityknowledge.firebaseio.com/groups/store%20locations.json","Stores"); //2014 data
+
+// ~~~~~~~~ historical data (still just lat/long) ~~~~~~~~~
+// getGroup("https://cityknowledge.firebaseio.com/groups/Demolished%20Churches.json","Demolished Churches");
+// getGroup("https://cityknowledge.firebaseio.com/groups/Island%20Church%20Data.json","Island Churches");
+
+// getGroup("https://cityknowledge.firebaseio.com/groups/Convents%20Data.json","Convents");
+// the above layer probably matches up with the images in
+// https://cityknowledge.firebaseio.com/groups/convent%20floor%20plans.json
+
+// ~~~~~~~~ useful datasets not tagged by location ~~~~~~~~
+// https://cityknowledge.firebaseio.com/groups/SUBGROUP%20Boat%20Traffic%20Counts%20by%20Station.json
+// https://cityknowledge.firebaseio.com/groups/SUBGROUP%20Latest%20Traffic%20Counts%20By%20Station.json
+
 
 function getGroupCallback(tag,msg) {
     jsonList = msg;
