@@ -151,7 +151,6 @@ function onEachFeature(feature, layer) {
 var geojson = L.geoJson(islands, {
     style: style,
     onEachFeature: onEachFeature,
-    
 }).addTo(map);
 
 //**********************************************************************************************
@@ -168,7 +167,7 @@ populationInfo.onAdd = function (map) {
 populationInfo.update = function (props) {
     this._div.innerHTML = '<h4>Demographic Data</h4>' +  (props ?
         '<b>'+ props.Nome_Isola + '</b><br />' 
-        + 'Island Number: ' + props.Insula_Num + '</b><br />'
+        + 'Island Number: ' + props.Numero + '</b><br />'
         + 'Total Population: ' + props.sum_pop_11 + '</b><br />' 
         : 'Hover over an island <br /> Double click for more info' );
 };
@@ -255,43 +254,43 @@ function partial(func /*, 0..n args */) {
   };
 }
 
-function getGroup(URL,tag){
+function getGroup(URL,tag,customStyle){
     if(tag){
-        initializeCollection(tag);
+        initializeCollection(tag,customStyle);
     }
     
-    $.getJSON(URL,partial(getGroupCallback,tag));
+    $.getJSON(URL,partial(getGroupCallback,tag,customStyle));
     
 }
 
 // ~~~~~~~~~~ layers with maps/working points ~~~~~~~~~~~~~
 //var getReq = $.getJSON("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json",getGroupCallback);
-getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json","Bridges");
+//getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json","Bridges");
 //getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canals.json","Canals");
 //getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canal%20Segments.json","Canal Segments");
 //getGroup("https://cityknowledge.firebaseio.com/groups/belltowers%20MAPS%2015.json","Bell Towers");
-//getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOTELS08_PT_15.json","Hotels");
+//getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOTELS08_PT_15.json","HotelsMap");
 //getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOLES_PT_15.json","Sewer Outlets");
 
 // ~~~~~~~~ layers with just lat/long ~~~~~~~~~~~~~~~~~~~~~
-// getGroup("https://cityknowledge.firebaseio.com/groups/Hostels,%20Hotels.json","Hotels");
+//getGroup("https://cityknowledge.firebaseio.com/groups/Hostels,%20Hotels.json","Hotels",style2);
 //getGroup("https://cityknowledge.firebaseio.com/groups/Bed%20&%20Bfast,%20Apartments.json","Bed and Breakfasts");
 //getGroup("https://cityknowledge.firebaseio.com/groups/store%20locations.json","Stores"); //2014 data
 
 // ~~~~~~~~ historical data (still just lat/long) ~~~~~~~~~
-// getGroup("https://cityknowledge.firebaseio.com/groups/Demolished%20Churches.json","Demolished Churches");
-// getGroup("https://cityknowledge.firebaseio.com/groups/Island%20Church%20Data.json","Island Churches");
+//getGroup("https://cityknowledge.firebaseio.com/groups/Demolished%20Churches.json");
+//getGroup("https://cityknowledge.firebaseio.com/groups/Island%20Church%20Data.json","Island Churches");
 
-// getGroup("https://cityknowledge.firebaseio.com/groups/Convents%20Data.json","Convents");
+//getGroup("https://cityknowledge.firebaseio.com/groups/Convents%20Data.json");
 // the above layer probably matches up with the images in
-// https://cityknowledge.firebaseio.com/groups/convent%20floor%20plans.json
+//https://cityknowledge.firebaseio.com/groups/convent%20floor%20plans.json"
 
 // ~~~~~~~~ useful datasets not tagged by location ~~~~~~~~
 // https://cityknowledge.firebaseio.com/groups/SUBGROUP%20Boat%20Traffic%20Counts%20by%20Station.json
 // https://cityknowledge.firebaseio.com/groups/SUBGROUP%20Latest%20Traffic%20Counts%20By%20Station.json
 
 
-function getGroupCallback(tag,msg) {
+function getGroupCallback(tag,customStyle,msg) {
     jsonList = msg;
     console.log(jsonList.members);
     
@@ -302,26 +301,31 @@ function getGroupCallback(tag,msg) {
     for(var obj in jsonList.members){
         var URL = "https://cityknowledge.firebaseio.com/data/" + obj + ".json";
         console.log(URL);
-        $.getJSON(URL,partial(getEntryCallback,tag));
+        $.getJSON(URL,partial(getEntryCallback,tag,customStyle));
     }
     
 }
 
 // callback function for pulling JSON file, run code related to it in HERE ONLY
-function getEntryCallback(tag,msg) {
+function getEntryCallback(tag,customStyle,msg) {
     var jsonObj = msg;
     console.log(jsonObj);
     tag = tag || jsonObj.birth_certificate.type || "Feature"+(featureCollections.length+1);
     
-    initializeCollection(tag);
-    featureCollections[tag].addData(CKtoGeoJSON(jsonObj),{style: style2});
+    initializeCollection(tag,customStyle);
+    featureCollections[tag].addData(CKtoGeoJSON(jsonObj));
     
 }
 
-function initializeCollection(tag){
+function initializeCollection(tag,customStyle){
     if(!featureCollections.hasOwnProperty(tag)){
-        featureCollections[tag]=L.geoJson().addTo(map);
+        featureCollections[tag]=L.geoJson(null,{style: customStyle}).addTo(map);
+        
         layerController.addOverlay(featureCollections[tag],tag);
+
+        console.log("******"+tag+"******");
+        console.log(customStyle);
+        console.log(featureCollections[tag]);
         console.log(mapOverlays);
     }
 }
@@ -337,7 +341,7 @@ function CKtoGeoJSON(CKjson){
     if(isValidGeoJson(CKjson)==true){
         geoJson = CKjson;
     }
-    else{
+    else if(CKjson.shape || CKjson.geometry){
         geoJson.geometry = CKjson.shape||CKjson.geometry;
         for(property in CKjson){
             if(Object.prototype.hasOwnProperty.call(CKjson, property)){
@@ -347,10 +351,47 @@ function CKtoGeoJSON(CKjson){
             }
         }
     }
+    else if(CKjson.data){
+        var lat, lon;
+        for(property in CKjson.data){
+            if(Object.prototype.hasOwnProperty.call(CKjson.data, property)){
+                if(stringContains((property.toString()).toUpperCase(),"LATITUDE")){
+                    lat = CKjson.data[property];
+                }
+                else if(stringContains((property.toString()).toUpperCase(),"LONGTITUDE")||stringContains((property.toString()).toUpperCase(),"LONGITUDE")){
+                    lon = CKjson.data[property];
+                }
+                geoJson.properties[property] = CKjson.data[property];
+            }
+            geoJson.geometry["type"]="Point";
+            geoJson.geometry["coordinates"] = [lon,lat];
+        }
+    
+    }
+    else{
+        var lat, lon;
+        for(property in CKjson){
+            if(Object.prototype.hasOwnProperty.call(CKjson, property)){
+                if(stringContains((property.toString()).toUpperCase(),"LATITUDE")){
+                    lat = CKjson[property];
+                }
+                else if(stringContains((property.toString()).toUpperCase(),"LONGITUDE")){
+                    lon = CKjson[property];
+                }
+                geoJson.properties[property] = CKjson[property];
+            }
+            geoJson.geometry["type"]="Point";
+            geoJson.geometry["coordinates"] = [lon,lat];
+        }
+    }
     console.log(geoJson);
-    //console.log(BridgeLayer);
     return geoJson;
 }
+
+function stringContains(outerString,innerString){
+    return outerString.indexOf(innerString) > -1;
+}
+
 
 function isValidGeoJson(jsonObj){
     if(jsonObj.type){
