@@ -263,34 +263,54 @@ function getGroup(URL,tag,customArgs){
     
 }
 
+// icons from https://mapicons.mapsmarker.com/category/markers/restaurants-bars/
+// define shared options that will be inherited by all custom icons
+var customIcon = L.Icon.extend({
+    options: {
+        iconAnchor:   [16, 37], // point of the icon which will correspond to marker's location
+        popupAnchor:  [0, -37] // point from which the popup should open relative to the iconAnchor
+    }
+});
+// then define the individual icons by feeding in the image URLs
+var hotelIcon = new customIcon({iconUrl: 'image/lodging-2.png'});
+var churchIcon = new customIcon({iconUrl: 'image/cathedral.png'});
+var conventIcon = new customIcon({iconUrl: 'image/convent-2.png'});
+var storeIcon = new customIcon({iconUrl: 'image/mall.png'});
+
 // ~~~~~~~~~~ layers with maps/working points ~~~~~~~~~~~~~
 //var getReq = $.getJSON("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json",getGroupCallback);
-getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json","Bridges",{style: style2});
-//getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canals.json","Canals");
-//getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canal%20Segments.json","Canal Segments");
-//getGroup("https://cityknowledge.firebaseio.com/groups/belltowers%20MAPS%2015.json","Bell Towers");
-//getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOTELS08_PT_15.json","HotelsMap");
-//getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOLES_PT_15.json","Sewer Outlets");
+//getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json","Bridges",{style: style2});
+getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canals.json","Canals",{style: style2});
+featureCollections["Canals"].bindPopup("I am a canal");
+//getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canal%20Segments.json","Canal Segments",{style: style2});
+//getGroup("https://cityknowledge.firebaseio.com/groups/belltowers%20MAPS%2015.json","Bell Towers",{style: style2});
+//getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOTELS08_PT_15.json","HotelsMap",{style: style2});
+//getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOLES_PT_15.json","Sewer Outlets",{style: style2});
 
 // ~~~~~~~~ layers with just lat/long ~~~~~~~~~~~~~~~~~~~~~
-getGroup("https://cityknowledge.firebaseio.com/groups/Hostels,%20Hotels.json","Hotels",{pointToLayer: function(feature,latlng){
-    return new L.CircleMarker(latlng, {
-                    radius: 5,
-                    fillColor: "#A3C990",
-                    color: "#000",
-                    weight: 1,
-                    opacity: 1,
-                    fillOpacity: 0.4
-                });
-}});
+//getGroup("https://cityknowledge.firebaseio.com/groups/Hostels,%20Hotels.json","Hotels",{pointToLayer: function(feature,latlng){
+////    return new L.CircleMarker(latlng, {
+////                    radius: 5,
+////                    fillColor: "#A3C990",
+////                    color: "#000",
+////                    weight: 1,
+////                    opacity: 1,
+////                    fillOpacity: 0.4
+////                });
+//    return new L.marker(latlng, {icon: churchIcon});
+//}});
 //getGroup("https://cityknowledge.firebaseio.com/groups/Bed%20&%20Bfast,%20Apartments.json","Bed and Breakfasts");
 //getGroup("https://cityknowledge.firebaseio.com/groups/store%20locations.json","Stores"); //2014 data
 
 // ~~~~~~~~ historical data (still just lat/long) ~~~~~~~~~
 //getGroup("https://cityknowledge.firebaseio.com/groups/Demolished%20Churches.json");
-//getGroup("https://cityknowledge.firebaseio.com/groups/Island%20Church%20Data.json","Island Churches");
+getGroup("https://cityknowledge.firebaseio.com/groups/Island%20Church%20Data.json","Island Churches",{pointToLayer: function(feature,latlng){
+    return new L.marker(latlng, {icon: churchIcon}).bindPopup("I am a church");
+}});
+//getGroup("https://cityknowledge.firebaseio.com/groups/Convents%20Data.json", "Convents",{pointToLayer: function(feature,latlng){
+//    return new L.marker(latlng, {icon: conventIcon}).bindPopup("I am a convent");
+//}});
 
-//getGroup("https://cityknowledge.firebaseio.com/groups/Convents%20Data.json");
 // the above layer probably matches up with the images in
 //https://cityknowledge.firebaseio.com/groups/convent%20floor%20plans.json"
 
