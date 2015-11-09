@@ -48,7 +48,8 @@ map.on('click', onMapClick);
 // Styling for making choropleth-like colorations of polygons
 // Create grades using http://colorbrewer2.org/
 function getColor(d) {
-    return d > 3000 ? '#4d004b' :
+    if(d){
+        return d > 3000 ? '#4d004b' :
            d > 2000 ? '#810f7c' :
            d > 1000 ? '#88419d' :
            d > 500  ? '#8c6bb1' :
@@ -58,16 +59,17 @@ function getColor(d) {
            d > 20   ? '#e0ecf4' :
            d > 10   ? '#f7fcfd' :
                       '#f7fcfd';
-    
+    }
+    return '#f7fcfd';
 }
 
 function style(feature) {
     return {
-        fillColor: getColor(feature.properties.sum_pop_11),
+        fillColor: getColor(feature.properties.islands_sum_pop_11),
         weight: 0,
         opacity: 1,
         color: 'black',
-        dashArray: '3',
+        dashArray: '1',
         fillOpacity: 0.7
     };
 }
@@ -128,7 +130,9 @@ function highlightFeature(e) {
 }
 
 function resetHighlight(e) {
-        geojson.resetStyle(e.target);
+        geojson.eachLayer(function(layer){
+            layer.resetStyle(e.target);
+        });
         populationInfo.update();
 }
 
@@ -148,10 +152,16 @@ function onEachFeature(feature, layer) {
 
 //**********************************************************************************************
 // add base geojson to map with islands data
-var geojson = L.geoJson(islands, {
+var islands_single = L.geoJson(IslesLagoon_single, {
     style: style,
     onEachFeature: onEachFeature,
-}).addTo(map);
+});
+var islands_multi = L.geoJson(IslesLagoon_multi, {
+    style: style,
+    onEachFeature: onEachFeature,
+});
+
+var geojson = L.layerGroup([islands_single, islands_multi]).addTo(map);
 
 //**********************************************************************************************
 // set up an information box for population data
