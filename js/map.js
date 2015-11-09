@@ -254,18 +254,18 @@ function partial(func /*, 0..n args */) {
   };
 }
 
-function getGroup(URL,tag,customStyle){
+function getGroup(URL,tag,customArgs){
     if(tag){
-        initializeCollection(tag,customStyle);
+        initializeCollection(tag,customArgs);
     }
     
-    $.getJSON(URL,partial(getGroupCallback,tag,customStyle));
+    $.getJSON(URL,partial(getGroupCallback,tag,customArgs));
     
 }
 
 // ~~~~~~~~~~ layers with maps/working points ~~~~~~~~~~~~~
 //var getReq = $.getJSON("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json",getGroupCallback);
-//getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json","Bridges");
+getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json","Bridges",{style: style2});
 //getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canals.json","Canals");
 //getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canal%20Segments.json","Canal Segments");
 //getGroup("https://cityknowledge.firebaseio.com/groups/belltowers%20MAPS%2015.json","Bell Towers");
@@ -273,7 +273,16 @@ function getGroup(URL,tag,customStyle){
 //getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOLES_PT_15.json","Sewer Outlets");
 
 // ~~~~~~~~ layers with just lat/long ~~~~~~~~~~~~~~~~~~~~~
-//getGroup("https://cityknowledge.firebaseio.com/groups/Hostels,%20Hotels.json","Hotels",style2);
+getGroup("https://cityknowledge.firebaseio.com/groups/Hostels,%20Hotels.json","Hotels",{pointToLayer: function(feature,latlng){
+    return new L.CircleMarker(latlng, {
+                    radius: 5,
+                    fillColor: "#A3C990",
+                    color: "#000",
+                    weight: 1,
+                    opacity: 1,
+                    fillOpacity: 0.4
+                });
+}});
 //getGroup("https://cityknowledge.firebaseio.com/groups/Bed%20&%20Bfast,%20Apartments.json","Bed and Breakfasts");
 //getGroup("https://cityknowledge.firebaseio.com/groups/store%20locations.json","Stores"); //2014 data
 
@@ -290,7 +299,7 @@ function getGroup(URL,tag,customStyle){
 // https://cityknowledge.firebaseio.com/groups/SUBGROUP%20Latest%20Traffic%20Counts%20By%20Station.json
 
 
-function getGroupCallback(tag,customStyle,msg) {
+function getGroupCallback(tag,customArgs,msg) {
     jsonList = msg;
     console.log(jsonList.members);
     
@@ -301,31 +310,28 @@ function getGroupCallback(tag,customStyle,msg) {
     for(var obj in jsonList.members){
         var URL = "https://cityknowledge.firebaseio.com/data/" + obj + ".json";
         console.log(URL);
-        $.getJSON(URL,partial(getEntryCallback,tag,customStyle));
+        $.getJSON(URL,partial(getEntryCallback,tag,customArgs));
     }
     
 }
 
 // callback function for pulling JSON file, run code related to it in HERE ONLY
-function getEntryCallback(tag,customStyle,msg) {
+function getEntryCallback(tag,customArgs,msg) {
     var jsonObj = msg;
     console.log(jsonObj);
     tag = tag || jsonObj.birth_certificate.type || "Feature"+(featureCollections.length+1);
     
-    initializeCollection(tag,customStyle);
+    initializeCollection(tag,customArgs);
     featureCollections[tag].addData(CKtoGeoJSON(jsonObj));
     
 }
 
-function initializeCollection(tag,customStyle){
+function initializeCollection(tag,customArgs){
     if(!featureCollections.hasOwnProperty(tag)){
-        featureCollections[tag]=L.geoJson(null,{style: customStyle}).addTo(map);
+        featureCollections[tag]=L.geoJson(null,customArgs).addTo(map);
         
         layerController.addOverlay(featureCollections[tag],tag);
 
-        console.log("******"+tag+"******");
-        console.log(customStyle);
-        console.log(featureCollections[tag]);
         console.log(mapOverlays);
     }
 }
