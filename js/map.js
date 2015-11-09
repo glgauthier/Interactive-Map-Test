@@ -178,7 +178,7 @@ populationInfo.update = function (props) {
     this._div.innerHTML = '<h4>Demographic Data</h4>' +  (props ?
         '<b>'+ props.Nome_Isola + '</b><br />' 
         + 'Island Number: ' + props.Numero + '</b><br />'
-        + 'Total Population: ' + props.sum_pop_11 + '</b><br />' 
+        + 'Total Population: ' + props.islands_sum_pop_11 + '</b><br />' 
         : 'Hover over an island <br /> Double click for more info' );
 };
 
