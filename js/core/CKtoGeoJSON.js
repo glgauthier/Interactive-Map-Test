@@ -1,16 +1,21 @@
+//Take a JSON object from the CK console and return a valid GeoJSON object with the same information.
 function CKtoGeoJSON(CKjson){
-    // add functionality for reading in json files that have lat/long instead of shapes
+    
+    //Create an empty GeoJSON object to be filled with data and returned
     var geoJson={
         type: "Feature",
         geometry: {},
         properties:{}
     };
     
+    //If the CKobject is already a valid GeoJSON object, simply use it.
     if(isValidGeoJson(CKjson)==true){
         geoJson = CKjson;
     }
+    //if the CK object has a shape or geometry field, use this as the geometry of the GeoJSON object
     else if(CKjson.shape || CKjson.geometry){
         geoJson.geometry = CKjson.shape||CKjson.geometry;
+        //All fields not in shape/geometry go into the properties of the GeoJSON object
         for(property in CKjson){
             if(Object.prototype.hasOwnProperty.call(CKjson, property)){
                 if(property != "shape" && property != "geometry"){
@@ -19,43 +24,118 @@ function CKtoGeoJSON(CKjson){
             }
         }
     }
+    //If there is no shape but there is data, look through data for Lat/Long fields.
     else if(CKjson.data){
-        var lat, lon;
-        for(property in CKjson.data){
-            if(Object.prototype.hasOwnProperty.call(CKjson.data, property)){
-                if(stringContains((property.toString()).toUpperCase(),"LATITUDE")){
-                    lat = CKjson.data[property];
-                }
-                else if(stringContains((property.toString()).toUpperCase(),"LONGTITUDE")||stringContains((property.toString()).toUpperCase(),"LONGITUDE")){
-                    lon = CKjson.data[property];
-                }
-                geoJson.properties[property] = CKjson.data[property];
-            }
-            geoJson.geometry["type"]="Point";
-            geoJson.geometry["coordinates"] = [lon,lat];
-        }
-    
-    }
-    else{
-        var lat, lon;
+        geoJson.geometry["type"]="Point";
+        geoJson.geometry["coordinates"] = findLonLat(CKjson.data);
+        //Then add all fields to properties
         for(property in CKjson){
             if(Object.prototype.hasOwnProperty.call(CKjson, property)){
-                if(stringContains((property.toString()).toUpperCase(),"LATITUDE")){
-                    lat = CKjson[property];
+                if(property != "shape" && property != "geometry"){
+                    geoJson.properties[property]=CKjson[property];
                 }
-                else if(stringContains((property.toString()).toUpperCase(),"LONGITUDE")){
-                    lon = CKjson[property];
-                }
-                geoJson.properties[property] = CKjson[property];
             }
-            geoJson.geometry["type"]="Point";
-            geoJson.geometry["coordinates"] = [lon,lat];
         }
     }
-    
+    //If there is no shape and no data, look through the object for Lat/Long fields.
+    else{
+        geoJson.geometry["type"]="Point";
+        geoJson.geometry["coordinates"] = findLonLat(CKjson.data);
+        //Then add all fields to properties
+        for(property in CKjson){
+            if(Object.prototype.hasOwnProperty.call(CKjson, property)){
+                if(property != "shape" && property != "geometry"){
+                    geoJson.properties[property]=CKjson[property];
+                }
+            }
+        }
+    }
+        
+    //add list of all islands associated with this oject to the properties
+    geoJson.properties.Islands = [];
+    //search through properties of the newly created GeoJSON object to find Islands.
+    geoJson.properties.Islands.concat(findIslands(geoJson.properties));
     
     console.log(geoJson);
     return geoJson;
+}
+    
+function findIslands(obj){
+    var output = [];
+    
+    if(!obj){
+        return output;
+    }
+    
+    for(property in obj){
+        if(Object.prototype.hasOwnProperty.call(obj, property)){
+            if(typeof obj[property] === 'object'){
+                output = mergeArrays(output,findIslands(obj[property]));
+            }
+            else if(stringContains((property.toString()).toUpperCase(),"ISLAND")||
+                   stringContains((property.toString()).toUpperCase(),"ISOLA")){
+                if (obj[property].constructor === Array){
+                    for(var i=0;i<obj[property].length;i++){
+                        if(isInt(obj[property])&&(output.indexOf(obj[property])<0)){
+                            output.push(obj[property]);
+                        }
+                    }
+                }
+                else{
+                    if(isInt(obj[property]) && (output.indexOf(obj[property])<0)){
+                        output.push(obj[property]);
+                    }
+                }
+            }
+        }
+    }
+    return output;
+}
+
+function findLonLat(obj){
+    var lon = null,lat = null;
+    
+    if(!obj){
+        return output;
+    }
+    
+    for(property in obj){
+        if(Object.prototype.hasOwnProperty.call(obj, property)){
+            if(typeof obj[property] === 'object'){
+                var LonLat = findLonLat(obj[property]);
+                if(!lon && LonLat[0]){
+                    lon=LonLat[0];
+                }
+                if(!lat && LonLat[1]){
+                    lat=LonLat[1];
+                }
+            }
+            else{
+                if(stringContains((property.toString()).toUpperCase(),"LATITUDE")){
+                    lat = obj[property];
+                }
+                else if(stringContains((property.toString()).toUpperCase(),"LONGTITUDE")||stringContains((property.toString()).toUpperCase(),"LONGITUDE")){
+                    lon = obj[property];
+                }
+            }
+        }
+    }
+    return [lon,lat];
+}
+    
+function isInt(value) {
+  var x;
+  if (isNaN(value)) {
+    return false;
+  }
+  x = parseFloat(value);
+  return (x | 0) === x;
+}
+
+function mergeArrays(a1,a2){
+    return a1.concat(a2).filter(function (item) {
+                return a1.indexOf(item) < 0;
+            });
 }
 
 function stringContains(outerString,innerString){
