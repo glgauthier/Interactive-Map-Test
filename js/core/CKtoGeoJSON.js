@@ -52,16 +52,158 @@ function CKtoGeoJSON(CKjson){
     }
         
     //add list of all islands associated with this oject to the properties
-    geoJson.properties.islands = [];
+    geoJson.properties.islands = new Array(0);
     //search through properties of the newly created GeoJSON object to find Islands.
-    geoJson.properties.islands.concat(findIslands(geoJson.properties));
+    Array.prototype.push.apply(geoJson.properties.islands,findIslands(geoJson.properties));
+    
+    if(geoJson.properties.islands.length === 0){
+        if(singleLayer){
+            Array.prototype.push.apply(geoJson.properties.islands,queryIslands(singleLayer,geoJson));
+        }
+        if(multiLayer){
+            Array.prototype.push.apply(geoJson.properties.islands,queryIslands(multiLayer,geoJson));
+        }
+    }
+    
+    
+    if(geoJson.properties.islands.length > 10){
+        console.log("V");
+    }
+    
     
     console.log(geoJson);
     return geoJson;
 }
+
+function nearestIsland(islands_geoJson,point){
+    var min = null, island;
+    for(var i=0;i<islands_geoJson.features.length;i++){
+        var islandGeom = islands_geoJson.features[i].geometry;
+        if(islandGeom.type === "Polygon"){
+            var dist = distToPolySquared(coordsToPoly(islandGeom.coordinates),coordsToPoint(point));
+            if(!min || dist<min){
+                min=dist;
+                island = islands_geoJson.features[i].properties.Numero;
+            }
+        }
+        else if(islandGeom.type === "MultiPolygon"){
+            for(var n = 0; n<island.coordinates.length;n++){
+                var dist = distToPolySquared(coordsToPoly(islandGeom.coordinates[n]),coordsToPoint(point));
+                if(!min || dist<min){
+                    min=dist;
+                    island = islands_geoJson.features[i].properties.Numero;
+                }
+            }
+        }
+    }
+    return island;
+}
+
+function queryIslands(islands_geoJson,obj_geoJson){
+    var output = new Array(0);
     
+    for(var i=0;i<islands_geoJson.features.length;i++){
+        if(queryIsland(islands_geoJson.features[i],obj_geoJson)){
+            if(output.indexOf(islands_geoJson.features[i].properties.Numero)<0){
+                output.push(islands_geoJson.features[i].properties.Numero);
+            }
+        }
+    }
+    return output;
+}
+
+function queryIsland(island_geoJson,obj_geoJson){
+    var islandGeom = island_geoJson.geometry || islands_geoJson;
+    var objGeom = obj_geoJson.geometry || obj_geoJson;
+    
+    if(islandGeom.type === "Polygon"){
+        if(objGeom.type === "Point"){
+            return pointInPoly(coordsToPoint(objGeom.coordinates),coordsToPoly(islandGeom.coordinates));
+        }
+        else if(objGeom.type === "MultiPoint"){
+            for(var i=0;i<objGeom.coordinates.length;i++){
+                if(pointInPoly(coordsToPoint(objGeom.coordinates[i]),coordsToPoly(islandGeom.coordinates))){
+                    return true;
+                }
+            }
+            return false;
+        }
+        else if(objGeom.type === "Polygon"){
+            return polyInterset(coordsToPoly(objGeom.coordinates),coordsToPoly(islandGeom.coordinates));
+        }
+        else if(objGeom.type === "MultiPolygon"){
+            for(var i=0;i<objGeom.coordinates.length;i++){
+                if(polyInterset(coordsToPoly(objGeom.coordinates[i]),coordsToPoly(islandGeom.coordinates))){
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+    else if(islandGeom.type === "MultiPolygon"){
+        if(objGeom.type === "Point"){
+            for(var i=0;i<islandGeom.coordinates.length;i++){
+                if(pointInPoly(coordsToPoint(objGeom.coordinates),coordsToPoly(islandGeom.coordinates[i]))){
+                    return true;
+                }
+            }
+        }
+        else if(objGeom.type === "MultiPoint"){
+            for(var i=0;i<islandGeom.coordinates.length;i++){
+                for(var i2=0;i2<objGeom.coordinates.length;i2++){
+                    if(pointInPoly(coordsToPoint(objGeom.coordinates[i2]),coordsToPoly(islandGeom.coordinates[i]))){
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+        else if(objGeom.type === "Polygon"){
+            for(var i=0;i<islandGeom.coordinates.length;i++){
+                if(polyInterset(coordsToPoly(objGeom.coordinates),coordsToPoly(islandGeom.coordinates[i]))){
+                    return true;
+                }
+            }
+        }
+        else if(objGeom.type === "MultiPolygon"){
+            for(var i=0;i<islandGeom.coordinates.length;i++){
+                for(var i2=0;i2<objGeom.coordinates.length;i2++){
+                    if(polyInterset(coordsToPoly(objGeom.coordinates[i2]),coordsToPoly(islandGeom.coordinates[i]))){
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+    }
+    return false
+}
+    
+function coordsToPoint(coordinates){
+    if(coordinates.x && coordinates. y){
+        return coordinates;
+    }
+    return {
+        x: coordinates[0],
+        y: coordinates[1]
+    }
+}
+function coordsToPoly(coordinates){
+    var output = new Array(0);
+    
+    if(coordinates.length>1){
+        for(var i=0;i<coordinates.length;i++){
+            output.push(coordsToPoint(coordinates[i]));
+        }
+    }
+    else if(coordinates.length == 1){
+        return coordsToPoly(coordinates[0]);
+    }
+    return output;
+}
+
 function findIslands(obj){
-    var output = [];
+    var output = new Array(0);
     
     if(!obj){
         return output;
@@ -70,21 +212,16 @@ function findIslands(obj){
     for(property in obj){
         if(Object.prototype.hasOwnProperty.call(obj, property)){
             if(typeof obj[property] === 'object'){
-                output = mergeArrays(output,findIslands(obj[property]));
+                var array = findIslands(obj[property]);
+                output = mergeArrays(output,array);
             }
             else if(stringContains((property.toString()).toUpperCase(),"ISLAND")||
                    stringContains((property.toString()).toUpperCase(),"ISOLA")){
                 if (obj[property].constructor === Array){
-                    for(var i=0;i<obj[property].length;i++){
-                        if(isInt(obj[property])&&(output.indexOf(obj[property])<0)){
-                            output.push(obj[property]);
-                        }
-                    }
+                    output = mergeArrays(output,obj[property]);
                 }
-                else{
-                    if(isInt(obj[property]) && (output.indexOf(obj[property])<0)){
-                        output.push(obj[property]);
-                    }
+                else if((output.indexOf(obj[property])<0)){
+                    output.push(obj[property]);
                 }
             }
         }
@@ -96,7 +233,7 @@ function findLonLat(obj){
     var lon = null,lat = null;
     
     if(!obj){
-        return output;
+        return [lon,lat];
     }
     
     for(property in obj){
@@ -133,9 +270,9 @@ function isInt(value) {
 }
 
 function mergeArrays(a1,a2){
-    return a1.concat(a2).filter(function (item) {
-                return a1.indexOf(item) < 0;
-            });
+    return a1.concat(a2.filter(function(item){
+        return a1.indexOf(item)<0;
+    }));
 }
 
 function stringContains(outerString,innerString){

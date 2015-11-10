@@ -270,6 +270,7 @@ function getGroupCallback(tag,customArgs,msg) {
 // callback function for pulling JSON file, run code related to it in HERE ONLY
 function getEntryCallback(tag,customArgs,msg) {
     var jsonObj = msg;
+    console.log(" ");
     console.log(jsonObj);
     tag = tag || jsonObj.birth_certificate.type || "Feature"+(featureCollections.length+1);
     
