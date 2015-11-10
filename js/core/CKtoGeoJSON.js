@@ -52,9 +52,9 @@ function CKtoGeoJSON(CKjson){
     }
         
     //add list of all islands associated with this oject to the properties
-    geoJson.properties.Islands = [];
+    geoJson.properties.islands = [];
     //search through properties of the newly created GeoJSON object to find Islands.
-    geoJson.properties.Islands.concat(findIslands(geoJson.properties));
+    geoJson.properties.islands.concat(findIslands(geoJson.properties));
     
     console.log(geoJson);
     return geoJson;

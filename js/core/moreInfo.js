@@ -30,6 +30,9 @@ function overlay(currentLayer) {
 //        fillOpacity: 1.0
 //    });
     
+    // if the info box is being turned off don't do any additional work
+    if(!currentLayer){return;}
+    
     // make life a little easier
     var properties = currentLayer.feature.properties;
     // print out whatever info you want to the 'inner' div of the 'overlay' div of index.html
@@ -37,15 +40,17 @@ function overlay(currentLayer) {
     // currently have an issue with the scroll bar appearing on the outer div containing the map
     // instead of the info window
     document.getElementById("inner").innerHTML= '<a onclick = "overlay()" class = "Xbutton">X</a> <b><center>Island Information</center></b>'
-        +' <br />'+ 
-        (properties ?
-        '<b>' + 'Name: ' + properties.Nome_Isola + '</b><br />' 
-        + 'Codice: ' + properties.Codice + '</b><br />'
-        + 'Island Number: ' + properties.Insula_Num + '</b><br />'
-        + '2011 Census Tract Number: ' + properties.Numero + '</b><br />'
-        + 'Total Population: ' + properties.sum_pop_11 + '</b><br />' 
-        + '<b><br />Overlays: </b>' + layerController._layers
-        :''); 
+        +' <br />';
+//        + (properties ?
+//        '<b>' + 'Name: ' + properties.Nome_Isola + '</b><br />' 
+//        + 'Codice: ' + properties.Codice + '</b><br />'
+//        + 'Island Number: ' + properties.Insula_Num + '</b><br />'
+//        + '2011 Census Tract Number: ' + properties.Numero + '</b><br />'
+//        + 'Total Population: ' + properties.sum_pop_11 + '</b><br />' 
+//        + '<b><br />Overlays: </b>' + layerController._layers
+//        :''); 
+//   
+    makeHTMLinfo(properties,"inner","JSON");
    
     // test for appending additional info
     $(document.getElementById("inner")).append('<br /> <br /><a href="http://www.venipedia.org/wiki/index.php?title=Islands"  target="_blank" onMouseOver="return changeImage()" onMouseOut= "return changeImageBack()"> <img name="jsbutton" src="image/venipedia.png" width="80" height="70" border="0" alt="javascript button" align="left"></a>'  
@@ -75,6 +80,33 @@ function changeImageBack()
 {
     document.images["jsbutton"].src = "image/venipedia.png";
     return true;
+}
+
+function makeHTMLinfo(props,id,type)
+{
+    switch(type){
+        case("JSON"): // for geoJSONS that we've made from GIS Layers (info stored in properties)
+            $(document.getElementById(id)).append(printObject(props));
+            break;
+        case("OVERLAY"): // for any layers that are auto-created from venipedia (info stored in properties.data)
+            $(document.getElementById(id)).append(printObject(props.data));
+            break; 
+        default:
+            $(document.getElementById(id)).append('Error - Must Specify Type <br />');
+            break;
+    }
+}
+
+function printObject(props)
+{
+    var output = '';
+    
+    for(property in props){
+        if(Object.prototype.hasOwnProperty.call(props, property)){
+            output += '<b>'+property + '</b>: ' + props[property] + '<br />';
+        }
+    }
+    return output;
 }
 
 /* !!!!!!!! photograph stuff !!!!!!!!

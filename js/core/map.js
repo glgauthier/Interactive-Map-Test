@@ -68,34 +68,39 @@ legend.onAdd = function (map) {
 legend.addTo(map);
 //**********************************************************************************************
 
-
 // This section is used to track where the user's cursor is located and perform events based on 
 // its location
 function highlightFeature(e) {
     var layer = e.target;
     
-    layer.setStyle({
-        fillColor: '#7fcdbb',
-        weight: 2,
-        color: '#666',
-        dashArray: '',
-        fillOpacity: 0.3
-    });
-
-    if (!L.Browser.ie && !L.Browser.opera) {
-        layer.bringToFront();
-    }
     // instead of updating info on one layer, an if statement can be used here to show info
     // on multiple layers. for more info, see the following:
     //http://gis.stackexchange.com/questions/68941/how-to-add-remove-legend-with-leaflet-layers-control
-    populationInfo.update(layer.feature.properties);
+    if(layer.feature.properties.data){
+         // islands stored layer.feature.properties.islands as an ARRAY
+         populationInfo.update(layer.feature.properties.data);
+    } else {
+         layer.setStyle({
+            fillColor: '#7fcdbb',
+            weight: 2,
+            color: '#666',
+            dashArray: '',
+            fillOpacity: 0.3
+         });
+         populationInfo.update(layer.feature.properties);
+    }
     
 }
 
 function resetHighlight(e) {
+        var layer = e.target;
+        console.log(e.target);
+        if(!layer.feature.properties.data){
         geojson.eachLayer(function(layer){
             layer.resetStyle(e.target);
         });
+        }
+    
         populationInfo.update();
 }
 
@@ -106,11 +111,18 @@ function zoomToFeature(e) {
 }
 
 function onEachFeature(feature, layer) {
-        layer.on({
-            mouseover: highlightFeature,
-            mouseout: resetHighlight,
-            dblclick: zoomToFeature
-        });
+        if(layer.feature.properties.data){
+            layer.on({
+                mouseover: highlightFeature,
+                mouseout: resetHighlight
+            });
+        } else {
+            layer.on({
+                mouseover: highlightFeature,
+                mouseout: resetHighlight,
+                dblclick: zoomToFeature
+            });
+        }
 }
 
 //**********************************************************************************************
@@ -138,11 +150,14 @@ populationInfo.onAdd = function (map) {
 
 // method that we will use to update the control based on feature properties passed
 populationInfo.update = function (props) {
-    this._div.innerHTML = '<h4>Demographic Data</h4>' +  (props ?
-        '<b>'+ props.Nome_Isola + '</b><br />' 
-        + 'Island Number: ' + props.Numero + '</b><br />'
-        + 'Total Population: ' + props.islands_sum_pop_11 + '</b><br />' 
-        : 'Hover over an island <br /> Double click for more info' );
+    
+    this._div.innerHTML = '<h4>General Information</h4>' +// + propString;
+       (props ?
+//        '<b>'+ props.Nome_Isola + '</b><br />' 
+//        + 'Island Number: ' + props.Numero + '</b><br />'
+//        + 'Total Population: ' + props.islands_sum_pop_11 + '</b><br />' 
+        printObject(props)
+        : 'Hover over a feature <br /> Double click for more info' );
 };
 
 populationInfo.addTo(map);
