@@ -54,7 +54,7 @@ function CCW(p1, p2, p3) {
 // p3,p4    : point (line 2)
 
 function isIntersect(p1, p2, p3, p4, epsilon) {
-    epsilon = epsilon || 0.00002;
+    epsilon = epsilon || 0.0;
     return ((CCW(p1, p3, p4) != CCW(p2, p3, p4)) && (CCW(p1, p2, p3) != CCW(p1, p2, p4)))||(dist2(p1,p3)<=epsilon)||(dist2(p1,p4)<=epsilon)||(dist2(p2,p3)<=epsilon)||(dist2(p2,p4)<=epsilon);
 }
 //function isIntersect(p1, p2, p3, p4) {
@@ -103,7 +103,7 @@ function pointInPoly(p1, poly) {
 
 //Quick check if objects can possibly intersect using bounding box
 function possibleIntersect(min1, max1, min2, max2, epsilon) {
-    epsilon = epsilon || 0.0001;
+    epsilon = epsilon || 0.0;
     
     return !((max1.x+epsilon) < min2.x || (max2.x+epsilon) < min1.x ||
         (max1.y+epsilon) < min2.y || (max2.y+epsilon) < min1.y);

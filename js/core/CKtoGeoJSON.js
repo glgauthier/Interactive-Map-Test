@@ -65,11 +65,7 @@ function CKtoGeoJSON(CKjson){
         }
     }
     
-    
-    if(geoJson.properties.islands.length > 10){
-        console.log("V");
-    }
-    
+    //IF STILLL no islands, find nearest Island/Islands??? (nearest to each point if a polygon)
     
     console.log(geoJson);
     return geoJson;
