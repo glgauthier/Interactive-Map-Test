@@ -60,7 +60,7 @@ function getColor(d) {
            d > 10   ? '#f7fcfd' :
                       '#f7fcfd';
     }
-    return '#f7fcfd';
+    return 'rgba(0, 172, 112, 0.64)';
 }
 
 function style(feature) {
@@ -289,8 +289,8 @@ var storeIcon = new customIcon({iconUrl: 'image/mall.png'});
 
 // ~~~~~~~~~~ layers with maps/working points ~~~~~~~~~~~~~
 //var getReq = $.getJSON("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json",getGroupCallback);
-//getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json","Bridges",{style: style2});
-getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canals.json","Canals",{style: style2});
+getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json","Bridges",{style: style2});
+getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canals.json","Canals");
 featureCollections["Canals"].bindPopup("I am a canal");
 //getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canal%20Segments.json","Canal Segments",{style: style2});
 //getGroup("https://cityknowledge.firebaseio.com/groups/belltowers%20MAPS%2015.json","Bell Towers",{style: style2});
