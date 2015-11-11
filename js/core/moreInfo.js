@@ -104,8 +104,11 @@ function printObject(props)
     for(property in props){
         if(Object.prototype.hasOwnProperty.call(props, property)){
             output += '<b>'+property + '</b>: ' + props[property] + '<br />';
+            // get rid of underscores
+            output = output.replace("_"," ");
         }
     }
+    
     return output;
 }
 

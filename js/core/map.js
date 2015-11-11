@@ -76,9 +76,11 @@ function highlightFeature(e) {
     // instead of updating info on one layer, an if statement can be used here to show info
     // on multiple layers. for more info, see the following:
     //http://gis.stackexchange.com/questions/68941/how-to-add-remove-legend-with-leaflet-layers-control
-    if(layer.feature.properties.data){
-         // islands stored layer.feature.properties.islands as an ARRAY
-         populationInfo.update(layer.feature.properties.data);
+    if(layer.feature.properties.islands){
+         //// islands stored layer.feature.properties.islands as an ARRAY
+         //mapInfo.update(layer.feature.properties.data);
+         //console.log("layer exists");
+        mapInfo.update(layer.feature.properties.data,layer.feature.properties.islands);
     } else {
          layer.setStyle({
             fillColor: '#7fcdbb',
@@ -87,21 +89,21 @@ function highlightFeature(e) {
             dashArray: '',
             fillOpacity: 0.3
          });
-         populationInfo.update(layer.feature.properties);
+         mapInfo.update(layer.feature.properties);
     }
     
 }
 
 function resetHighlight(e) {
         var layer = e.target;
-        console.log(e.target);
+       // console.log(e.target);
         if(!layer.feature.properties.data){
         geojson.eachLayer(function(layer){
             layer.resetStyle(e.target);
         });
         }
     
-        populationInfo.update();
+        mapInfo.update();
 }
 
 function zoomToFeature(e) {
@@ -140,27 +142,26 @@ var geojson = L.layerGroup([islands_single, islands_multi]).addTo(map);
 
 //**********************************************************************************************
 // set up an information box for population data
-var populationInfo = L.control();
+var mapInfo = L.control();
 
-populationInfo.onAdd = function (map) {
+mapInfo.onAdd = function (map) {
     this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
     this.update();
     return this._div;
 };
 
 // method that we will use to update the control based on feature properties passed
-populationInfo.update = function (props) {
+mapInfo.update = function (props,props2) {
     
     this._div.innerHTML = '<h4>General Information</h4>' +// + propString;
        (props ?
-//        '<b>'+ props.Nome_Isola + '</b><br />' 
-//        + 'Island Number: ' + props.Numero + '</b><br />'
-//        + 'Total Population: ' + props.islands_sum_pop_11 + '</b><br />' 
-        printObject(props)
-        : 'Hover over a feature <br /> Double click for more info' );
+        '<h2>CK Console Data:</h2>' + printObject(props)
+        : 'Hover over a feature <br /> Double click for more info' ) 
+        + (props2 ? '<h2>Island Sort Algorithm Results:</h2>' + printObject(props2) : '');
 };
 
-populationInfo.addTo(map);
+
+mapInfo.addTo(map);
 
 //**********************************************************************************************
 // add location functionality
@@ -253,7 +254,7 @@ function getGroup(URL,tag,customArgs){
 
 function getGroupCallback(tag,customArgs,msg) {
     jsonList = msg;
-    console.log(jsonList.members);
+    //console.log(jsonList.members);
     
     if(tag){
         initializeCollection(tag);
@@ -261,7 +262,7 @@ function getGroupCallback(tag,customArgs,msg) {
     
     for(var obj in jsonList.members){
         var URL = "https://cityknowledge.firebaseio.com/data/" + obj + ".json";
-        console.log(URL);
+        //console.log(URL);
         $.getJSON(URL,partial(getEntryCallback,tag,customArgs));
     }
     
@@ -285,7 +286,7 @@ function initializeCollection(tag,customArgs){
         
         layerController.addOverlay(featureCollections[tag],tag);
 
-        console.log(mapOverlays);
+        //console.log(mapOverlays);
     }
 }
 
