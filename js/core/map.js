@@ -78,7 +78,7 @@ function highlightFeature(e) {
     //http://gis.stackexchange.com/questions/68941/how-to-add-remove-legend-with-leaflet-layers-control
     if(layer.feature.properties.data){
          // islands stored layer.feature.properties.islands as an ARRAY
-         InfoBox.update(layer.feature.properties.data);
+         InfoBox.update(layer.feature.properties);
     } else {
          layer.setStyle(Highlight_style(layer));
          InfoBox.update(layer.feature.properties);

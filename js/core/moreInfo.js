@@ -97,14 +97,44 @@ function makeHTMLinfo(props,id,type)
     }
 }
 
-function printObject(props)
+function printObject(props,depth)
 {
+    depth = depth || 0;
     var output = '';
     
     for(property in props){
         if(Object.prototype.hasOwnProperty.call(props, property)){
-            output += '<b>'+property + '</b>: ' + props[property] + '<br />';
+            console.log(tabs(depth)+depth);
+            output+= tabs(depth) + '<b>'+property + '</b>: ';
+            if(typeof props[property] === 'object'){
+                output+= '<br />' + printObject(props[property],depth+1);
+            }
+            else if(Array.isArray(props[property])){
+                output += "["
+                if(props[property].length>0){
+                    output+=props[property][0];
+                    for(var i = 1;i<props[property].length;i++){
+                        output += ', '+props[property][i];
+                    }
+                }
+                output += ']<br />';
+            }
+            else{
+                output += props[property] + '<br />';
+            }
         }
+    }
+    return output;
+}
+
+function tabs(int_num){
+    if((!int_num)||int_num===0){
+        return '';
+    }
+    
+    var output = '';
+    for(var i=0;i<int_num;i++){
+        output += '&emsp;';
     }
     return output;
 }
