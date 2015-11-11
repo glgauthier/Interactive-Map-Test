@@ -1,7 +1,7 @@
 //******* Necessary - Used by core application to style layers. Must exist but can be modified ********//
 function Island_style(feature) {
     return {
-        fillColor: getColor(feature.properties.islands_sum_pop_11),
+        fillColor: getColor(feature.properties.sum_pop_11),
         weight: 0,
         opacity: 1,
         color: 'black',
@@ -12,12 +12,11 @@ function Island_style(feature) {
 
 function Highlight_style(feature) {
     return {
-        fillColor: getColor(feature.properties.islands_sum_pop_11),
-        weight: 0,
-        opacity: 1,
-        color: 'black',
-        dashArray: '1',
-        fillOpacity: 0.7
+        fillColor: '#7fcdbb',
+        weight: 2,
+        color: '#666',
+        dashArray: '',
+        fillOpacity: 0.3
     };
 }
 

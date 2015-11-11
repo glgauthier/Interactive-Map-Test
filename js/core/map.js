@@ -78,16 +78,10 @@ function highlightFeature(e) {
     //http://gis.stackexchange.com/questions/68941/how-to-add-remove-legend-with-leaflet-layers-control
     if(layer.feature.properties.data){
          // islands stored layer.feature.properties.islands as an ARRAY
-         populationInfo.update(layer.feature.properties.data);
+         InfoBox.update(layer.feature.properties.data);
     } else {
-         layer.setStyle({
-            fillColor: '#7fcdbb',
-            weight: 2,
-            color: '#666',
-            dashArray: '',
-            fillOpacity: 0.3
-         });
-         populationInfo.update(layer.feature.properties);
+         layer.setStyle(Highlight_style(layer));
+         InfoBox.update(layer.feature.properties);
     }
     
 }
@@ -101,7 +95,7 @@ function resetHighlight(e) {
         });
         }
     
-        populationInfo.update();
+        InfoBox.update();
 }
 
 function zoomToFeature(e) {
@@ -140,27 +134,27 @@ var geojson = L.layerGroup([islands_single, islands_multi]).addTo(map);
 
 //**********************************************************************************************
 // set up an information box for population data
-var populationInfo = L.control();
+var InfoBox = L.control();
 
-populationInfo.onAdd = function (map) {
+InfoBox.onAdd = function (map) {
     this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
     this.update();
     return this._div;
 };
 
 // method that we will use to update the control based on feature properties passed
-populationInfo.update = function (props) {
+InfoBox.update = function (props) {
     
     this._div.innerHTML = '<h4>General Information</h4>' +// + propString;
        (props ?
 //        '<b>'+ props.Nome_Isola + '</b><br />' 
 //        + 'Island Number: ' + props.Numero + '</b><br />'
-//        + 'Total Population: ' + props.islands_sum_pop_11 + '</b><br />' 
+//        + 'Total Population: ' + props.sum_pop_11 + '</b><br />' 
         printObject(props)
         : 'Hover over a feature <br /> Double click for more info' );
 };
 
-populationInfo.addTo(map);
+InfoBox.addTo(map);
 
 //**********************************************************************************************
 // add location functionality
@@ -270,7 +264,6 @@ function getGroupCallback(tag,customArgs,msg) {
 // callback function for pulling JSON file, run code related to it in HERE ONLY
 function getEntryCallback(tag,customArgs,msg) {
     var jsonObj = msg;
-    console.log(" ");
     console.log(jsonObj);
     tag = tag || jsonObj.birth_certificate.type || "Feature"+(featureCollections.length+1);
     
