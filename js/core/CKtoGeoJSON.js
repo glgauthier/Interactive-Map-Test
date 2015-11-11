@@ -214,9 +214,14 @@ function findIslands(obj){
             else if(stringContains((property.toString()).toUpperCase(),"ISLAND")||
                    stringContains((property.toString()).toUpperCase(),"ISOLA")){
                 if (obj[property].constructor === Array){
-                    output = mergeArrays(output,obj[property]);
+                    for(var i=0;i<obj[property].length;i++){
+                        if(isInt(obj[property])&&(output.indexOf(obj[property])<0)){
+                            output.push(obj[property][i]);
+                        }
+                    }
+                    
                 }
-                else if((output.indexOf(obj[property])<0)){
+                else if(isInt(obj[property])&&(output.indexOf(obj[property])<0)){
                     output.push(obj[property]);
                 }
             }
