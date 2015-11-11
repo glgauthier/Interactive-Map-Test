@@ -104,6 +104,7 @@ function printObject(props,depth)
     
     for(property in props){
         if(Object.prototype.hasOwnProperty.call(props, property)){
+<<<<<<< HEAD
             console.log(tabs(depth)+depth);
             output+= tabs(depth) + '<b>'+property + '</b>: ';
             if(typeof props[property] === 'object'){
@@ -122,8 +123,14 @@ function printObject(props,depth)
             else{
                 output += props[property] + '<br />';
             }
+=======
+            output += '<b>'+property + '</b>: ' + props[property] + '<br />';
+            // get rid of underscores
+            output = output.replace("_"," ");
+>>>>>>> origin/master
         }
     }
+    
     return output;
 }
 

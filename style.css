@@ -25,6 +25,12 @@ html, body
     margin: 0 0 5px;
     color: #777;
 }
+.info h2 {
+    font: 15px Arial, Helvetica, sans-serif;
+    margin: 0 0 1px;
+    color: #1313f5;
+}
+
 
 .VPCinfo {
     padding: 6px 8px;
