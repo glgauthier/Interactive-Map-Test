@@ -102,6 +102,10 @@ function printObject(props,depth)
     depth = depth || 0;
     var output = '';
     
+    if(!props){
+        return  props + '<br />';
+    }
+    
     if(props.constructor === Array){
         output += "["
         if(props.length>0){
