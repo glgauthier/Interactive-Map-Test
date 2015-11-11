@@ -102,33 +102,24 @@ function printObject(props,depth)
     depth = depth || 0;
     var output = '';
     
-    for(property in props){
-        if(Object.prototype.hasOwnProperty.call(props, property)){
-<<<<<<< HEAD
-            console.log(tabs(depth)+depth);
-            output+= tabs(depth) + '<b>'+property + '</b>: ';
-            if(typeof props[property] === 'object'){
-                output+= '<br />' + printObject(props[property],depth+1);
+    if(props.constructor === Array){
+        output += "["
+        if(props.length>0){
+            output+=props[0];
+            for(var i = 1;i<props.length;i++){
+                output += ', '+props[i];
             }
-            else if(Array.isArray(props[property])){
-                output += "["
-                if(props[property].length>0){
-                    output+=props[property][0];
-                    for(var i = 1;i<props[property].length;i++){
-                        output += ', '+props[property][i];
-                    }
-                }
-                output += ']<br />';
-            }
-            else{
-                output += props[property] + '<br />';
-            }
-=======
-            output += '<b>'+property + '</b>: ' + props[property] + '<br />';
-            // get rid of underscores
-            output = output.replace("_"," ");
->>>>>>> origin/master
         }
+        output += ']<br />';
+    }
+    else if(typeof props === 'object'){
+        //output+= tabs(depth) + '<b>'+property + '</b>: ';
+        for(property in props){
+            output += tabs(depth) + '<b>' + property + ':</b> '+printObject(props[property],depth+1);
+        }
+    }
+    else{
+        output += props + '<br />';
     }
     
     return output;

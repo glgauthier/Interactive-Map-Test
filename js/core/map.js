@@ -76,14 +76,6 @@ function highlightFeature(e) {
     // instead of updating info on one layer, an if statement can be used here to show info
     // on multiple layers. for more info, see the following:
     //http://gis.stackexchange.com/questions/68941/how-to-add-remove-legend-with-leaflet-layers-control
-<<<<<<< HEAD
-    if(layer.feature.properties.data){
-         // islands stored layer.feature.properties.islands as an ARRAY
-         InfoBox.update(layer.feature.properties);
-    } else {
-         layer.setStyle(Highlight_style(layer));
-         InfoBox.update(layer.feature.properties);
-=======
     if(layer.feature.properties.islands){
          //// islands stored layer.feature.properties.islands as an ARRAY
          //mapInfo.update(layer.feature.properties.data);
@@ -98,7 +90,6 @@ function highlightFeature(e) {
             fillOpacity: 0.3
          });
          mapInfo.update(layer.feature.properties);
->>>>>>> origin/master
     }
     
 }
@@ -112,11 +103,7 @@ function resetHighlight(e) {
         });
         }
     
-<<<<<<< HEAD
-        InfoBox.update();
-=======
         mapInfo.update();
->>>>>>> origin/master
 }
 
 function zoomToFeature(e) {
@@ -155,35 +142,17 @@ var geojson = L.layerGroup([islands_single, islands_multi]).addTo(map);
 
 //**********************************************************************************************
 // set up an information box for population data
-<<<<<<< HEAD
-var InfoBox = L.control();
 
-InfoBox.onAdd = function (map) {
-=======
 var mapInfo = L.control();
 
-mapInfo.onAdd = function (map) {
->>>>>>> origin/master
+mapInfo.onAdd = function (map){
     this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
     this.update();
     return this._div;
 };
 
 // method that we will use to update the control based on feature properties passed
-<<<<<<< HEAD
-InfoBox.update = function (props) {
-    
-    this._div.innerHTML = '<h4>General Information</h4>' +// + propString;
-       (props ?
-//        '<b>'+ props.Nome_Isola + '</b><br />' 
-//        + 'Island Number: ' + props.Numero + '</b><br />'
-//        + 'Total Population: ' + props.sum_pop_11 + '</b><br />' 
-        printObject(props)
-        : 'Hover over a feature <br /> Double click for more info' );
-};
 
-InfoBox.addTo(map);
-=======
 mapInfo.update = function (props,props2) {
     
     this._div.innerHTML = '<h4>General Information</h4>' +// + propString;
@@ -195,7 +164,6 @@ mapInfo.update = function (props,props2) {
 
 
 mapInfo.addTo(map);
->>>>>>> origin/master
 
 //**********************************************************************************************
 // add location functionality

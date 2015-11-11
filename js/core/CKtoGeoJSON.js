@@ -207,11 +207,7 @@ function findIslands(obj){
     
     for(property in obj){
         if(Object.prototype.hasOwnProperty.call(obj, property)){
-            if(typeof obj[property] === 'object'){
-                var array = findIslands(obj[property]);
-                output = mergeArrays(output,array);
-            }
-            else if(stringContains((property.toString()).toUpperCase(),"ISLAND")||
+            if(stringContains((property.toString()).toUpperCase(),"ISLAND")||
                    stringContains((property.toString()).toUpperCase(),"ISOLA")){
                 if (obj[property].constructor === Array){
                     for(var i=0;i<obj[property].length;i++){
@@ -224,6 +220,10 @@ function findIslands(obj){
                 else if(isInt(obj[property])&&(output.indexOf(obj[property])<0)){
                     output.push(obj[property]);
                 }
+            }
+            else if(typeof obj[property] === 'object'){
+                var array = findIslands(obj[property]);
+                output = mergeArrays(output,array);
             }
         }
     }
