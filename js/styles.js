@@ -1,4 +1,6 @@
 //******* Necessary - Used by core application to style layers. Must exist but can be modified ********//
+var opaqueFlag = 0;
+
 function Island_style(feature) {
     return {
         fillColor: getColor(feature.properties.sum_pop_11),
@@ -25,6 +27,10 @@ function Highlight_style(feature) {
 // Styling for making choropleth-like colorations of polygons
 // Create grades using http://colorbrewer2.org/
 function getColor(d) {
+    if(opaqueFlag==1){
+        return 'rgba(0,0,0,0)';
+    } else{
+    
     if(d){
         return d > 3000 ? '#4d004b' :
            d > 2000 ? '#810f7c' :
@@ -38,7 +44,10 @@ function getColor(d) {
                       '#f7fcfd';
     }
     return 'rgba(255, 0, 0, 0.64)';
+    }
 }
+
+//**********************************************************************************************
 
 // this section contains an alternate styling for polygons
 function style2(feature) {
@@ -50,4 +59,26 @@ function style2(feature) {
         dashArray: '3',
         fillOpacity: 1.0
     };
+}
+
+// create a legend for the colors
+var legend = L.control({position: 'bottomright'});
+
+legend.onAdd = function (map) {
+ 
+    var div = L.DomUtil.create('div', 'info legend'),
+        grades = [0, 10, 20, 50, 100, 200, 500, 1000, 2000, 3000],
+        labels = [];
+
+    // loop through our density intervals and generate a label with a colored square for each interval
+    for (var i = 0; i < grades.length; i++) {
+        div.innerHTML +=
+            '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
+            grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+    }
+
+    return div;
+};
+if(!opaqueFlag){
+    legend.addTo(map);
 }
