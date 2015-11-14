@@ -40,6 +40,7 @@ function onMapClick(e) {
     .setLatLng(e.latlng)
     .setContent("You clicked the map at " + e.latlng.toString())
     .openOn(map);
+    e.stopPropagation();
 }
 
 map.on('click', onMapClick);

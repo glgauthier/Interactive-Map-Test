@@ -46,9 +46,17 @@ var FilterControl = L.Control.extend({
             if(that.minimized){
                 that.minimize(false);
             }
+            if(e.stopPropagation){
+                e.stopPropagation();
+            }
+            return false;
         }
         this.div.ondblclick = function(e){
             that.minimize(!that.minimized);
+            if(e.stopPropagation){
+                e.stopPropagation();
+            }
+            return false;
         }
         
         var labelDiv = document.createElement("DIV");
