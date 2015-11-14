@@ -118,6 +118,7 @@ var islands_multi = L.geoJson(multiLayer, {
 });
 
 var geojson = L.layerGroup([islands_single, islands_multi]).addTo(map);
+console.log(geojson);
 
 //**********************************************************************************************
 // set up an information box for population data

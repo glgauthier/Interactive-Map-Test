@@ -22,6 +22,19 @@ function Highlight_style(feature) {
     };
 }
 
+function Filter_style(feature){
+    return{
+        
+    }
+}
+
+function FilterElement_style(feature){
+    return{
+        margin: "4px",
+        verticalAlign: "top"
+    }
+}
+
 //******** OPTIONAL - Used for custom styles **********//
 
 // Styling for making choropleth-like colorations of polygons
