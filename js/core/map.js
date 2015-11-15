@@ -1,4 +1,5 @@
 var featureCollections={};
+var islandsCollection={};
 
 var overlayFlag = 0;
 
@@ -40,7 +41,9 @@ function onMapClick(e) {
     .setLatLng(e.latlng)
     .setContent("You clicked the map at " + e.latlng.toString())
     .openOn(map);
-    e.stopPropagation();
+    if(e.stopPropagation){
+        e.stopPropagation();
+    }
 }
 
 map.on('click', onMapClick);
@@ -108,15 +111,36 @@ function onEachFeature(feature, layer) {
 }
 
 //**********************************************************************************************
+
+console.log(singleLayer);
+
+for(var i=0,iLen=singleLayer.features.length;i<iLen;i++){
+    var feature = singleLayer.features[i];
+    feature.properties.visible = true;
+    islandsCollection[feature.properties.Numero] = feature;
+}
+for(var i=0,iLen=multiLayer.features.length;i<iLen;i++){
+    var feature = multiLayer.features[i];
+    feature.properties.visible = true;
+    islandsCollection[feature.properties.Numero] = feature;
+}
+
 // add base geojson to map with islands data
 var islands_single = L.geoJson(singleLayer, {
     style: Island_style,
     onEachFeature: onEachFeature,
+    filter: function(feature,layer){
+        return feature.properties.visible;
+    }
 });
 var islands_multi = L.geoJson(multiLayer, {
     style: Island_style,
     onEachFeature: onEachFeature,
+    filter: function(feature,layer){
+        return feature.properties.visible;
+    }
 });
+
 
 var geojson = L.layerGroup([islands_single, islands_multi]).addTo(map);
 console.log(geojson);
@@ -215,6 +239,31 @@ var mapOverlays = {
 
 // add in layer control so that you can toggle the layers
 var layerController = L.control.layers(baseMaps,mapOverlays).addTo(map);
+
+//*********************************************************************************************
+
+// create a legend for the colors
+var legend = L.control({position: 'bottomright'});
+
+legend.onAdd = function (map) {
+ 
+    var div = L.DomUtil.create('div', 'info legend'),
+        grades = [0, 10, 20, 50, 100, 200, 500, 1000, 2000, 3000],
+        labels = [];
+
+    // loop through our density intervals and generate a label with a colored square for each interval
+    for (var i = 0; i < grades.length; i++) {
+        div.innerHTML +=
+            '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
+            grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+    }
+
+    return div;
+};
+
+if(!opaqueFlag){
+    legend.addTo(map);
+}
 
 //*******************************************************************************************
 

@@ -1,10 +1,10 @@
-var FilterControl = L.Control.extend({
+var ColorControl = L.Control.extend({
     //div
     //modifyDiv
     //object
     //fieldSelect
     //functionSelect
-    //textInput
+    //thresholds[]
     
     initialize: function (object, position, modifyDiv) {
         // ...
@@ -25,7 +25,9 @@ var FilterControl = L.Control.extend({
 
     onAdd: function (map) {
         this.div = L.DomUtil.create('div', 'info legend');
+        //div.innerHTML = '<select><option>1</option><option>2</option><option>3</option></select>';
         
+        //this.setObject(["a",1,"b"]);
         this.setObject(this.object);
         
         if(this.modifyDiv){
@@ -38,9 +40,8 @@ var FilterControl = L.Control.extend({
         var that = this;
         this.div.innerHTML = '';
         this.object = object;
-        applyStyle(this.div,Filter_style(this.div));
+        applyStyle(this.div,Color_style(this.div));
         
-        //on click, un-minimize and stop propogation
         this.div.onclick = function(e){
             if(that.minimized){
                 that.minimize(false);
@@ -50,7 +51,6 @@ var FilterControl = L.Control.extend({
             }
             return false;
         }
-        //on double click, (un)minimize and stop propogation
         this.div.ondblclick = function(e){
             that.minimize(!that.minimized);
             if(e.stopPropagation){
@@ -60,8 +60,8 @@ var FilterControl = L.Control.extend({
         }
         
         var labelDiv = document.createElement("DIV");
-        var label = document.createTextNode("Filter By: ");
-        applyStyle(labelDiv,FilterElement_style(labelDiv));
+        var label = document.createTextNode("Color By: ");
+        applyStyle(labelDiv,ColorElement_style(labelDiv));
         labelDiv.style.float = 'left';
         labelDiv.appendChild(label);
         this.div.appendChild(labelDiv);
@@ -69,30 +69,11 @@ var FilterControl = L.Control.extend({
         this.fieldSelect = createDropdown(object);
         //this.fieldSelect.multiple = true;
         this.div.appendChild(this.fieldSelect);
-        this.functionSelect = createDropdown(["=","<",">","contains"]);
+        this.functionSelect = createDropdown(["random","gradient"]);
         this.div.appendChild(this.functionSelect);
         
-        this.textInput = document.createElement("INPUT");
-        applyStyle(this.textInput,FilterElement_style(this.textInput));
-        this.textInput.setAttribute("type", "text");
-        this.textInput.onkeypress = function(e){
-            var key = e.which || e.keyCode;
-            if (key == 27) {  // 27 is the ESC key
-                that.onClear(e);
-            }
-            else if (key == 13) {  // 13 is the Enter key
-                if(that.textInput && that.textInput.value != ''){
-                   that.onApply(e);
-                }
-                else{
-                    that.onClear(e);
-                }
-            }
-        };
-        this.div.appendChild(this.textInput);
-        
         var applyButton = document.createElement("INPUT");
-        applyStyle(applyButton,FilterElement_style(applyButton));
+        applyStyle(applyButton,ColorElement_style(applyButton));
         applyButton.setAttribute("type", "button");
         applyButton.setAttribute("value","Apply");
         applyButton.onclick = this.onApply;
@@ -100,7 +81,7 @@ var FilterControl = L.Control.extend({
         this.div.appendChild(applyButton);
         
         var clearButton = document.createElement("INPUT");
-        applyStyle(clearButton,FilterElement_style(clearButton));
+        applyStyle(clearButton,ColorElement_style(clearButton));
         clearButton.setAttribute("type", "button");
         clearButton.setAttribute("value","Clear");
         clearButton.onclick = this.onClear;
@@ -111,11 +92,11 @@ var FilterControl = L.Control.extend({
         this.minimized = bool;
         if(bool){
             this.div.innerHTML = '';
-            applyStyle(this.div,Filter_style(this.div));
+            applyStyle(this.div,Color_style(this.div));
 
             var labelDiv = document.createElement("DIV");
-            var label = document.createTextNode("Filter By: ");
-            applyStyle(labelDiv,FilterElement_style(labelDiv));
+            var label = document.createTextNode("Color By: ");
+            applyStyle(labelDiv,ColorElement_style(labelDiv));
             labelDiv.style.float = 'left';
             labelDiv.appendChild(label);
             this.div.appendChild(labelDiv);
@@ -125,11 +106,19 @@ var FilterControl = L.Control.extend({
         }
     },
     
-    testObject : function(object){
-        
+    getColor : function(object){
+        //TODO: given an object(or value), get its color
+        //if selected function is random, return random color
+        //otherwise, color will depend on selectedField, the value of that field, and thresholds set using setGradient()
+        //???? is it possible to make color a continuous function of value ????
     },
     
-    //Get which fields are selected (1st dropdown)
+    setGradient : function(array){
+        //TODO: store thresholds of different gradient colors using array of all values
+        //Many ways: find total range split into equal sized ranges
+        //           sort values in order and split into equal sized groups
+    },
+    
     selectedFields : function(){
         var items = [];
         if(!this.fieldSelect){
@@ -153,7 +142,6 @@ var FilterControl = L.Control.extend({
         return items;
     },
     
-    //get which functions are selected (2nd dropdown)
     selectedFunctions : function(){
         var items = [];
         if(!this.functionSelect){
@@ -177,22 +165,14 @@ var FilterControl = L.Control.extend({
         return items;
     },
     
-    //get the value of the input textbox
-    inputText : function(){
-        return textInput.value;
-    },
-    
-    //callback for applying filter (should be overridden using filter.onApply = ___)
     onApply : function(e){
         
     },
-    //callback for clearing filter (should be overridden using filter.onClear = ___)
     onClear : function(e){
         
     }
 });
 
-//Create a dropdown object for use in a filter and apply the user defined style
 function createDropdown(object,options){
     var dropdown = document.createElement("SELECT");
     if(options){
@@ -203,7 +183,7 @@ function createDropdown(object,options){
         }
     }
     
-    applyStyle(dropdown,FilterElement_style(option));
+    applyStyle(dropdown,ColorElement_style(option));
     
     if(!object){
         return dropdown;
@@ -244,20 +224,29 @@ function applyStyle(feature,style){
     }
 }
 
-//********************************************************************************************************
+function applyColor(){
+    //if gradient coloring is selected
+    if(colorControl.selectedFunctions()[0]==='gradient'){
+        //iterate through all islands. generate array of the values of the selected field
+    
+        //use that array to set the gradient
+    }
+    
+    //iterate through all island layers and set style = colorControl.getStyle();   
+    
+    //apply new styles?
+}
+function clearColor(){
+    //iterate through all island layers and set style = some style   
+}
 
-//Create a filter object (put it in the top left and flow left to right)
-var filter = new FilterControl(singleLayer.features[0].properties,'topleft',function(div){
-    div.style.clear = 'none';
+var colorControl = new ColorControl(singleLayer.features[0].properties,'topleft',function(div){
+    div.style.clear = 'both';
 });
-//define onApply behavior
-filter.onApply = function(e){
-    alert("apply "+filter.selectedFields());
+colorControl.onApply = function(e){
+    alert("apply "+colorControl.selectedFields());
 }
-//define onClear behavior
-filter.onClear = function(e){
-    alert("clear "+filter.selectedFunctions());
+colorControl.onClear = function(e){
+    alert("clear "+colorControl.selectedFunctions());
 }
-
-//add the filter control to 
-map.addControl(filter);
+map.addControl(colorControl);
