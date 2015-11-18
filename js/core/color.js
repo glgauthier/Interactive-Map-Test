@@ -41,7 +41,7 @@ var ColorControl = L.Control.extend({
         
         var labelDiv = document.createElement("DIV");
         var label = document.createElement("IMG");
-        label.setAttribute('src','/image/color.png');
+        label.setAttribute('src','image/color.png');
         applyStyle(labelDiv,FilterElement_style(labelDiv));
         labelDiv.style.float = 'left';
         labelDiv.onclick = function(e){
@@ -108,13 +108,7 @@ var ColorControl = L.Control.extend({
             this.div.innerHTML = '';
             applyStyle(this.div,Color_style(this.div));
 
-            var labelDiv = document.createElement("DIV");
-            var label = document.createElement("img");
-            label.setAttribute('src','/image/color.png')
-            applyStyle(labelDiv,ColorElement_style(labelDiv));
-            labelDiv.style.float = 'left';
-            labelDiv.appendChild(label);
-            this.div.appendChild(labelDiv);
+            this.setupImage();
         }
         else{
             this.setObject(this.object);
