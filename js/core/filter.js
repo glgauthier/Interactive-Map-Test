@@ -128,7 +128,38 @@ var FilterControl = L.Control.extend({
     },
     
     testObject : function(object){
-        
+        var fields = this.selectedFields();
+        for(var i=0,iLen=fields.length;i<iLen;i++){
+            if(object.hasOwnProperty(fields[i])){
+                for(var f=0,fLen=this.selectedFunctions().length;f<fLen;f++){
+                    switch(this.selectedFunctions()[f]) {
+                        case "=":
+                            if(object[fields[i]]==this.inputText()){
+                                return true;
+                            }
+                            break;
+                        case "<":
+                            if(object[fields[i]]<this.inputText()){
+                                return true;
+                            }
+                            break;
+                        case ">":
+                            if(object[fields[i]]>this.inputText()){
+                                return true;
+                            }
+                            break;
+                        case "contains":
+                            if(((object[fields[i]].toString()).toUpperCase()).indexOf(this.inputText().toUpperCase) > -1){
+                                return true;
+                            }
+                            break;
+                        default:
+                            return true;
+                    }
+                }
+            }
+        }
+        return false;
     },
     
     //Get which fields are selected (1st dropdown)
@@ -181,7 +212,7 @@ var FilterControl = L.Control.extend({
     
     //get the value of the input textbox
     inputText : function(){
-        return textInput.value;
+        return this.textInput.value;
     },
     
     //callback for applying filter (should be overridden using filter.onApply = ___)
@@ -254,11 +285,47 @@ var filter = new FilterControl(singleLayer.features[0].properties,'topleft',func
 });
 //define onApply behavior
 filter.onApply = function(e){
-    alert("apply "+filter.selectedFields());
+    var islandIndeces = {};
+    
+    for(var i=0,iLen=feature_layers.length;i<iLen;i++){
+        var feature = feature_layers[i].feature;
+
+        if(feature.properties.Numero){
+            islandIndeces[feature.properties.Numero] = i;
+            if(feature.visible != filter.testObject(feature.properties)){
+                feature.visible_changed = true;
+                feature.visible = !feature.visible;
+            }
+        }
+    }
+    for(var i=0,iLen=feature_layers.length;i<iLen;i++){
+        var show = false;
+        var feature = feature_layers[i].feature;
+        if(!feature.properties.Numero && feature.properties.islands){
+            for(var n=0,nLen=feature.properties.islands.length;(n<nLen)&&(show==false);n++){
+                if(islandIndeces[feature.properties.islands[n]].visible){
+                    show = true;
+                }
+            }
+            if(feature.visible != show){
+                feature.visible_changed = true;
+                feature.visible = show;
+            }
+        }
+    }
+    
+    refreshFilter();
 }
 //define onClear behavior
 filter.onClear = function(e){
-    alert("clear "+filter.selectedFunctions());
+    for(var i=0,iLen=feature_layers.length;i<iLen;i++){
+        var feature = feature_layers[i].feature;
+        if(feature.visible == false){
+            feature.visible_changed = true;
+            feature.visible = true;
+        }
+    }
+    refreshFilter();
 }
 
 //add the filter control to 
