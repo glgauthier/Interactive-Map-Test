@@ -149,7 +149,7 @@ var FilterControl = L.Control.extend({
                             }
                             break;
                         case "contains":
-                            if(((object[fields[i]].toString()).toUpperCase()).indexOf(this.inputText().toUpperCase) > -1){
+                            if(object[fields[i]] && ((object[fields[i]].toString()).toUpperCase()).indexOf(this.inputText().toUpperCase()) > -1)                             {
                                 return true;
                             }
                             break;
