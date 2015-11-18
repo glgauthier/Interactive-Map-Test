@@ -36,38 +36,48 @@ var FilterControl = L.Control.extend({
         return this.div;
     },
     
-    setObject : function(object){
+    setupImage : function(){
         var that = this;
-        this.div.innerHTML = '';
-        this.object = object;
-        applyStyle(this.div,Filter_style(this.div));
+
         
-        //on click, un-minimize and stop propogation
-        this.div.onclick = function(e){
-            if(that.minimized){
-                that.minimize(false);
-            }
-            if(e.stopPropagation){
-                e.stopPropagation();
-            }
-            return false;
-        }
-        //on double click, (un)minimize and stop propogation
-        this.div.ondblclick = function(e){
+        var labelDiv = document.createElement("DIV");
+        var label = document.createElement("IMG");
+        label.setAttribute('src','/image/filter.png');
+        applyStyle(labelDiv,FilterElement_style(labelDiv));
+        labelDiv.style.float = 'left';
+        labelDiv.onclick = function(e){
             that.minimize(!that.minimized);
             if(e.stopPropagation){
                 e.stopPropagation();
             }
             return false;
         }
-        
-        var labelDiv = document.createElement("DIV");
-        var label = document.createElement("img");
-        label.setAttribute('src','/image/filter.png');
-        applyStyle(labelDiv,FilterElement_style(labelDiv));
-        labelDiv.style.float = 'left';
         labelDiv.appendChild(label);
         this.div.appendChild(labelDiv);
+    },
+    
+    setObject : function(object){
+        var that = this;
+        this.div.innerHTML = '';
+        this.object = object;
+        applyStyle(this.div,Filter_style(this.div));
+        
+        //on click, stop propogation
+        this.div.onclick = function(e){
+            if(e.stopPropagation){
+                e.stopPropagation();
+            }
+            return false;
+        }
+        //on double click, stop propogation
+        this.div.ondblclick = function(e){
+            if(e.stopPropagation){
+                e.stopPropagation();
+            }
+            return false;
+        }
+        
+        this.setupImage();
         
         this.fieldSelect = createDropdown(object);
         //this.fieldSelect.multiple = true;
@@ -93,6 +103,16 @@ var FilterControl = L.Control.extend({
             }
         };
         this.div.appendChild(this.textInput);
+        
+        L.DomEvent.on(this.textInput, 'mousedown', function(event) {
+            L.DomEvent.stopPropagation(event);
+        });
+        L.DomEvent.on(this.textInput, 'mouseup', function(event) {
+            L.DomEvent.stopPropagation(event);
+        });
+        L.DomEvent.on(this.textInput, 'mousemove', function(event) {
+            L.DomEvent.stopPropagation(event);
+        });
         
         var applyButton = document.createElement("INPUT");
         applyStyle(applyButton,FilterElement_style(applyButton));
@@ -120,13 +140,7 @@ var FilterControl = L.Control.extend({
             this.div.innerHTML = '';
             applyStyle(this.div,Filter_style(this.div));
 
-            var labelDiv = document.createElement("DIV");
-            var label = document.createElement("img");
-            label.setAttribute('src','/image/filter.png')
-            applyStyle(labelDiv,FilterElement_style(labelDiv));
-            labelDiv.style.float = 'left';
-            labelDiv.appendChild(label);
-            this.div.appendChild(labelDiv);
+            this.setupImage();
             
         }
         else{
