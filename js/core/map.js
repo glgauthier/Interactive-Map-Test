@@ -290,6 +290,8 @@ legend.onAdd = function (map) {
         grades = [0, 10, 20, 50, 100, 200, 500, 1000, 2000, 3000],
         labels = [];
 
+    $(div).append('<center> <button type="button" id="legendButton" >Show/Hide</button></center><br>');
+    
     // loop through our density intervals and generate a label with a colored square for each interval
     for (var i = 0; i < grades.length; i++) {
         div.innerHTML +=
@@ -300,9 +302,20 @@ legend.onAdd = function (map) {
     return div;
 };
 
-if(!opaqueFlag){
-    legend.addTo(map);
+// MUST REMOVE LATER
+legend.addTo(map);
+
+// attach an event to the legend's show/hide button
+document.getElementById("legendButton").addEventListener("click", hideColors);
+
+// function called on show/hide legend button press
+function hideColors(e){
+    if(e.stopPropagation){
+        e.stopPropagation();
+    }
+    opaqueFlag != opaqueFlag;
 }
+
 
 //*******************************************************************************************
 
