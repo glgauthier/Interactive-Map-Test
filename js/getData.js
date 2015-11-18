@@ -1,12 +1,12 @@
 
 // ~~~~~~~~~~ layers with maps/working points ~~~~~~~~~~~~~
 //var getReq = $.getJSON("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json",getGroupCallback);
-getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json","Bridges",{style: style2, onEachFeature:onEachFeature});
-//getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canals.json","Canals",{onEachFeature:onEachFeature});
+getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json","Bridges",{style: style2, onEachFeature:setupHighlight});
+//getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canals.json","Canals",{onEachFeature:setupHighlight});
 //featureCollections["Canals"].bindPopup("I am a canal");
 
 //getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canal%20Segments.json","Canal Segments",{style: style2});
-getGroup("https://cityknowledge.firebaseio.com/groups/belltowers%20MAPS%2015.json","Bell Towers",{style: style2, onEachFeature:onEachFeature,pointToLayer: function(feature,latlng){
+getGroup("https://cityknowledge.firebaseio.com/groups/belltowers%20MAPS%2015.json","Bell Towers",{style: style2, onEachFeature:setupHighlight,pointToLayer: function(feature,latlng){
     return new L.marker(latlng, {icon: churchIcon}).bindPopup("Hover over for more info")}});
 //getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOTELS08_PT_15.json","HotelsMap",{style: style2});
 //getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOLES_PT_15.json","Sewer Outlets",{style: style2});

@@ -1,6 +1,13 @@
 var featureCollections={};
 var islandsCollection={};
 
+var feature_layers = [];
+//{
+//  feature:
+//  layer:
+//  parent:
+//}
+
 var overlayFlag = 0;
 
 var map = L.map('map').setView([45.4375, 12.3358], 13);
@@ -29,6 +36,16 @@ var basicLayer = L.tileLayer('https://api.tiles.mapbox.com/v4/mapbox.outdoors/{z
         'Imagery © <a href="http://mapbox.com">Mapbox</a>',
     id: 'mapbox.outdoors'
 });
+//**********************************************************************************************
+
+function partial(func /*, 0..n args */) {
+  var args = Array.prototype.slice.call(arguments, 1);
+  return function() {
+    var allArguments = args.concat(Array.prototype.slice.call(arguments));
+    return func.apply(this, allArguments);
+  };
+}
+
 //**********************************************************************************************
 
 //		L.marker([45.4375, 12.33]).addTo(map)
@@ -65,13 +82,7 @@ function highlightFeature(e) {
          //console.log("layer exists");
         mapInfo.update(layer.feature.properties.data,layer.feature.properties.islands);
     } else {
-         layer.setStyle({
-            fillColor: '#7fcdbb',
-            weight: 2,
-            color: '#666',
-            dashArray: '',
-            fillOpacity: 0.3
-         });
+         layer.setStyle(Highlight_style(layer.feature));
          mapInfo.update(layer.feature.properties);
     }
     
@@ -81,9 +92,9 @@ function resetHighlight(e) {
         var layer = e.target;
        // console.log(e.target);
         if(!layer.feature.properties.data){
-        geojson.eachLayer(function(layer){
-            layer.resetStyle(e.target);
-        });
+            geojson.eachLayer(function(layer){
+                layer.resetStyle(e.target);
+            });
         }
     
         mapInfo.update();
@@ -95,56 +106,85 @@ function zoomToFeature(e) {
     overlay(currentLayer);
 }
 
-function onEachFeature(feature, layer) {
-        if(layer.feature.properties.data){
-            layer.on({
-                mouseover: highlightFeature,
-                mouseout: resetHighlight
-            });
-        } else {
-            layer.on({
-                mouseover: highlightFeature,
-                mouseout: resetHighlight,
-                dblclick: zoomToFeature
-            });
-        }
+function saveAndHighlight(parent, feature, layer) {
+    saveFeature(parent, feature, layer)
+    setupHighlight(feature,layer);
+}
+
+function saveFeature(parent, feature, layer){
+    var obj = {
+        parent:parent,
+        feature:feature,
+        layer:layer
+    }
+    if(feature.index){
+        feature_layers[feature.index] = obj
+    }
+    else{
+        feature.index = feature_layers.length;
+        feature_layers.push(obj);
+    }
+}
+
+function setupHighlight(feature, layer) {
+    if(layer.feature.properties.data){
+        layer.on({
+            mouseover: highlightFeature,
+            mouseout: resetHighlight
+        });
+    } else {
+        layer.on({
+            mouseover: highlightFeature,
+            mouseout: resetHighlight,
+            dblclick: zoomToFeature
+        });
+    }
 }
 
 //**********************************************************************************************
 
-console.log(singleLayer);
-
 for(var i=0,iLen=singleLayer.features.length;i<iLen;i++){
     var feature = singleLayer.features[i];
-    feature.properties.visible = true;
+    feature.visible = true;
     islandsCollection[feature.properties.Numero] = feature;
 }
 for(var i=0,iLen=multiLayer.features.length;i<iLen;i++){
     var feature = multiLayer.features[i];
-    feature.properties.visible = true;
+    feature.visible = true;
     islandsCollection[feature.properties.Numero] = feature;
 }
 
 // add base geojson to map with islands data
 var islands_single = L.geoJson(singleLayer, {
     style: Island_style,
-    onEachFeature: onEachFeature,
-    filter: function(feature,layer){
-        return feature.properties.visible;
-    }
+    onEachFeature: partial(saveAndHighlight,islands_single)
 });
 var islands_multi = L.geoJson(multiLayer, {
     style: Island_style,
-    onEachFeature: onEachFeature,
-    filter: function(feature,layer){
-        return feature.properties.visible;
-    }
+    onEachFeature: partial(saveAndHighlight,islands_multi)
 });
 
+function refreshFilter(){
+    for(var i=0,iLen=feature_layers.length;i<iLen;i++){
+        var feature = feature_layers[i].feature;
+        var layer = feature_layers[i].layer;
+        var parent = feature_layers[i].parent || map;
+        
+        if((feature && layer && parent) && feature.visible_changed){
+            if(feature.visible){
+                if(!parent.hasLayer(layer)){
+                    parent.addLayer(layer);
+                }
+            }
+            else if(parent.hasLayer(layer)){
+                parent.removeLayer(layer);
+            }
+        }
+    }
+}
 
 var geojson = L.layerGroup([islands_single, islands_multi]).addTo(map);
 console.log(geojson);
-
 //**********************************************************************************************
 // set up an information box for population data
 
@@ -166,7 +206,6 @@ mapInfo.update = function (props,props2) {
         : 'Hover over a feature <br /> Double click for more info' ) 
         + (props2 ? '<h2>Island Sort Algorithm Results:</h2>' + printObject(props2) : '');
 };
-
 
 mapInfo.addTo(map);
 
@@ -267,14 +306,6 @@ if(!opaqueFlag){
 
 //*******************************************************************************************
 
-function partial(func /*, 0..n args */) {
-  var args = Array.prototype.slice.call(arguments, 1);
-  return function() {
-    var allArguments = args.concat(Array.prototype.slice.call(arguments));
-    return func.apply(this, allArguments);
-  };
-}
-
 function getGroup(URL,tag,customArgs){
     if(tag){
         initializeCollection(tag,customArgs);
@@ -297,7 +328,6 @@ function getGroupCallback(tag,customArgs,msg) {
         //console.log(URL);
         $.getJSON(URL,partial(getEntryCallback,tag,customArgs));
     }
-    
 }
 
 // callback function for pulling JSON file, run code related to it in HERE ONLY
@@ -307,8 +337,12 @@ function getEntryCallback(tag,customArgs,msg) {
     tag = tag || jsonObj.birth_certificate.type || "Feature"+(featureCollections.length+1);
     
     initializeCollection(tag,customArgs);
-    featureCollections[tag].addData(CKtoGeoJSON(jsonObj));
+    var feature = CKtoGeoJSON(jsonObj);
+    var layer = L.geoJson(feature,customArgs);
+    featureCollections[tag].addLayer(layer);
+    saveFeature(featureCollections[tag],feature,layer);
     
+    //featureCollections[tag].addData(CKtoGeoJSON(jsonObj));
 }
 
 function initializeCollection(tag,customArgs){

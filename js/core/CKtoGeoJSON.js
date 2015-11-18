@@ -65,7 +65,10 @@ function CKtoGeoJSON(CKjson){
         }
     }
     
-    //IF STILLL no islands, find nearest Island/Islands??? (nearest to each point if a polygon)
+    //TODO: ??? IF STILLL no islands, find nearest Island/Islands??? (nearest to each point if a polygon)
+    
+    geoJson.visible = true;
+    geoJson.visible_changed = false;
     
     //console.log(geoJson);
     return geoJson;
