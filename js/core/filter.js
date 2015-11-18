@@ -303,13 +303,16 @@ filter.onApply = function(e){
         var feature = feature_layers[i].feature;
         if(!feature.properties.Numero && feature.properties.islands){
             for(var n=0,nLen=feature.properties.islands.length;(n<nLen)&&(show==false);n++){
-                if(islandIndeces[feature.properties.islands[n]].visible){
+                if(feature_layers[islandIndeces[feature.properties.islands[n]]].feature.visible){
                     show = true;
+                    console.log("show");
                 }
             }
             if(feature.visible != show){
+                console.log(feature);
                 feature.visible_changed = true;
                 feature.visible = show;
+                console.log(feature);
             }
         }
     }
