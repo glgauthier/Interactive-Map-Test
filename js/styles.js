@@ -34,6 +34,44 @@ function getColor(d) {
     }
 }
 
+// function for changing the feature instances within a layer
+// pass in a property name as a string
+// islands_single.setStyle(a_style) also works for changing style 
+function recolorIsles(name) {
+
+    islands_single.eachLayer(function(layer) {
+        // Your function that determines a fill color for a particular
+        // property name and value.
+        //var myFillColor = generateRandomColors();
+        var myFillColor = getColor(layer.feature.properties[name]);
+
+        var x =  layer.setStyle({
+                fillColor: myFillColor,
+                weight: 0,
+                opacity: 1,
+                color: 'black',
+                dashArray: '1',
+                fillOpacity: 0.7
+        });
+    });
+    
+    islands_multi.eachLayer(function(layer) {
+        // Your function that determines a fill color for a particular
+        // property name and value.
+        //var myFillColor = generateRandomColors();
+        var myFillColor = getColor(layer.feature.properties[name]);
+
+        layer.setStyle({
+                fillColor: myFillColor,
+                weight: 0,
+                opacity: 1,
+                color: 'black',
+                dashArray: '1',
+                fillOpacity: 0.7
+        });
+    });
+}
+
 //*********************************************************************************
 function Random_style(feature) {
     return {
