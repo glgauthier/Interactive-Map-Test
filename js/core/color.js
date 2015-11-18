@@ -60,7 +60,8 @@ var ColorControl = L.Control.extend({
         }
         
         var labelDiv = document.createElement("DIV");
-        var label = document.createTextNode("Color By: ");
+        var label = document.createElement("img");
+        label.setAttribute('src','/image/color.png')
         applyStyle(labelDiv,ColorElement_style(labelDiv));
         labelDiv.style.float = 'left';
         labelDiv.appendChild(label);
@@ -95,7 +96,8 @@ var ColorControl = L.Control.extend({
             applyStyle(this.div,Color_style(this.div));
 
             var labelDiv = document.createElement("DIV");
-            var label = document.createTextNode("Color By: ");
+            var label = document.createElement("img");
+            label.setAttribute('src','/image/color.png')
             applyStyle(labelDiv,ColorElement_style(labelDiv));
             labelDiv.style.float = 'left';
             labelDiv.appendChild(label);
@@ -250,3 +252,4 @@ colorControl.onClear = function(e){
     alert("clear "+colorControl.selectedFunctions());
 }
 map.addControl(colorControl);
+colorControl.minimize(true);

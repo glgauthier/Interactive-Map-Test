@@ -20,7 +20,7 @@ var FilterControl = L.Control.extend({
     minimized: false,
     
     options: {
-        position: 'topleft'
+        position: 'left'
     },
 
     onAdd: function (map) {
@@ -60,7 +60,8 @@ var FilterControl = L.Control.extend({
         }
         
         var labelDiv = document.createElement("DIV");
-        var label = document.createTextNode("Filter By: ");
+        var label = document.createElement("img");
+        label.setAttribute('src','/image/filter.png');
         applyStyle(labelDiv,FilterElement_style(labelDiv));
         labelDiv.style.float = 'left';
         labelDiv.appendChild(label);
@@ -114,7 +115,8 @@ var FilterControl = L.Control.extend({
             applyStyle(this.div,Filter_style(this.div));
 
             var labelDiv = document.createElement("DIV");
-            var label = document.createTextNode("Filter By: ");
+            var label = document.createElement("img");
+            label.setAttribute('src','/image/filter.png')
             applyStyle(labelDiv,FilterElement_style(labelDiv));
             labelDiv.style.float = 'left';
             labelDiv.appendChild(label);
@@ -248,7 +250,7 @@ function applyStyle(feature,style){
 
 //Create a filter object (put it in the top left and flow left to right)
 var filter = new FilterControl(singleLayer.features[0].properties,'topleft',function(div){
-    div.style.clear = 'none';
+    div.style.clear = 'both';
 });
 //define onApply behavior
 filter.onApply = function(e){
@@ -261,3 +263,4 @@ filter.onClear = function(e){
 
 //add the filter control to 
 map.addControl(filter);
+filter.minimize(true);
