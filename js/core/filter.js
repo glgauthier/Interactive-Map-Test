@@ -5,6 +5,7 @@ var FilterControl = L.Control.extend({
     //fieldSelect
     //functionSelect
     //textInput
+    //savedFields
     
     initialize: function (object, position, modifyDiv) {
         // ...
@@ -13,6 +14,7 @@ var FilterControl = L.Control.extend({
         }
         
         this.object = object;
+        this.save = {};
         
         this.modifyDiv = modifyDiv;
     },
@@ -111,6 +113,10 @@ var FilterControl = L.Control.extend({
     minimize : function(bool){
         this.minimized = bool;
         if(bool){
+            this.save["field"] = this.fieldSelect.selectedIndex;
+            this.save["function"] = this.functionSelect.selectedIndex;
+            this.save["text"] = this.textInput.value;
+                
             this.div.innerHTML = '';
             applyStyle(this.div,Filter_style(this.div));
 
@@ -121,9 +127,14 @@ var FilterControl = L.Control.extend({
             labelDiv.style.float = 'left';
             labelDiv.appendChild(label);
             this.div.appendChild(labelDiv);
+            
         }
         else{
             this.setObject(this.object);
+            
+            this.fieldSelect.selectedIndex = this.save["field"];
+            this.functionSelect.selectedIndex = this.save["function"];
+            this.textInput.value = this.save["text"];
         }
     },
     
