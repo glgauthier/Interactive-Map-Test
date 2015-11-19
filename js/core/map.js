@@ -210,6 +210,7 @@ var mapInfo = L.control();
 
 mapInfo.onAdd = function (map){
     this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+    this._div.style.maxWidth = "300px";
     this.update();
     return this._div;
 };
@@ -304,11 +305,12 @@ function getGroup(URL,tag,customArgs){
         initializeCollection(tag,customArgs);
     }
     
-    $.getJSON(URL,partial(getGroupCallback,tag,customArgs));
+    //$.getJSON(URL,partial(getGroupCallback,tag,customArgs,URL));
+    $.getJSON(URL,function(msg){getGroupCallback(tag,customArgs,URL,msg);});
     
 }
 
-function getGroupCallback(tag,customArgs,msg) {
+function getGroupCallback(tag,customArgs, oldURL ,msg) {
     jsonList = msg;
     //console.log(jsonList.members);
     
@@ -317,9 +319,10 @@ function getGroupCallback(tag,customArgs,msg) {
     }
     
     for(var obj in jsonList.members){
-        var URL = "https://cityknowledge.firebaseio.com/data/" + obj + ".json";
+        var URL = "https://"+ oldURL.split("/")[2]+"/data/" + obj + ".json";
         //console.log(URL);
-        $.getJSON(URL,partial(getEntryCallback,tag,customArgs));
+        //$.getJSON(URL,partial(getEntryCallback,tag,customArgs));
+        $.getJSON(URL,function(msg){getEntryCallback(tag,customArgs,msg);});
     }
 }
 
@@ -330,6 +333,7 @@ function getEntryCallback(tag,customArgs,msg) {
     tag = tag || jsonObj.birth_certificate.type || "Feature"+(featureCollections.length+1);
     
     initializeCollection(tag,customArgs);
+    
     var feature = CKtoGeoJSON(jsonObj);
     var layer = L.geoJson(feature,customArgs);
     featureCollections[tag].addLayer(layer);
@@ -343,7 +347,8 @@ function initializeCollection(tag,customArgs){
         featureCollections[tag]=L.geoJson(null,customArgs).addTo(map);
         
         layerController.addOverlay(featureCollections[tag],tag);
-
+        
+        map.removeLayer(featureCollections[tag]);
         //console.log(mapOverlays);
     }
 }

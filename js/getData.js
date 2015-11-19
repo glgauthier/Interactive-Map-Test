@@ -2,7 +2,7 @@
 // ~~~~~~~~~~ layers with maps/working points ~~~~~~~~~~~~~
 //var getReq = $.getJSON("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json",getGroupCallback);
 getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json","Bridges",{style: style2, onEachFeature:setupHighlight});
-//getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canals.json","Canals",{onEachFeature:setupHighlight});
+getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canals.json","Canals",{onEachFeature:setupHighlight});
 //featureCollections["Canals"].bindPopup("I am a canal");
 
 //getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canal%20Segments.json","Canal Segments",{style: style2});
@@ -37,6 +37,10 @@ getGroup("https://cityknowledge.firebaseio.com/groups/Island%20Church%20Data.jso
 
 // the above layer probably matches up with the images in
 //https://cityknowledge.firebaseio.com/groups/convent%20floor%20plans.json"
+
+getGroup("https://ckdata.firebaseio.com/groups/MERGE%20Stores%202012.json",undefined,{pointToLayer: function(feature,latlng){
+    return new L.marker(latlng, {icon: storeIcon}).bindPopup("I am a store");
+}});
 
 // ~~~~~~~~ useful datasets not tagged by location ~~~~~~~~
 // https://cityknowledge.firebaseio.com/groups/SUBGROUP%20Boat%20Traffic%20Counts%20by%20Station.json
