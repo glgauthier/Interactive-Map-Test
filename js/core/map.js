@@ -60,17 +60,18 @@ legend.onAdd = function (map) {
     
     if(!opaqueFlag){
         div.innerHTML = '';
-        div.innerHTML = '<center> <button type="button" id="legendButton" >Hide Legend</button></center><br>';
+//        div.innerHTML = '<center> <button type="button" id="legendButton" >Hide Legend</button></center><br>';
         for (var i = 0; i < grades.length; i++) {
             div.innerHTML +=
                 '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
                 grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
         }
         
-    } else {
-        div.innerHTML = '';
-        div.innerHTML = '<center> <button type="button" id="legendButton" >Show Legend</button></center>';
-        //document.getElementById("legendButton").addEventListener("click", hideColors);
+    } 
+   else {
+          div.innerHTML = '';
+//        div.innerHTML = '<center> <button type="button" id="legendButton" >Show Legend</button></center>';
+//        //document.getElementById("legendButton").addEventListener("click", hideColors);
     }
     //document.getElementById("legendButton").addEventListener("click", hideColors);
     return div;
@@ -82,7 +83,7 @@ if(!opaqueFlag){
     legend.addTo(map);
     
     // attach an event to the legend's show/hide button
-    document.getElementById("legendButton").addEventListener("click", hideColors);
+    //document.getElementById("legendButton").addEventListener("click", hideColors);
 }
 
 // function called on show/hide legend button press
@@ -90,19 +91,10 @@ function hideColors(e){
     if(e.stopPropagation){
         e.stopPropagation();
     }
-    opaqueFlag = !opaqueFlag;
-//    if(opaqueFlag){
-//        div.innerHTML = '<center> <button type="button" id="legendButton" >Show</button></center>';
-//        document.getElementById("legendButton").addEventListener("click", hideColors);
-//    } else {
-//        div.innerHTML = '';
-//        legend.addTo(map);
-//        document.getElementById("legendButton").addEventListener("click", hideColors);
-//    }
+
     legend.addTo(map);
     document.getElementById("legendButton").addEventListener("click", hideColors);
     console.log(opaqueFlag);
-    recolorIsles('sum_pop_11');
 }
 //**********************************************************************************************
 
