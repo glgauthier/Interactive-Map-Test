@@ -1,51 +1,27 @@
 // create a legend for the colors
 // Create grades using http://colorbrewer2.org/
 var legend = L.control({position: 'bottomright'});
-
 var div = L.DomUtil.create('div', 'info legend');
+
 legend.onAdd = function (map) {
- 
-        var grades = [0, 10, 20, 50, 100, 200, 500, 1000, 2000, 3000],
-        labels = [];
+
+    var grades = [0, 10, 20, 50, 100, 200, 500, 1000, 2000, 3000],
+    labels = [];
+
+    div.innerHTML='';
     
-    if(!opaqueFlag){
-        div.innerHTML = '';
-//        div.innerHTML = '<center> <button type="button" id="legendButton" >Hide Legend</button></center><br>';
-        for (var i = 0; i < grades.length; i++) {
-            div.innerHTML +=
-                '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
-                grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
-        }
-        
-    } 
-   else {
-          div.innerHTML = '';
-//        div.innerHTML = '<center> <button type="button" id="legendButton" >Show Legend</button></center>';
-//        //document.getElementById("legendButton").addEventListener("click", hideColors);
+    for (var i = 0; i < grades.length; i++) {
+        div.innerHTML +=
+            '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
+            grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
     }
-    //document.getElementById("legendButton").addEventListener("click", hideColors);
-    return div;
-    
+
+    return div;  
 };
 
-if(!opaqueFlag){
-    
-    legend.addTo(map);
-    
-    // attach an event to the legend's show/hide button
-    //document.getElementById("legendButton").addEventListener("click", hideColors);
-}
+// make legend show up on page load
+if(!opaqueFlag) legend.addTo(map);
 
-// function called on show/hide legend button press
-function hideColors(e){
-    if(e.stopPropagation){
-        e.stopPropagation();
-    }
-
-    legend.addTo(map);
-    document.getElementById("legendButton").addEventListener("click", hideColors);
-    console.log(opaqueFlag);
-}
 
 //**********************************************************************************************
 var ColorControl = L.Control.extend({
@@ -310,7 +286,7 @@ colorControl.onApply = function(e){
 }
 colorControl.onClear = function(e){
     opaqueFlag=true;
-    legend.addTo(map);
+    legend.removeFrom(map);
     //document.getElementById("legendButton").addEventListener("click", hideColors);
     recolorIsles('sum_pop_11');
 }

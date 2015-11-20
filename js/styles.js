@@ -45,7 +45,7 @@ function recolorIsles(name) {
         //var myFillColor = generateRandomColors();
         var myFillColor = getColor(layer.feature.properties[name]);
 
-        var x =  layer.setStyle({
+        layer.setStyle({
                 fillColor: myFillColor,
                 weight: 0,
                 opacity: 1,
