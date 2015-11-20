@@ -202,7 +202,7 @@ function refreshFilter(){
 }
 
 var geojson = L.layerGroup([islands_single, islands_multi]).addTo(map);
-console.log(geojson);
+//console.log(geojson);
 //**********************************************************************************************
 // set up an information box for population data
 
@@ -300,57 +300,113 @@ var layerController = L.control.layers(baseMaps,mapOverlays).addTo(map);
 
 //*******************************************************************************************
 
-function getGroup(URL,tag,customArgs){
-    if(tag){
-        initializeCollection(tag,customArgs);
-    }
+//options = { tag, filter: boolean function(obj)};
+function getGroup(URL,options,customArgs){
     
     //$.getJSON(URL,partial(getGroupCallback,tag,customArgs,URL));
-    $.getJSON(URL,function(msg){getGroupCallback(tag,customArgs,URL,msg);});
+    $.getJSON(URL,function(msg){getGroupCallback(options,customArgs,URL,msg);});
     
 }
 
-function getGroupCallback(tag,customArgs, oldURL ,msg) {
+var loadStatus = [];
+
+function getGroupCallback(options,customArgs,groupURL,msg) {
+    jsonList = msg;
+    //console.log(jsonList.members);
+    var statusIndex = loadStatus.length;
+    loadStatus.push({});
+    
+    if(options && options.tag){
+        initializeCollection(statusIndex,options,customArgs,groupURL,jsonList);
+    }
+    
+    loadStatus[statusIndex].count = 0;
+    for(var obj in jsonList.members){
+         
+        if(options && featureCollections[options.tag]){
+            loadStatus[statusIndex].complete = false;
+            console.log(options.tag+": stop at count = "+loadStatus[statusIndex].count);
+            return;
+        }
+        
+        var URL = "https://"+ groupURL.split("/")[2]+"/data/" + obj + ".json";
+        //console.log(URL);
+        $.getJSON(URL,function(msg){getEntryCallback(statusIndex,options,customArgs,groupURL,jsonList,msg);});
+//        $.ajax({
+//            dataType: "json",
+//            url: URL,
+//            success: function(msg){getEntryCallback(statusIndex,options,customArgs,groupURL,jsonList,msg);},
+//            async:false
+//        });
+        loadStatus[statusIndex].count++;
+    }
+    loadStatus[statusIndex].complete = true;
+}
+
+function finishGetEntries(statusIndex,options,customArgs,groupURL,msg){
     jsonList = msg;
     //console.log(jsonList.members);
     
-    if(tag){
-        initializeCollection(tag);
+    if(options && options.tag){
+        if(loadStatus[statusIndex].complete == true) return;
+        initializeCollection(statusIndex,options,customArgs,groupURL,jsonList);
     }
-    
+
+    var count = 0;
     for(var obj in jsonList.members){
-        var URL = "https://"+ oldURL.split("/")[2]+"/data/" + obj + ".json";
-        //console.log(URL);
-        //$.getJSON(URL,partial(getEntryCallback,tag,customArgs));
-        $.getJSON(URL,function(msg){getEntryCallback(tag,customArgs,msg);});
+        if(count>=loadStatus[statusIndex].count){
+            var URL = "https://"+ groupURL.split("/")[2]+"/data/" + obj + ".json";
+            //console.log(URL);
+            $.getJSON(URL,function(msg){getEntryCallback(statusIndex,options,customArgs,groupURL,jsonList,msg);});
+        }
+        count++;
+        loadStatus[statusIndex].count=count;
     }
+    loadStatus[statusIndex].complete = true;
 }
 
 // callback function for pulling JSON file, run code related to it in HERE ONLY
-function getEntryCallback(tag,customArgs,msg) {
+function getEntryCallback(statusIndex,options,customArgs,groupURL,groupMSG,msg) {
     var jsonObj = msg;
-    console.log(jsonObj);
-    tag = tag || jsonObj.birth_certificate.type || "Feature"+(featureCollections.length+1);
+    //console.log(jsonObj);
     
-    initializeCollection(tag,customArgs);
     
-    var feature = CKtoGeoJSON(jsonObj);
-    var layer = L.geoJson(feature,customArgs);
-    featureCollections[tag].addLayer(layer);
-    saveFeature(featureCollections[tag],feature,layer);
+    if(!options){
+        options = {};
+    }
     
-    //featureCollections[tag].addData(CKtoGeoJSON(jsonObj));
+    options.tag = options.tag || jsonObj.birth_certificate.type || "Feature"+(featureCollections.length+1);
+    
+    console.log(options.tag+": get");
+    
+    if(!options.filter || (options.filter && options.filter(jsonObj))){
+        initializeCollection(statusIndex,options,customArgs,groupURL,groupMSG);
+        
+        var feature = CKtoGeoJSON(jsonObj);
+        var layer = L.geoJson(feature,customArgs);
+        featureCollections[options.tag].addLayer(layer);
+        saveFeature(featureCollections[options.tag],feature,layer);
+        
+        //featureCollections[tag].addData(CKtoGeoJSON(jsonObj));
+    }
 }
 
-function initializeCollection(tag,customArgs){
+function initializeCollection(statusIndex,options,customArgs,groupURL,groupMSG){
+    var tag = options.tag;
     if(!featureCollections.hasOwnProperty(tag)){
-        featureCollections[tag]=L.geoJson(null,customArgs).addTo(map);
         
+        featureCollections[tag]=L.geoJson(null,customArgs);
+        var originalOnAdd = featureCollections[tag].onAdd;
+        featureCollections[tag].onAdd = function(map){
+            //Continue Loading 
+            finishGetEntries(statusIndex,options,customArgs,groupURL,groupMSG);
+            originalOnAdd.call(featureCollections[tag],map);
+        }
         layerController.addOverlay(featureCollections[tag],tag);
         
-        map.removeLayer(featureCollections[tag]);
-        //console.log(mapOverlays);
+        return true;
     }
+    return false;
 }
 
 
