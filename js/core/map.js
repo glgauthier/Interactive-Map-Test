@@ -338,26 +338,54 @@ function getGroupCallback(options,customArgs,groupURL,msg) {
     }
     
     loadStatus[statusIndex].count = 0;
+    
+    if(options && featureCollections[options.tag]){
+        loadStatus[statusIndex].complete = false;
+        return;
+    }
+    
+    var count = 0;
     for(var obj in jsonList.members){
-         
-        if(options && featureCollections[options.tag]){
-            loadStatus[statusIndex].complete = false;
-            console.log(options.tag+": stop at count = "+loadStatus[statusIndex].count);
-            return;
+        //var URL = "https://"+ groupURL.split("/")[2]+"/data/" + obj + ".json";
+        //console.log(URL);
+        //$.getJSON(URL,function(msg){getEntryCallback(statusIndex,options,customArgs,groupURL,jsonList,msg);});
+        if(count == 0){
+            getNextEntry(statusIndex,options,customArgs,groupURL,jsonList);
         }
         
-        var URL = "https://"+ groupURL.split("/")[2]+"/data/" + obj + ".json";
-        //console.log(URL);
-        $.getJSON(URL,function(msg){getEntryCallback(statusIndex,options,customArgs,groupURL,jsonList,msg);});
 //        $.ajax({
 //            dataType: "json",
 //            url: URL,
 //            success: function(msg){getEntryCallback(statusIndex,options,customArgs,groupURL,jsonList,msg);},
 //            async:false
 //        });
-        loadStatus[statusIndex].count++;
+        count++;
+    }
+    loadStatus[statusIndex].maxCount = count;
+}
+
+function getNextEntry(statusIndex,options,customArgs,groupURL,groupMSG){
+    jsonList = groupMSG;
+    //console.log(jsonList.members);
+    
+    if(options && options.tag){
+        if(loadStatus[statusIndex].complete == true) return;
+        initializeCollection(statusIndex,options,customArgs,groupURL,jsonList);
+    }
+
+    var count = 0;
+    for(var obj in jsonList.members){
+        if(count>=loadStatus[statusIndex].count){
+            var URL = "https://"+ groupURL.split("/")[2]+"/data/" + obj + ".json";
+            //console.log(URL);
+            $.getJSON(URL,function(msg){getEntryCallback(statusIndex,options,customArgs,groupURL,jsonList,msg);});
+            count++;
+            loadStatus[statusIndex].count=count;
+            return false;
+        }
     }
     loadStatus[statusIndex].complete = true;
+    return true;
 }
 
 function finishGetEntries(statusIndex,options,customArgs,groupURL,msg){
@@ -387,7 +415,6 @@ function getEntryCallback(statusIndex,options,customArgs,groupURL,groupMSG,msg) 
     var jsonObj = msg;
     //console.log(jsonObj);
     
-    
     if(!options){
         options = {};
     }
@@ -396,8 +423,9 @@ function getEntryCallback(statusIndex,options,customArgs,groupURL,groupMSG,msg) 
     
     console.log(options.tag+": get");
     
+    initializeCollection(statusIndex,options,customArgs,groupURL,groupMSG);
+    
     if(!options.filter || (options.filter && options.filter(jsonObj))){
-        initializeCollection(statusIndex,options,customArgs,groupURL,groupMSG);
         
         var feature = CKtoGeoJSON(jsonObj);
         var layer = L.geoJson(feature,customArgs);
