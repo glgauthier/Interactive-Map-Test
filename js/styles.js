@@ -3,7 +3,7 @@ var opaqueFlag = false;
 
 function Island_style(feature) {
     return {
-        fillColor: getColor(feature.properties.sum_pop_11),
+        fillColor: colorControl.getColor(feature.properties),
         weight: 0,
         opacity: 1,
         color: 'black',
@@ -43,7 +43,7 @@ function recolorIsles(name) {
         // Your function that determines a fill color for a particular
         // property name and value.
         //var myFillColor = generateRandomColors();
-        var myFillColor = getColor(layer.feature.properties[name]);
+        var myFillColor = colorControl.getColor(layer.feature.properties[name]);
 
         layer.setStyle({
                 fillColor: myFillColor,
@@ -59,7 +59,7 @@ function recolorIsles(name) {
         // Your function that determines a fill color for a particular
         // property name and value.
         //var myFillColor = generateRandomColors();
-        var myFillColor = getColor(layer.feature.properties[name]);
+        var myFillColor = colorControl.getColor(layer.feature.properties[name]);
 
         layer.setStyle({
                 fillColor: myFillColor,

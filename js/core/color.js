@@ -19,8 +19,7 @@ legend.onAdd = function (map) {
     return div;  
 };
 
-// make legend show up on page load
-if(!opaqueFlag) legend.addTo(map);
+
 
 
 //**********************************************************************************************
@@ -141,13 +140,34 @@ var ColorControl = L.Control.extend({
         }
     },
     
-    getColor : function(object){
+    // colorControl.getColor()
+    getColor : function(props){
+        if(opaqueFlag){
+            return 'rgba(0,0,0,0)';
+        } else{
+            if(props.sum_pop_11){
+                return props.sum_pop_11 > 3000 ? '#4d004b' :
+                       props.sum_pop_11 > 2000 ? '#810f7c' :
+                       props.sum_pop_11 > 1000 ? '#88419d' :
+                       props.sum_pop_11 > 500  ? '#8c6bb1' :
+                       props.sum_pop_11 > 200  ? '#8c96c6' :
+                       props.sum_pop_11 > 100  ? '#9ebcda' :
+                       props.sum_pop_11 > 50   ? '#bfd3e6' :
+                       props.sum_pop_11 > 20   ? '#e0ecf4' :
+                       props.sum_pop_11 > 10   ? '#f7fcfd' :
+                                                 '#f7fcfd';
+            }
+            // if NOT opaqueflag and field is empty, color pinkish
+            return 'rgba(255, 0, 0, 0.64)';
+        }
+        
         //TODO: given an object(or value), get its color
         //if selected function is random, return random color
         //otherwise, color will depend on selectedField, the value of that field, and thresholds set using setGradient()
         //???? is it possible to make color a continuous function of value ????
     },
     
+    // colorControl.setGradient()
     setGradient : function(array){
         //TODO: store thresholds of different gradient colors using array of all values
         //Many ways: find total range split into equal sized ranges
@@ -282,13 +302,11 @@ colorControl.onApply = function(e){
     opaqueFlag=false;
     legend.addTo(map);
     //document.getElementById("legendButton").addEventListener("click", hideColors);
-    recolorIsles('sum_pop_11');
+    recolorIsles(colorControl.selectedFields()[0]);
 }
 colorControl.onClear = function(e){
     opaqueFlag=true;
     legend.removeFrom(map);
     //document.getElementById("legendButton").addEventListener("click", hideColors);
-    recolorIsles('sum_pop_11');
+    recolorIsles(colorControl.selectedFields()[0]);
 }
-map.addControl(colorControl);
-colorControl.minimize(true);

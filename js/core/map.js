@@ -135,6 +135,16 @@ for(var i=0,iLen=multiLayer.features.length;i<iLen;i++){
     islandsCollection[feature.properties.Numero] = feature;
 }
 
+
+//add the filter and color controls to the map 
+map.addControl(filter);
+filter.minimize(true);
+map.addControl(colorControl);
+colorControl.minimize(true);
+
+// make legend show up on page load
+if(!opaqueFlag) legend.addTo(map);
+
 // add base geojson to map with islands data
 var islands_single = L.geoJson(singleLayer, {
     style: Island_style,
@@ -144,6 +154,8 @@ var islands_multi = L.geoJson(multiLayer, {
     style: Island_style,
     onEachFeature: partial(saveAndHighlight,islands_multi)
 });
+
+
 
 function refreshFilter(){
     for(var i=0,iLen=feature_layers.length;i<iLen;i++){
