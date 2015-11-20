@@ -38,18 +38,13 @@ getGroup("https://cityknowledge.firebaseio.com/groups/Island%20Church%20Data.jso
 // the above layer probably matches up with the images in
 //https://cityknowledge.firebaseio.com/groups/convent%20floor%20plans.json"
 
-<<<<<<< HEAD
 getGroup("https://ckdata.firebaseio.com/groups/MERGE%20Stores%202012.json",{tag: "Stores 2015",filter:function(obj){
     if(obj["2015"]) return true;
     
 }},{pointToLayer: function(feature,latlng){
     return new L.marker(latlng, {icon: storeIcon}).bindPopup("I am a store");
 }});
-=======
-//getGroup("https://ckdata.firebaseio.com/groups/MERGE%20Stores%202012.json",undefined,{pointToLayer: function(feature,latlng){
-//    return new L.marker(latlng, {icon: storeIcon}).bindPopup("I am a store");
-//}});
->>>>>>> origin/master
+
 
 // ~~~~~~~~ useful datasets not tagged by location ~~~~~~~~
 // https://cityknowledge.firebaseio.com/groups/SUBGROUP%20Boat%20Traffic%20Counts%20by%20Station.json
