@@ -73,9 +73,7 @@ function resetHighlight(e) {
         var layer = e.target;
        // console.log(e.target);
         if(!layer.feature.properties.data){
-            geojson.eachLayer(function(layer){
-                layer.resetStyle(e.target);
-            });
+            islands_layer.resetStyle(e.target)
         }
     
         mapInfo.update();
@@ -124,26 +122,11 @@ function setupHighlight(feature, layer) {
 
 //**********************************************************************************************
 
-for(var i=0,iLen=singleLayer.features.length;i<iLen;i++){
-    var feature = singleLayer.features[i];
-    feature.visible = true;
-    islandsCollection[feature.properties.Numero] = feature;
-}
-for(var i=0,iLen=multiLayer.features.length;i<iLen;i++){
-    var feature = multiLayer.features[i];
-    feature.visible = true;
-    islandsCollection[feature.properties.Numero] = feature;
-}
-
 // add base geojson to map with islands data
-var islands_single = L.geoJson(singleLayer, {
+var islands_layer = L.geoJson(null, {
     style: Island_style,
-    onEachFeature: partial(saveAndHighlight,islands_single)
-});
-var islands_multi = L.geoJson(multiLayer, {
-    style: Island_style,
-    onEachFeature: partial(saveAndHighlight,islands_multi)
-});
+    onEachFeature: partial(saveAndHighlight,islands_layer)
+}).addTo(map);
 
 function refreshFilter(){
     for(var i=0,iLen=feature_layers.length;i<iLen;i++){
@@ -164,7 +147,6 @@ function refreshFilter(){
     }
 }
 
-var geojson = L.layerGroup([islands_single, islands_multi]).addTo(map);
 //console.log(geojson);
 //**********************************************************************************************
 // set up an information box for population data
@@ -268,6 +250,7 @@ layerController.getContainer().ondblclick = function(e){
 
 //*******************************************************************************************
 
+//Add a data set to be displayed on the map!
 //options = { tag, filter: boolean function(obj)};
 function getGroup(URL,options,customArgs){
     
@@ -276,6 +259,8 @@ function getGroup(URL,options,customArgs){
     
 }
 
+//Save the loading status of every data group added
+//array of vars. var = {count,complete,maxCount}
 var loadStatus = [];
 
 function getGroupCallback(options,customArgs,groupURL,msg) {

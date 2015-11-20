@@ -82,7 +82,6 @@ var FilterControl = L.Control.extend({
         this.fieldSelect = createDropdown(object);
         //this.fieldSelect.multiple = true;
         this.fieldSelect.onchange = function(e){
-            console.log(that.getAutoCompleteValues());
             that.autoComplete.list = that.getAutoCompleteValues();
             that.autoComplete.evaluate();
         }
@@ -137,6 +136,7 @@ var FilterControl = L.Control.extend({
         clearButton.setAttribute("value","Clear");
         clearButton.onclick = this.onClear;
         this.div.appendChild(clearButton);
+        
     },
     
     minimize : function(bool){
@@ -319,8 +319,21 @@ function applyStyle(feature,style){
 
 //********************************************************************************************************
 
+console.log(islands_layer);
+
 //Create a filter object (put it in the top left and flow left to right)
-var filter = new FilterControl(singleLayer.features[0].properties,'topleft',function(div){
+var fieldsObj = undefined;
+
+var keys = [];
+for(var key in islands_layer.layers){
+    keys.push(key);
+}
+
+if(keys.length>0){
+    fieldsObj = islands_layer.layers[keys[0]].feature.properties;
+}
+
+var filter = new FilterControl(fieldsObj,'topleft',function(div){
     div.style.clear = 'both';
 });
 //define onApply behavior

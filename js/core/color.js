@@ -275,7 +275,21 @@ function applyStyle(feature,style){
 //    //iterate through all island layers and set style = some style   
 //}
 
-var colorControl = new ColorControl(singleLayer.features[0].properties,'topleft',function(div){
+//********************************************************************************************************
+
+//Create a filter object (put it in the top left and flow left to right)
+var fieldsObj = undefined;
+
+var keys = [];
+for(var key in islands_layer.layers){
+    keys.push(key);
+}
+
+if(keys.length>0){
+    fieldsObj = islands_layer.layers[keys[0]].feature.properties;
+}
+
+var colorControl = new ColorControl(fieldsObj,'topleft',function(div){
     div.style.clear = 'both';
 });
 colorControl.onApply = function(e){
