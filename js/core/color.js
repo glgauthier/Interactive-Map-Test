@@ -232,31 +232,37 @@ function applyStyle(feature,style){
         feature.style[property] = style[property];
     }
 }
-
-function applyColor(){
-    //if gradient coloring is selected
-    if(colorControl.selectedFunctions()[0]==='gradient'){
-        //iterate through all islands. generate array of the values of the selected field
-    
-        //use that array to set the gradient
-    }
-    
-    //iterate through all island layers and set style = colorControl.getStyle();   
-    
-    //apply new styles?
-}
-function clearColor(){
-    //iterate through all island layers and set style = some style   
-}
+//
+//function applyColor(){
+//    //if gradient coloring is selected
+//    if(colorControl.selectedFunctions()[0]==='gradient'){
+//        //iterate through all islands. generate array of the values of the selected field
+//    
+//        //use that array to set the gradient
+//    }
+//    
+//    //iterate through all island layers and set style = colorControl.getStyle();   
+//    
+//    //apply new styles?
+//}
+//function clearColor(){
+//    //iterate through all island layers and set style = some style   
+//}
 
 var colorControl = new ColorControl(singleLayer.features[0].properties,'topleft',function(div){
     div.style.clear = 'both';
 });
 colorControl.onApply = function(e){
-    alert("apply "+colorControl.selectedFields());
+    opaqueFlag=false;
+    legend.addTo(map);
+    //document.getElementById("legendButton").addEventListener("click", hideColors);
+    recolorIsles('sum_pop_11');
 }
 colorControl.onClear = function(e){
-    alert("clear "+colorControl.selectedFunctions());
+    opaqueFlag=true;
+    legend.addTo(map);
+    //document.getElementById("legendButton").addEventListener("click", hideColors);
+    recolorIsles('sum_pop_11');
 }
 map.addControl(colorControl);
 colorControl.minimize(true);

@@ -52,28 +52,38 @@ function partial(func /*, 0..n args */) {
 // Create grades using http://colorbrewer2.org/
 var legend = L.control({position: 'bottomright'});
 
+var div = L.DomUtil.create('div', 'info legend');
 legend.onAdd = function (map) {
  
-    var div = L.DomUtil.create('div', 'info legend'),
-        grades = [0, 10, 20, 50, 100, 200, 500, 1000, 2000, 3000],
+        var grades = [0, 10, 20, 50, 100, 200, 500, 1000, 2000, 3000],
         labels = [];
-
-    $(div).append('<center> <button type="button" id="legendButton" >Show/Hide</button></center><br>');
     
-    // loop through our density intervals and generate a label with a colored square for each interval
-    for (var i = 0; i < grades.length; i++) {
-        div.innerHTML +=
-            '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
-            grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+    if(!opaqueFlag){
+        div.innerHTML = '';
+//        div.innerHTML = '<center> <button type="button" id="legendButton" >Hide Legend</button></center><br>';
+        for (var i = 0; i < grades.length; i++) {
+            div.innerHTML +=
+                '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
+                grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+        }
+        
+    } 
+   else {
+          div.innerHTML = '';
+//        div.innerHTML = '<center> <button type="button" id="legendButton" >Show Legend</button></center>';
+//        //document.getElementById("legendButton").addEventListener("click", hideColors);
     }
-
+    //document.getElementById("legendButton").addEventListener("click", hideColors);
     return div;
+    
 };
 
 if(!opaqueFlag){
+    
     legend.addTo(map);
+    
     // attach an event to the legend's show/hide button
-    document.getElementById("legendButton").addEventListener("click", hideColors);
+    //document.getElementById("legendButton").addEventListener("click", hideColors);
 }
 
 // function called on show/hide legend button press
@@ -81,9 +91,11 @@ function hideColors(e){
     if(e.stopPropagation){
         e.stopPropagation();
     }
-    opaqueFlag != opaqueFlag;
-}
 
+    legend.addTo(map);
+    document.getElementById("legendButton").addEventListener("click", hideColors);
+    console.log(opaqueFlag);
+}
 //**********************************************************************************************
 
 // This section is used to track where the user's cursor is located and perform events based on 
