@@ -309,6 +309,11 @@ var mapOverlays = {
 
 // add in layer control so that you can toggle the layers
 var layerController = L.control.layers(baseMaps,mapOverlays).addTo(map);
+layerController.getContainer().ondblclick = function(e){
+    if(e.stopPropagation){
+        e.stopPropagation();
+    }
+}
 
 //*******************************************************************************************
 
