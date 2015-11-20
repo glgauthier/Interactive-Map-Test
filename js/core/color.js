@@ -84,6 +84,7 @@ var ColorControl = L.Control.extend({
     
     setObject : function(object){
         var that = this;
+        this.div = this.div || L.DomUtil.create('div', 'info legend');
         this.div.innerHTML = '';
         this.object = object;
         applyStyle(this.div,Color_style(this.div));
@@ -346,3 +347,6 @@ colorControl.onClear = function(e){
     //document.getElementById("legendButton").addEventListener("click", hideColors);
     recolorIsles();
 }
+
+map.addControl(colorControl);
+colorControl.minimize(true);

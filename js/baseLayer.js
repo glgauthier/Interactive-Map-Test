@@ -15,6 +15,7 @@ $.getJSON('IslesLagoon_single.geojson',function(msg){
         colorControl.setObject(singleLayer.features[0].properties);
         colorControl.minimize(filter.minimized);
     }
+    recolorIsles();
 });
 
 //$.ajax({
@@ -49,6 +50,7 @@ $.getJSON('IslesLagoon_multi.geojson',function(msg){
         colorControl.setObject(multiLayer.features[0].properties);
         colorControl.minimize(filter.minimized);
     }
+    recolorIsles();
 });
 
 //$.ajax({

@@ -27,7 +27,7 @@ var FilterControl = L.Control.extend({
     },
 
     onAdd: function (map) {
-        this.div = L.DomUtil.create('div', 'info legend');
+        this.div = this.div || L.DomUtil.create('div', 'info legend');
         
         this.setObject(this.object);
         
@@ -58,6 +58,7 @@ var FilterControl = L.Control.extend({
     
     setObject : function(object){
         var that = this;
+        this.div = this.div || L.DomUtil.create('div', 'info legend');
         this.div.innerHTML = '';
         this.object = object;
         applyStyle(this.div,Filter_style(this.div));
@@ -398,3 +399,6 @@ filter.getAutoCompleteValues = function(e){
     return vals;
 }
 
+
+map.addControl(filter);
+filter.minimize(true);
