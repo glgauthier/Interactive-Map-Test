@@ -398,6 +398,3 @@ filter.getAutoCompleteValues = function(e){
     return vals;
 }
 
-//add the filter control to 
-map.addControl(filter);
-filter.minimize(true);

@@ -122,11 +122,37 @@ function setupHighlight(feature, layer) {
 
 //**********************************************************************************************
 
+<<<<<<< HEAD
+=======
+for(var i=0,iLen=singleLayer.features.length;i<iLen;i++){
+    var feature = singleLayer.features[i];
+    feature.visible = true;
+    islandsCollection[feature.properties.Numero] = feature;
+}
+for(var i=0,iLen=multiLayer.features.length;i<iLen;i++){
+    var feature = multiLayer.features[i];
+    feature.visible = true;
+    islandsCollection[feature.properties.Numero] = feature;
+}
+
+
+//add the filter and color controls to the map 
+map.addControl(filter);
+filter.minimize(true);
+map.addControl(colorControl);
+colorControl.minimize(true);
+
+// make legend show up on page load
+if(!opaqueFlag) legend.addTo(map);
+
+>>>>>>> origin/master
 // add base geojson to map with islands data
 var islands_layer = L.geoJson(null, {
     style: Island_style,
     onEachFeature: partial(saveAndHighlight,islands_layer)
 }).addTo(map);
+
+
 
 function refreshFilter(){
     for(var i=0,iLen=feature_layers.length;i<iLen;i++){

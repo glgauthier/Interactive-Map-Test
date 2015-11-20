@@ -3,6 +3,8 @@
 var legend = L.control({position: 'bottomright'});
 var div = L.DomUtil.create('div', 'info legend');
 
+var objectColors = [];
+
 legend.onAdd = function (map) {
 
     var grades = [0, 10, 20, 50, 100, 200, 500, 1000, 2000, 3000],
@@ -19,8 +21,7 @@ legend.onAdd = function (map) {
     return div;  
 };
 
-// make legend show up on page load
-if(!opaqueFlag) legend.addTo(map);
+
 
 
 //**********************************************************************************************
@@ -141,13 +142,52 @@ var ColorControl = L.Control.extend({
         }
     },
     
-    getColor : function(object){
+    // colorControl.getColor()
+    getColor : function(props){
+        
+        var value = props[this.selectedFields()[0]];
+        var fxns = this.selectedFunctions()[0];
+        if(opaqueFlag){
+            return 'rgba(0,0,0,0)';
+        } else{
+            if(fxns=="random"){
+                // look for the field in objectColors
+                contents = $.grep(objectColors, function(e){ return e.id == value; });
+                // if an object with the same val hasn't already been colored, get a color
+                if (contents.length > 0){
+                    return contents[0].color;
+                } else {
+                    // otherwise, use the color from the object with the same val
+                    var temp = {id:value,color:generateRandomColors()};
+                    objectColors.push(temp);
+                    return temp.color;
+                }
+            } 
+            if(fxns=="gradient"){
+                if(value){
+                    return value > 3000 ? '#4d004b' :
+                           value > 2000 ? '#810f7c' :
+                           value > 1000 ? '#88419d' :
+                           value > 500  ? '#8c6bb1' :
+                           value > 200  ? '#8c96c6' :
+                           value > 100  ? '#9ebcda' :
+                           value > 50   ? '#bfd3e6' :
+                           value > 20   ? '#e0ecf4' :
+                           value > 10   ? '#f7fcfd' :
+                                                     '#f7fcfd';
+                }
+            }
+            // if NOT opaqueflag and field is empty, color pinkish
+            return 'rgba(255, 0, 0, 0.64)';
+        }
+        
         //TODO: given an object(or value), get its color
         //if selected function is random, return random color
         //otherwise, color will depend on selectedField, the value of that field, and thresholds set using setGradient()
         //???? is it possible to make color a continuous function of value ????
     },
     
+    // colorControl.setGradient()
     setGradient : function(array){
         //TODO: store thresholds of different gradient colors using array of all values
         //Many ways: find total range split into equal sized ranges
@@ -295,14 +335,14 @@ var colorControl = new ColorControl(fieldsObj,'topleft',function(div){
 colorControl.onApply = function(e){
     opaqueFlag=false;
     legend.addTo(map);
+    objectColors = [];
     //document.getElementById("legendButton").addEventListener("click", hideColors);
-    recolorIsles('sum_pop_11');
+    recolorIsles();
 }
 colorControl.onClear = function(e){
     opaqueFlag=true;
     legend.removeFrom(map);
+    objectColors = [];
     //document.getElementById("legendButton").addEventListener("click", hideColors);
-    recolorIsles('sum_pop_11');
+    recolorIsles();
 }
-map.addControl(colorControl);
-colorControl.minimize(true);
