@@ -45,7 +45,7 @@ function recolorIsles(name) {
         // property name and value.
         //var myFillColor = generateRandomColors();
         var myFillColor = colorControl.getColor(layer.feature.properties);
-        console.log(layer.feature.properties);
+        //console.log(layer.feature.properties);
         layer.setStyle({
                 fillColor: myFillColor,
                 weight: 0,

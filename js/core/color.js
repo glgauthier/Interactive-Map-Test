@@ -3,6 +3,8 @@
 var legend = L.control({position: 'bottomright'});
 var div = L.DomUtil.create('div', 'info legend');
 
+var objectColors = [];
+
 legend.onAdd = function (map) {
 
     var grades = [0, 10, 20, 50, 100, 200, 500, 1000, 2000, 3000],
@@ -142,21 +144,38 @@ var ColorControl = L.Control.extend({
     
     // colorControl.getColor()
     getColor : function(props){
+        
         var value = props[this.selectedFields()[0]];
+        var fxns = this.selectedFunctions()[0];
         if(opaqueFlag){
             return 'rgba(0,0,0,0)';
         } else{
-            if(value){
-                return value > 3000 ? '#4d004b' :
-                       value > 2000 ? '#810f7c' :
-                       value > 1000 ? '#88419d' :
-                       value > 500  ? '#8c6bb1' :
-                       value > 200  ? '#8c96c6' :
-                       value > 100  ? '#9ebcda' :
-                       value > 50   ? '#bfd3e6' :
-                       value > 20   ? '#e0ecf4' :
-                       value > 10   ? '#f7fcfd' :
-                                                 '#f7fcfd';
+            if(fxns=="random"){
+                // look for the field in objectColors
+                contents = $.grep(objectColors, function(e){ return e.id == value; });
+                // if an object with the same val hasn't already been colored, get a color
+                if (contents.length > 0){
+                    return contents[0].color;
+                } else {
+                    // otherwise, use the color from the object with the same val
+                    var temp = {id:value,color:generateRandomColors()};
+                    objectColors.push(temp);
+                    return temp.color;
+                }
+            } 
+            if(fxns=="gradient"){
+                if(value){
+                    return value > 3000 ? '#4d004b' :
+                           value > 2000 ? '#810f7c' :
+                           value > 1000 ? '#88419d' :
+                           value > 500  ? '#8c6bb1' :
+                           value > 200  ? '#8c96c6' :
+                           value > 100  ? '#9ebcda' :
+                           value > 50   ? '#bfd3e6' :
+                           value > 20   ? '#e0ecf4' :
+                           value > 10   ? '#f7fcfd' :
+                                                     '#f7fcfd';
+                }
             }
             // if NOT opaqueflag and field is empty, color pinkish
             return 'rgba(255, 0, 0, 0.64)';
@@ -302,12 +321,14 @@ var colorControl = new ColorControl(singleLayer.features[0].properties,'topleft'
 colorControl.onApply = function(e){
     opaqueFlag=false;
     legend.addTo(map);
+    objectColors = [];
     //document.getElementById("legendButton").addEventListener("click", hideColors);
     recolorIsles();
 }
 colorControl.onClear = function(e){
     opaqueFlag=true;
     legend.removeFrom(map);
+    objectColors = [];
     //document.getElementById("legendButton").addEventListener("click", hideColors);
     recolorIsles();
 }
