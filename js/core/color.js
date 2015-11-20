@@ -142,19 +142,20 @@ var ColorControl = L.Control.extend({
     
     // colorControl.getColor()
     getColor : function(props){
+        var value = props[this.selectedFields()[0]];
         if(opaqueFlag){
             return 'rgba(0,0,0,0)';
         } else{
-            if(props.sum_pop_11){
-                return props.sum_pop_11 > 3000 ? '#4d004b' :
-                       props.sum_pop_11 > 2000 ? '#810f7c' :
-                       props.sum_pop_11 > 1000 ? '#88419d' :
-                       props.sum_pop_11 > 500  ? '#8c6bb1' :
-                       props.sum_pop_11 > 200  ? '#8c96c6' :
-                       props.sum_pop_11 > 100  ? '#9ebcda' :
-                       props.sum_pop_11 > 50   ? '#bfd3e6' :
-                       props.sum_pop_11 > 20   ? '#e0ecf4' :
-                       props.sum_pop_11 > 10   ? '#f7fcfd' :
+            if(value){
+                return value > 3000 ? '#4d004b' :
+                       value > 2000 ? '#810f7c' :
+                       value > 1000 ? '#88419d' :
+                       value > 500  ? '#8c6bb1' :
+                       value > 200  ? '#8c96c6' :
+                       value > 100  ? '#9ebcda' :
+                       value > 50   ? '#bfd3e6' :
+                       value > 20   ? '#e0ecf4' :
+                       value > 10   ? '#f7fcfd' :
                                                  '#f7fcfd';
             }
             // if NOT opaqueflag and field is empty, color pinkish
@@ -302,11 +303,11 @@ colorControl.onApply = function(e){
     opaqueFlag=false;
     legend.addTo(map);
     //document.getElementById("legendButton").addEventListener("click", hideColors);
-    recolorIsles(colorControl.selectedFields()[0]);
+    recolorIsles();
 }
 colorControl.onClear = function(e){
     opaqueFlag=true;
     legend.removeFrom(map);
     //document.getElementById("legendButton").addEventListener("click", hideColors);
-    recolorIsles(colorControl.selectedFields()[0]);
+    recolorIsles();
 }

@@ -2,6 +2,7 @@
 var opaqueFlag = false;
 
 function Island_style(feature) {
+   // console.log(feature.properties);
     return {
         fillColor: colorControl.getColor(feature.properties),
         weight: 0,
@@ -38,13 +39,13 @@ function getColor(d) {
 // pass in a property name as a string
 // islands_single.setStyle(a_style) also works for changing style 
 function recolorIsles(name) {
-
+    
     islands_single.eachLayer(function(layer) {
         // Your function that determines a fill color for a particular
         // property name and value.
         //var myFillColor = generateRandomColors();
-        var myFillColor = colorControl.getColor(layer.feature.properties[name]);
-
+        var myFillColor = colorControl.getColor(layer.feature.properties);
+        console.log(layer.feature.properties);
         layer.setStyle({
                 fillColor: myFillColor,
                 weight: 0,
@@ -59,7 +60,7 @@ function recolorIsles(name) {
         // Your function that determines a fill color for a particular
         // property name and value.
         //var myFillColor = generateRandomColors();
-        var myFillColor = colorControl.getColor(layer.feature.properties[name]);
+        var myFillColor = colorControl.getColor(layer.feature.properties);
 
         layer.setStyle({
                 fillColor: myFillColor,
