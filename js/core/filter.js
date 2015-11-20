@@ -18,6 +18,22 @@ var FilterControl = L.Control.extend({
         this.save = {};
         
         this.modifyDiv = modifyDiv;
+        this.div = this.div || L.DomUtil.create('div', 'info legend');
+        
+        //on click, stop propogation
+        this.div.onclick = function(e){
+            if(e.stopPropagation){
+                e.stopPropagation();
+            }
+            return false;
+        }
+        //on double click, stop propogation
+        this.div.ondblclick = function(e){
+            if(e.stopPropagation){
+                e.stopPropagation();
+            }
+            return false;
+        }
     },
     
     minimized: false,
@@ -58,27 +74,9 @@ var FilterControl = L.Control.extend({
     
     setObject : function(object){
         var that = this;
-        this.div = this.div || L.DomUtil.create('div', 'info legend');
         this.div.innerHTML = '';
         this.object = object;
         applyStyle(this.div,Filter_style(this.div));
-        
-        //on click, stop propogation
-        this.div.onclick = function(e){
-            if(e.stopPropagation){
-                e.stopPropagation();
-            }
-            return false;
-        }
-        //on double click, stop propogation
-        this.div.ondblclick = function(e){
-            if(e.stopPropagation){
-                e.stopPropagation();
-            }
-            return false;
-        }
-        
-        this.setupImage();
         
         this.fieldSelect = createDropdown(object);
         //this.fieldSelect.multiple = true;
@@ -87,14 +85,14 @@ var FilterControl = L.Control.extend({
             that.autoComplete.evaluate();
         }
         this.div.appendChild(this.fieldSelect);
+            
         
         this.functionSelect = createDropdown(["=","<",">","contains"]);
         this.div.appendChild(this.functionSelect);
-        
+            
         this.textInput = document.createElement("INPUT");
         applyStyle(this.textInput,FilterElement_style(this.textInput));
         //this.textInput.setAttribute("type", "text");
-        
         this.textInput.onkeypress = function(e){
             var key = e.which || e.keyCode;
             if (key == 27) {  // 27 is the ESC key
@@ -123,42 +121,40 @@ var FilterControl = L.Control.extend({
             L.DomEvent.stopPropagation(event);
         });
         
-        var applyButton = document.createElement("INPUT");
-        applyStyle(applyButton,FilterElement_style(applyButton));
-        applyButton.setAttribute("type", "button");
-        applyButton.setAttribute("value","Apply");
-        applyButton.onclick = this.onApply;
-
-        this.div.appendChild(applyButton);
-        
-        var clearButton = document.createElement("INPUT");
-        applyStyle(clearButton,FilterElement_style(clearButton));
-        clearButton.setAttribute("type", "button");
-        clearButton.setAttribute("value","Clear");
-        clearButton.onclick = this.onClear;
-        this.div.appendChild(clearButton);
-        
+        this.minimize(this.minimized);
     },
     
     minimize : function(bool){
         this.minimized = bool;
-        if(bool){
-            this.save["field"] = this.fieldSelect.selectedIndex;
-            this.save["function"] = this.functionSelect.selectedIndex;
-            this.save["text"] = this.textInput.value;
-                
-            this.div.innerHTML = '';
-            applyStyle(this.div,Filter_style(this.div));
 
-            this.setupImage();
+        this.div.innerHTML = '';
+        applyStyle(this.div,Filter_style(this.div));
+
+        this.setupImage();
+        
+        if(bool==false){
             
-        }
-        else{
-            this.setObject(this.object);
+            this.div.appendChild(this.fieldSelect);
             
-            this.fieldSelect.selectedIndex = this.save["field"];
-            this.functionSelect.selectedIndex = this.save["function"];
-            this.textInput.value = this.save["text"];
+            this.div.appendChild(this.functionSelect);
+            
+            this.div.appendChild(this.textInput);
+            
+            this.autoComplete = new Awesomplete(this.textInput,{list: this.getAutoCompleteValues(),minChars:1});
+            
+            var applyButton = document.createElement("INPUT");
+            applyStyle(applyButton,FilterElement_style(applyButton));
+            applyButton.setAttribute("type", "button");
+            applyButton.setAttribute("value","Apply");
+            applyButton.onclick = this.onApply;
+            this.div.appendChild(applyButton);
+
+            var clearButton = document.createElement("INPUT");
+            applyStyle(clearButton,FilterElement_style(clearButton));
+            clearButton.setAttribute("type", "button");
+            clearButton.setAttribute("value","Clear");
+            clearButton.onclick = this.onClear;
+            this.div.appendChild(clearButton);
         }
     },
     
@@ -389,7 +385,7 @@ filter.getAutoCompleteValues = function(e){
         for(var f=0,fLen=fields.length;f<fLen;f++){
             if(feature.properties.hasOwnProperty(fields[f])){
                 var value = feature.properties[fields[f]];
-                value = value ? value.toString() : 'null';
+                value = (value!=null && value!=undefined) ? value.toString() : 'null';
                 if(vals.indexOf(value)==-1){
                     vals.push(value);
                 }

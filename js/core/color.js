@@ -21,9 +21,6 @@ legend.onAdd = function (map) {
     return div;  
 };
 
-
-
-
 //**********************************************************************************************
 var ColorControl = L.Control.extend({
     //div
@@ -42,6 +39,22 @@ var ColorControl = L.Control.extend({
         this.object = object;
         
         this.modifyDiv = modifyDiv;
+        this.div = this.div || L.DomUtil.create('div', 'info legend');
+        
+        //on click, stop propogation
+        this.div.onclick = function(e){
+            if(e.stopPropagation){
+                e.stopPropagation();
+            }
+            return false;
+        }
+        //on double click, stop propogation
+        this.div.ondblclick = function(e){
+            if(e.stopPropagation){
+                e.stopPropagation();
+            }
+            return false;
+        }
     },
     
     minimized: false,
@@ -51,7 +64,6 @@ var ColorControl = L.Control.extend({
     },
 
     onAdd: function (map) {
-        this.div = L.DomUtil.create('div', 'info legend');
         //div.innerHTML = '<select><option>1</option><option>2</option><option>3</option></select>';
         
         //this.setObject(["a",1,"b"]);
@@ -84,62 +96,49 @@ var ColorControl = L.Control.extend({
     
     setObject : function(object){
         var that = this;
-        this.div = this.div || L.DomUtil.create('div', 'info legend');
+        
         this.div.innerHTML = '';
         this.object = object;
         applyStyle(this.div,Color_style(this.div));
         
-        this.div.onclick = function(e){
-            if(that.minimized){
-                that.minimize(false);
-            }
-            if(e.stopPropagation){
-                e.stopPropagation();
-            }
-            return false;
-        }
-        this.div.ondblclick = function(e){
-            that.minimize(!that.minimized);
-            if(e.stopPropagation){
-                e.stopPropagation();
-            }
-            return false;
-        }
-        
         this.setupImage();
         
         this.fieldSelect = createDropdown(object);
-        //this.fieldSelect.multiple = true;
         this.div.appendChild(this.fieldSelect);
+        
         this.functionSelect = createDropdown(["random","gradient"]);
         this.div.appendChild(this.functionSelect);
         
-        var applyButton = document.createElement("INPUT");
-        applyStyle(applyButton,ColorElement_style(applyButton));
-        applyButton.setAttribute("type", "button");
-        applyButton.setAttribute("value","Apply");
-        applyButton.onclick = this.onApply;
-
-        this.div.appendChild(applyButton);
-        
-        var clearButton = document.createElement("INPUT");
-        applyStyle(clearButton,ColorElement_style(clearButton));
-        clearButton.setAttribute("type", "button");
-        clearButton.setAttribute("value","Clear");
-        clearButton.onclick = this.onClear;
-        this.div.appendChild(clearButton);
+        this.minimize(this.minimized);
     },
     
     minimize : function(bool){
         this.minimized = bool;
-        if(bool){
-            this.div.innerHTML = '';
-            applyStyle(this.div,Color_style(this.div));
+        
+        this.div.innerHTML = '';
+        applyStyle(this.div,Color_style(this.div));
 
-            this.setupImage();
-        }
-        else{
-            this.setObject(this.object);
+        this.setupImage();
+        
+        if(bool==false){
+            
+            this.div.appendChild(this.fieldSelect);
+            
+            this.div.appendChild(this.functionSelect);
+            
+            var applyButton = document.createElement("INPUT");
+            applyStyle(applyButton,FilterElement_style(applyButton));
+            applyButton.setAttribute("type", "button");
+            applyButton.setAttribute("value","Apply");
+            applyButton.onclick = this.onApply;
+            this.div.appendChild(applyButton);
+
+            var clearButton = document.createElement("INPUT");
+            applyStyle(clearButton,FilterElement_style(clearButton));
+            clearButton.setAttribute("type", "button");
+            clearButton.setAttribute("value","Clear");
+            clearButton.onclick = this.onClear;
+            this.div.appendChild(clearButton);
         }
     },
     
@@ -335,14 +334,21 @@ var colorControl = new ColorControl(fieldsObj,'topleft',function(div){
 });
 colorControl.onApply = function(e){
     opaqueFlag=false;
-    legend.addTo(map);
+    if(colorControl.selectedFunctions()[0]!="random"){
+        legend.addTo(map);
+    }
+    else if(legend._map){
+        legend.removeFrom(map);
+    }
     objectColors = [];
     //document.getElementById("legendButton").addEventListener("click", hideColors);
     recolorIsles();
 }
 colorControl.onClear = function(e){
     opaqueFlag=true;
-    legend.removeFrom(map);
+    if(legend._map){
+        legend.removeFrom(map);
+    }
     objectColors = [];
     //document.getElementById("legendButton").addEventListener("click", hideColors);
     recolorIsles();
@@ -350,3 +356,4 @@ colorControl.onClear = function(e){
 
 map.addControl(colorControl);
 colorControl.minimize(true);
+colorControl.onClear();
