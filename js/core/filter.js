@@ -81,7 +81,7 @@ var FilterControl = L.Control.extend({
         this.fieldSelect = createDropdown(object);
         //this.fieldSelect.multiple = true;
         this.fieldSelect.onchange = function(e){
-            that.autoComplete.list = that.getAutoCompleteValues();
+            that.autoComplete.list = that.getAllValues();
             that.autoComplete.evaluate();
         }
         this.div.appendChild(this.fieldSelect);
@@ -109,7 +109,7 @@ var FilterControl = L.Control.extend({
         };
         this.div.appendChild(this.textInput);
         
-        this.autoComplete = new Awesomplete(this.textInput,{list: this.getAutoCompleteValues(),minChars:1});
+        this.autoComplete = new Awesomplete(this.textInput,{list: this.getAllValues(),minChars:1});
         
         L.DomEvent.on(this.textInput, 'mousedown', function(event) {
             L.DomEvent.stopPropagation(event);
@@ -140,7 +140,7 @@ var FilterControl = L.Control.extend({
             
             this.div.appendChild(this.textInput);
             
-            this.autoComplete = new Awesomplete(this.textInput,{list: this.getAutoCompleteValues(),minChars:1});
+            this.autoComplete = new Awesomplete(this.textInput,{list: this.getAllValues(),minChars:1});
             
             var applyButton = document.createElement("INPUT");
             applyStyle(applyButton,FilterElement_style(applyButton));
@@ -246,7 +246,7 @@ var FilterControl = L.Control.extend({
         return this.textInput.value;
     },
         
-    getAutoCompleteValues : function (e){
+    getAllValues : function (e){
         
     },
     
@@ -377,7 +377,7 @@ filter.onClear = function(e){
     }
     refreshFilter();
 }
-filter.getAutoCompleteValues = function(e){
+filter.getAllValues = function(e){
     var vals = [];
     var fields = filter.selectedFields();
     for(var i=0,iLen=feature_layers.length;i<iLen;i++){

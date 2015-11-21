@@ -1,25 +1,30 @@
 // create a legend for the colors
 // Create grades using http://colorbrewer2.org/
 var legend = L.control({position: 'bottomright'});
-var div = L.DomUtil.create('div', 'info legend');
+var legend_div = L.DomUtil.create('div', 'info legend');
 
-var objectColors = [];
+var objectColors;
+var gradientColors = ['#f7fcfd','#e0ecf4','#bfd3e6','#9ebcda','#8c96c6','#8c6bb1','#88419d','#810f7c','#4d004b']
+
+legend.grades = [0, 20, 50, 100, 200, 500, 1000, 2000, 3000];
 
 legend.onAdd = function (map) {
 
-    var grades = [0, 10, 20, 50, 100, 200, 500, 1000, 2000, 3000],
-    labels = [];
+    legend.setThresholds(legend.grades);
 
-    div.innerHTML='';
-    
-    for (var i = 0; i < grades.length; i++) {
-        div.innerHTML +=
-            '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
-            grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
-    }
-
-    return div;  
+    return legend_div;  
 };
+
+legend.setThresholds = function(thresholds){
+    legend.grades = thresholds;
+    legend_div.innerHTML='';
+    
+    for (var i = 0; i < thresholds.length && i < gradientColors.length; i++) {
+        legend_div.innerHTML +=
+            '<i style="background:' + gradientColors[i] + '"></i> ' +
+            thresholds[i] + (thresholds[i + 1] ? '&ndash;' + thresholds[i + 1] + '<br>' : '+');
+    }
+}
 
 //**********************************************************************************************
 var ColorControl = L.Control.extend({
@@ -29,6 +34,8 @@ var ColorControl = L.Control.extend({
     //fieldSelect
     //functionSelect
     //thresholds[]
+    //appliedField
+    //appliedFunction
     
     initialize: function (object, position, modifyDiv) {
         // ...
@@ -37,7 +44,7 @@ var ColorControl = L.Control.extend({
         }
         
         this.object = object;
-        
+        this.thresholds = legend.grades;
         this.modifyDiv = modifyDiv;
         this.div = this.div || L.DomUtil.create('div', 'info legend');
         
@@ -106,13 +113,18 @@ var ColorControl = L.Control.extend({
         this.fieldSelect = createDropdown(object);
         this.div.appendChild(this.fieldSelect);
         
+        this.appliedField = this.selectedFields()[0];
+        
         this.functionSelect = createDropdown(["random","gradient"]);
         this.div.appendChild(this.functionSelect);
+        
+        this.appliedFunction = this.selectedFunctions()[0];
         
         this.minimize(this.minimized);
     },
     
     minimize : function(bool){
+        var that = this;
         this.minimized = bool;
         
         this.div.innerHTML = '';
@@ -130,7 +142,11 @@ var ColorControl = L.Control.extend({
             applyStyle(applyButton,FilterElement_style(applyButton));
             applyButton.setAttribute("type", "button");
             applyButton.setAttribute("value","Apply");
-            applyButton.onclick = this.onApply;
+            applyButton.onclick = function(e){
+                that.appliedFunction = that.selectedFunctions()[0];
+                that.appliedField = that.selectedFields()[0];
+                that.onApply(e);
+            }
             this.div.appendChild(applyButton);
 
             var clearButton = document.createElement("INPUT");
@@ -145,8 +161,8 @@ var ColorControl = L.Control.extend({
     // colorControl.getColor()
     getColor : function(props){
         
-        var value = props[this.selectedFields()[0]];
-        var fxns = this.selectedFunctions()[0];
+        var value = props[this.appliedField];
+        var fxns = this.appliedFunction;
         if(opaqueFlag){
             return 'rgba(0,0,0,0)';
         } else{
@@ -164,17 +180,13 @@ var ColorControl = L.Control.extend({
                 }
             } 
             if(fxns=="gradient"){
-                if(value){
-                    return value > 3000 ? '#4d004b' :
-                           value > 2000 ? '#810f7c' :
-                           value > 1000 ? '#88419d' :
-                           value > 500  ? '#8c6bb1' :
-                           value > 200  ? '#8c96c6' :
-                           value > 100  ? '#9ebcda' :
-                           value > 50   ? '#bfd3e6' :
-                           value > 20   ? '#e0ecf4' :
-                           value > 10   ? '#f7fcfd' :
-                                                     '#f7fcfd';
+                if(value!=undefined){
+                    for (var i = Math.min(this.thresholds.length,gradientColors.length); i >= 0; i--) {
+                        if(value > this.thresholds[i]){
+                            return gradientColors[i];
+                        }
+                    }
+                    return '#ffffff';
                 }
             }
             // if NOT opaqueflag and field is empty, color pinkish
@@ -188,10 +200,13 @@ var ColorControl = L.Control.extend({
     },
     
     // colorControl.setGradient()
-    setGradient : function(array){
+    setGradient : function(){
         //TODO: store thresholds of different gradient colors using array of all values
+        //use "this.getAllValues()" to determine range and  "this.thresholds";
         //Many ways: find total range split into equal sized ranges
         //           sort values in order and split into equal sized groups
+        
+        legend.setThresholds(this.thresholds);
     },
     
     selectedFields : function(){
@@ -240,6 +255,11 @@ var ColorControl = L.Control.extend({
         return items;
     },
     
+    //*********THE BELOW FUNCTIONS MUST BE OVERRIDEN BY THE AUTHOR TO MAKE THE CONTROL WORK AS INTENDED*********//
+    
+    getAllValues : function(e){
+        
+    },
     onApply : function(e){
         
     },
@@ -298,6 +318,7 @@ function applyStyle(feature,style){
         feature.style[property] = style[property];
     }
 }
+
 //
 //function applyColor(){
 //    //if gradient coloring is selected
@@ -317,7 +338,7 @@ function applyStyle(feature,style){
 
 //********************************************************************************************************
 
-//Create a filter object (put it in the top left and flow left to right)
+//Create a color object (put it in the top left)
 var fieldsObj = undefined;
 
 var keys = [];
@@ -332,9 +353,28 @@ if(keys.length>0){
 var colorControl = new ColorControl(fieldsObj,'topleft',function(div){
     div.style.clear = 'both';
 });
+
+colorControl.getAllValues = function(e){
+    var vals = [];
+    var fields = colorControl.selectedFields();
+    for(var i=0,iLen=feature_layers.length;i<iLen;i++){
+        var feature = feature_layers[i].feature;
+        for(var f=0,fLen=fields.length;f<fLen;f++){
+            if(feature.properties.hasOwnProperty(fields[f])){
+                var value = feature.properties[fields[f]];
+                value = (value!=null && value!=undefined) ? value.toString() : 'null';
+                if(vals.indexOf(value)==-1){
+                    vals.push(value);
+                }
+            }
+        }
+    }
+    return vals;
+}
 colorControl.onApply = function(e){
     opaqueFlag=false;
     if(colorControl.selectedFunctions()[0]!="random"){
+        colorControl.setGradient();
         legend.addTo(map);
     }
     else if(legend._map){

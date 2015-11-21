@@ -19,7 +19,7 @@ function getColor(d) {
         return 'rgba(0,0,0,0)';
     } else{
     
-    if(d){
+    if(d!=undefined){
         return d > 3000 ? '#4d004b' :
            d > 2000 ? '#810f7c' :
            d > 1000 ? '#88419d' :
