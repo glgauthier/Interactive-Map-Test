@@ -1,3 +1,6 @@
+getIslands('IslesLagoon_single.geojson');
+getIslands('IslesLagoon_multi.geojson');
+
 
 // ~~~~~~~~~~ layers with maps/working points ~~~~~~~~~~~~~
 //var getReq = $.getJSON("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json",getGroupCallback);

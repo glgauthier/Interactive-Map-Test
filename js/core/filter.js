@@ -260,6 +260,8 @@ var FilterControl = L.Control.extend({
     }
 });
 
+//******************************************************************************************************
+
 //Create a dropdown object for use in a filter and apply the user defined style
 function createDropdown(object,options){
     var dropdown = document.createElement("SELECT");
@@ -315,8 +317,6 @@ function applyStyle(feature,style){
 }
 
 //********************************************************************************************************
-
-console.log(islands_layer);
 
 //Create a filter object (put it in the top left and flow left to right)
 var fieldsObj = undefined;
