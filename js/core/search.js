@@ -27,7 +27,6 @@ searchControl.fuse = {};
 searchControl.keys = [];
 
 searchControl.refresh = function(){
-    console.log(searchControl);
 
     var islands_features = [];
 
@@ -36,7 +35,6 @@ searchControl.refresh = function(){
     });
 
     searchControl.keys = getKeys(islands_features[0]);
-    console.log(searchControl.keys);
     searchControl.fuse = new Fuse(islands_features, {
         keys: searchControl.keys
     });
@@ -61,7 +59,6 @@ function getKeys(object){
             }
         }
     }
-    console.log(results);
     return results;
 }
 
