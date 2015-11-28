@@ -250,38 +250,6 @@ layerController.getContainer().ondblclick = function(e){
 
 //*******************************************************************************************
 
-//Add a data set to be displayed on the map!
-//options = { tag, filter: boolean function(obj)};
-function getGroup(URL,options,customArgs){
-    
-    //$.getJSON(URL,partial(getGroupCallback,tag,customArgs,URL));
-    $.getJSON(URL,function(msg){getGroupCallback(options,customArgs,URL,msg);});
-    
-}
-
-function getIslands(path){
-    $.getJSON(path,function(msg){
-        var layer = msg;
-
-        for(var i=0,iLen=layer.features.length;i<iLen;i++){
-            var feature = layer.features[i];
-            feature.visible = true;
-            islandsCollection[feature.properties.Numero] = feature;
-        }
-        islands_layer.addData(layer);
-        if(!filter.object){
-            filter.setObject(layer.features[0].properties);
-            filter.minimize(filter.minimized);
-        }
-        if(!colorControl.object){
-            colorControl.setObject(layer.features[0].properties);
-            colorControl.minimize(filter.minimized);
-        }
-        searchControl.refresh();
-        recolorIsles();
-    });
-}
-
 //*******************************************************************************************
 
 //Save the loading status of every data group added

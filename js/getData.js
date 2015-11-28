@@ -1,5 +1,51 @@
-getIslands('IslesLagoon_single.geojson');
-getIslands('IslesLagoon_multi.geojson');
+// ~~~~~~~~ Functions for Retrievings Data ~~~~~~~~~~~~~~~~~~~~~
+
+//Add a data set to be displayed on the map!
+//options = { tag, filter: boolean function(obj)};
+function getGroup(URL,options,customArgs){
+    //$.getJSON(URL,partial(getGroupCallback,tag,customArgs,URL));
+    $.getJSON(URL,function(msg){getGroupCallback(options,customArgs,URL,msg);});
+}
+
+//options = { searchInclude: string[], searchExclude: string[]};
+function getIslands(path,options){
+    $.getJSON(path,function(msg){
+        var layer = msg;
+
+        for(var i=0,iLen=layer.features.length;i<iLen;i++){
+            var feature = layer.features[i];
+            feature.visible = true;
+            islandsCollection[feature.properties.Numero] = feature;
+        }
+        islands_layer.addData(layer);
+        if(!filter.object){
+            filter.setObject(layer.features[0].properties);
+            filter.minimize(filter.minimized);
+        }
+        if(!colorControl.object){
+            colorControl.setObject(layer.features[0].properties);
+            colorControl.minimize(filter.minimized);
+        }
+        
+        if(options){
+            if(options.searchInclude){
+                searchControl.includeKeys(options.searchInclude);
+            }
+            if(options.searchExclude){
+                searchControl.searchExclude(options.searchExclude);
+            }
+        }
+        
+        searchControl.refresh();
+        recolorIsles();
+    });
+}
+
+//***********************************************************************************************
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+getIslands('IslesLagoon_single.geojson',{searchInclude: ['Nome_Isola','Numero']});
+getIslands('IslesLagoon_multi.geojson'),{searchInclude: ['Nome_Isola','Numero']};
 
 
 // ~~~~~~~~~~ layers with maps/working points ~~~~~~~~~~~~~
