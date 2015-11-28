@@ -332,6 +332,7 @@ if(keys.length>0){
 
 var filter = new FilterControl(fieldsObj,'topleft',function(div){
     div.style.clear = 'both';
+    div.style.zIndex = 1000;
 });
 //define onApply behavior
 filter.onApply = function(e){

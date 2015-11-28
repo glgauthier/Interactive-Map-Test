@@ -41,9 +41,8 @@ searchControl.refresh = function(){
     islands_layer.eachLayer(function(layer){
         islands_features.push(layer.feature.properties);
     });
-    console.log(islands_features);
+    
     islands_features = valsToStrings(islands_features);
-    console.log(islands_features);
     
     searchControl._allKeys = getKeys(islands_features[0]);
     searchControl.keys = searchControl._allKeys;
