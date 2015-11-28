@@ -13,6 +13,13 @@ function overlayOff(currentLayer){
     }
 }
 
+//TODO: make this function more flexible:
+//  -to be customized in the getData() file (appearence, content, etc)
+//  -be prettier?
+//  -check boxesfor what appears in general info?
+//  -to work with any layer (not just islands)?
+//  -translate fields
+
 // this function is called from the zoomToFeature() function
 function overlay(currentLayer) {
 	el = document.getElementById("overlay");
@@ -119,7 +126,7 @@ function printObject(props,depth)
     else if(typeof props === 'object'){
         //output+= tabs(depth) + '<b>'+property + '</b>: ';
         for(property in props){
-            output += tabs(depth) + '<b>' + property + ':</b> '+printObject(props[property],depth+1);
+            output += tabs(depth) + '<b>' + dictionary(property) + ':</b> '+printObject(props[property],depth+1);
         }
     }
     else{
