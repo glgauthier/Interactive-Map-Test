@@ -86,6 +86,7 @@ function zoomToFeature(e) {
 }
 
 function saveAndHighlight(parent, feature, layer) {
+    console.log("saveAndHighlight");
     saveFeature(parent, feature, layer)
     setupHighlight(feature,layer);
 }
@@ -356,18 +357,27 @@ function getEntryCallback(statusIndex,options,customArgs,groupURL,groupMSG,msg) 
     
     if(!options.filter || (options.filter && options.filter(jsonObj))){
         
-        var feature = CKtoGeoJSON(jsonObj);
-        var layer = L.geoJson(feature,customArgs);
-        featureCollections[options.tag].addLayer(layer);
-        saveFeature(featureCollections[options.tag],feature,layer);
+        //var feature = CKtoGeoJSON(jsonObj);
+        //var layer = L.geoJson(feature,customArgs);
+        //featureCollections[options.tag].addLayer(layer);
+        //saveFeature(featureCollections[options.tag],feature,layer);
         
-        //featureCollections[tag].addData(CKtoGeoJSON(jsonObj));
+        featureCollections[options.tag].addData(CKtoGeoJSON(jsonObj));
     }
 }
 
 function initializeCollection(statusIndex,options,customArgs,groupURL,groupMSG){
     var tag = options.tag;
     if(!featureCollections.hasOwnProperty(tag)){
+        customArgs = customArgs || {};
+        
+        var originalOnEachFeature = customArgs.onEachFeature;
+        customArgs.onEachFeature = function(feature,layer){
+            saveFeature(featureCollections[tag],feature,layer);
+            if(originalOnEachFeature){
+                originalOnEachFeature(feature,layer);
+            }
+        }
         
         featureCollections[tag]=L.geoJson(null,customArgs);
         var originalOnAdd = featureCollections[tag].onAdd;
@@ -376,6 +386,7 @@ function initializeCollection(statusIndex,options,customArgs,groupURL,groupMSG){
             finishGetEntries(statusIndex,options,customArgs,groupURL,groupMSG);
             originalOnAdd.call(featureCollections[tag],map);
         }
+        
         layerController.addOverlay(featureCollections[tag],tag);
         
         return true;
