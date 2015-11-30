@@ -6,7 +6,7 @@ var legend_div = L.DomUtil.create('div', 'info legend');
 var objectColors;
 var gradientColors = ['#f7fcfd','#e0ecf4','#bfd3e6','#9ebcda','#8c96c6','#8c6bb1','#88419d','#810f7c','#4d004b']
 
-legend.grades = [0, 20, 50, 100, 200, 500, 1000, 2000, 3000];
+legend.grades = [];//[0, 20, 50, 100, 200, 500, 1000, 2000, 3000];
 
 legend.onAdd = function (map) {
 
@@ -180,6 +180,7 @@ var ColorControl = L.Control.extend({
                 }
             } 
             if(fxns=="gradient"){
+                this.setGradient;
                 if(value!=undefined){
                     for (var i = Math.min(this.thresholds.length,gradientColors.length); i >= 0; i--) {
                         if(value > this.thresholds[i]){
@@ -205,8 +206,22 @@ var ColorControl = L.Control.extend({
         //use "this.getAllValues()" to determine range and  "this.thresholds";
         //Many ways: find total range split into equal sized ranges
         //           sort values in order and split into equal sized groups
-        
-        legend.setThresholds(this.thresholds);
+       
+        var field = this.appliedField;
+        console.log(field);
+        var arr = $.map(islandsCollection, function(o){return o.properties[field];});
+        var maximum = Math.max.apply(this,arr);
+        var minimum = Math.min.apply(this,arr);
+        //console.log(arr);
+        console.log(maximum);
+        console.log(minimum);
+        legend.grades = [];
+        var range = maximum-minimum;
+        legend.grades = [minimum, range*0.2, range*0.4, range*0.6, range*0.8, maximum];
+    
+        legend.setThresholds(legend.grades);
+        this.thresholds = legend.grades;
+        console.log(this.thresholds);
     },
     
     selectedFields : function(){

@@ -14,26 +14,26 @@ function Island_style(feature) {
 }
 
 // function for generating the colors for Island_style
-function getColor(d) {
-    if(opaqueFlag){
-        return 'rgba(0,0,0,0)';
-    } else{
-    
-    if(d!=undefined){
-        return d > 3000 ? '#4d004b' :
-           d > 2000 ? '#810f7c' :
-           d > 1000 ? '#88419d' :
-           d > 500  ? '#8c6bb1' :
-           d > 200  ? '#8c96c6' :
-           d > 100  ? '#9ebcda' :
-           d > 50   ? '#bfd3e6' :
-           d > 20   ? '#e0ecf4' :
-           d > 10   ? '#f7fcfd' :
-                      '#f7fcfd';
-    }
-    return 'rgba(255, 0, 0, 0.64)';
-    }
-}
+//function getColor(d) {
+//    if(opaqueFlag){
+//        return 'rgba(0,0,0,0)';
+//    } else{
+//    
+//    if(d!=undefined){
+//        return d > 3000 ? '#4d004b' :
+//           d > 2000 ? '#810f7c' :
+//           d > 1000 ? '#88419d' :
+//           d > 500  ? '#8c6bb1' :
+//           d > 200  ? '#8c96c6' :
+//           d > 100  ? '#9ebcda' :
+//           d > 50   ? '#bfd3e6' :
+//           d > 20   ? '#e0ecf4' :
+//           d > 10   ? '#f7fcfd' :
+//                      '#f7fcfd';
+//    }
+//    return 'rgba(255, 0, 0, 0.64)';
+//    }
+//}
 
 // function for changing the feature instances within a layer
 // pass in a property name as a string
