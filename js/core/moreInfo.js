@@ -59,6 +59,7 @@ function overlay(currentLayer) {
 //   
     makeHTMLinfo(properties,"inner","JSON");
    
+    addOverlayInfo("inner",properties.Numero);
     // test for appending additional info
     $(document.getElementById("inner")).append('<br /> <br /><a href="http://www.venipedia.org/wiki/index.php?title=Islands"  target="_blank" onMouseOver="return changeImage()" onMouseOut= "return changeImageBack()"> <img name="jsbutton" src="image/venipedia.png" width="80" height="70" border="0" alt="javascript button" align="left"></a>'  
          + '<a href="http://cartography.veniceprojectcenter.org/" target="_blank" class="button">View on a historical map</a>');
@@ -153,3 +154,55 @@ function tabs(int_num){
 * instagram and then showing a feed of pictures tagged by location/hashtag is super easy,
 * so that could be an easy way to add photos later on if we want to use it
 */
+
+function addOverlayInfo(id,num){
+
+    // figure out what overlays are turned on/being used
+    layers = Object.keys(featureCollections);
+    for(var k =0; k<layers.length; k++){
+        // if the layer has objects, keep goung 
+        if (!$.isEmptyObject(featureCollections[layers[k]]._layers)){
+            //console.log(layers[k]);
+            
+            
+            // pull out what's tagged by isle
+            var target = $.map(featureCollections[layers[k]]._layers, function(e){return e.feature.properties});
+            var arrayLength = target.length;
+            var tempData = [];
+            var first = true; // flag for displaying layers[k] (category title)
+            for (var i = 0; i < arrayLength; i++) {  
+                if($.inArray(num,target[i].islands)!=-1) {
+                    if(first) {
+                        $(document.getElementById(id)).append('<br><b>'+ layers[k]+'</b>'+'</br>');
+                        first = false;
+                    }
+                    tempData.push(target[i]);
+                    // bridges
+                    if(target[i].data.Nome_Ponte){
+                        //console.log(target[i].data.Nome_Ponte);
+                        $(document.getElementById(id)).append(target[i].data.Nome_Ponte+'</br>');
+                    }
+                    // bell towers
+                    else if(target[i].data.NAME){
+                        //console.log(target[i].data.NAME);
+                        $(document.getElementById(id)).append(target[i].data.NAME+'</br>');
+                    }
+                    // island churches
+                    else if(target[i].data["Full Name"]){
+                        //console.log(target[i].data["Full Name"]);
+                        $(document.getElementById(id)).append(target[i].data["Full Name"]+'</br>');
+                    }
+                    // canals
+                    else if(target[i].data.Nome_Rio){
+                        $(document.getElementById(id)).append(target[i].data.Nome_Rio+'</br>');
+                    }
+                    // still need to add name support for the following OR just look for a field
+                    // that either has "Name" or "Nome" as part of it
+                    // shops
+                    // hotels
+                    // sewer outlets
+                }
+            }
+        }
+    }
+}
