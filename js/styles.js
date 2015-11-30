@@ -100,7 +100,7 @@ function Highlight_style(feature) {
 
 function Filter_style(feature){
     return{
-        padding: "2px 8px 0px"
+        padding: "2px 6px 0px"
     }
 }
 
@@ -113,7 +113,7 @@ function FilterElement_style(feature){
 
 function Color_style(feature){
     return{
-       padding: "2px 8px 0px"
+       padding: "2px 6px 0px"
     }
 }
 
