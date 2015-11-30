@@ -124,7 +124,6 @@ function ColorElement_style(feature){
     }
 }
 
-
 // this section contains an alternate styling for polygons
 function style2(feature) {
     return {
@@ -136,4 +135,3 @@ function style2(feature) {
         fillOpacity: 1.0
     };
 }
-
