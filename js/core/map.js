@@ -380,6 +380,7 @@ function initializeCollection(statusIndex,options,customArgs,groupURL,groupMSG){
         }
         
         featureCollections[tag]=L.geoJson(null,customArgs);
+        
         var originalOnAdd = featureCollections[tag].onAdd;
         featureCollections[tag].onAdd = function(map){
             //Continue Loading 
