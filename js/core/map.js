@@ -251,7 +251,6 @@ function showAbout(){
         '</br></br></br><iframe src="https://docs.google.com/document/d/11a5uMYyAtVFpasV2QbwML8ftwQgKn9n_pIhnUJoiBo8/pub?embedded=true" style="height:1036px;width:calc(100% - 40px);"></iframe>' +
         '</center>'
     );
-    
 }
 function hideAbout(){
     console.log("hide");
@@ -364,7 +363,20 @@ function finishGetEntries(statusIndex,options,customArgs,groupURL,msg){
         if(count>=loadStatus[statusIndex].count){
             var URL = "https://"+ groupURL.split("/")[2]+"/data/" + obj + ".json";
             //console.log(URL);
-            $.getJSON(URL,function(msg){getEntryCallback(statusIndex,options,customArgs,groupURL,jsonList,msg);});
+            //$.getJSON(URL,function(msg){getEntryCallback(statusIndex,options,customArgs,groupURL,jsonList,msg);});
+            $.ajax({
+                dataType: "json",
+                url: URL,
+                success: function(msg){
+                    getEntryCallback(statusIndex,options,customArgs,groupURL,jsonList,msg);
+                },
+                complete: function(){
+                    loadingScreen.remove();
+                },
+                beforeSend: function(){
+                    loadingScreen.add();
+                }
+            });
         }
         count++;
         loadStatus[statusIndex].count=count;
@@ -393,8 +405,13 @@ function getEntryCallback(statusIndex,options,customArgs,groupURL,groupMSG,msg) 
         //var layer = L.geoJson(feature,customArgs);
         //featureCollections[options.tag].addLayer(layer);
         //saveFeature(featureCollections[options.tag],feature,layer);
-        
-        featureCollections[options.tag].addData(CKtoGeoJSON(jsonObj));
+        try {
+            featureCollections[options.tag].addData(CKtoGeoJSON(jsonObj));
+        }
+        catch(err) {
+            console.error("Could Not Make Valid GeoJSON from CK Data:");
+            console.log(jsonObj);
+        }
     }
 }
 

@@ -277,13 +277,14 @@ function findLonLat(obj){
                 if(stringContains((property.toString()).toUpperCase(),"LATITUDE")){
                     lat = obj[property];
                 }
-                else if(stringContains((property.toString()).toUpperCase(),"LONGTITUDE")||stringContains((property.toString()).toUpperCase(),"LONGITUDE")){
+                else if(stringContains((property.toString()).toUpperCase(),"LONGTITUDE") || 
+                        stringContains((property.toString()).toUpperCase(),"LONGITUDE")){
                     lon = obj[property];
                 }
             }
         }
     }
-    if(parseFloat(lon) && parseFloat(lat))
+    if(lon && lat && parseFloat(lon) && parseFloat(lat))
         return [parseFloat(lon),parseFloat(lat)];
 }
     
