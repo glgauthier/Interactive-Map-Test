@@ -243,9 +243,19 @@ VPCinfo.onAdd = function (map) {
 
 function showAbout(){
     console.log("show");
+    el = document.getElementById("help");
+	el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
+    document.getElementById("innerHelp").innerHTML = '<a onclick = "hideAbout()" class = "Xbutton">X</a>';
+    $(document.getElementById("innerHelp")).append(
+        '<center>'+
+        '</br></br></br><iframe src="https://docs.google.com/document/d/11a5uMYyAtVFpasV2QbwML8ftwQgKn9n_pIhnUJoiBo8/pub?embedded=true" style="height:1036px;width:calc(100% - 40px);"></iframe>' +
+        '</center>'
+    );
+    
 }
 function hideAbout(){
     console.log("hide");
+    el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
 }
 
 VPCinfo.addTo(map);
