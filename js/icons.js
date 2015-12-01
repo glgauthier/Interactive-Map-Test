@@ -11,4 +11,8 @@ var hotelIcon = new customIcon({iconUrl: 'image/icons/lodging-2.png'});
 var churchIcon = new customIcon({iconUrl: 'image/icons/cathedral.png'});
 var conventIcon = new customIcon({iconUrl: 'image/icons/convent-2.png'});
 var storeIcon = new customIcon({iconUrl: 'image/icons/mall.png'});
+<<<<<<< HEAD
 var sewerIcon = new customIcon({iconUrl: 'image/icons/latrine.png'});
+=======
+var vpcicon = new customIcon({iconUrl: 'image/icons/vpcicon.png'});
+>>>>>>> origin/master
