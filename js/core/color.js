@@ -3,13 +3,18 @@
 var legend = L.control({position: 'bottomright'});
 var legend_div = L.DomUtil.create('div', 'info legend');
 
+// array used for keeping track of what items are randomly colored
 var objectColors;
-var gradientColors = ['#edf8fb','#bfd3e6','#9ebcda','#8c96c6','#8856a7','#810f7c'];
-//['#f7fcfd','#e0ecf4','#bfd3e6','#9ebcda','#8c96c6','#8c6bb1','#88419d','#810f7c','#4d004b']
+
+// color gradients
+var gradientColors = [['#edf8fb','#b3cde3','#8c96c6','#8856a7','#810f7c'],['#fef0d9','#fdcc8a','#fc8d59','#e34a33','#b30000'],['#f1eef6','#d7b5d8','#df65b0','#dd1c77','#980043'],['#edf8fb','#b2e2e2','#66c2a4','#2ca25f','#006d2c']];
+var tempField; // used for switching between gradients
+var c = 0; // used for switching between gradients (gradientColors[c][x])
 
 var gradientFlag=0;
 
-legend.grades = [];//[0, 20, 50, 100, 200, 500, 1000, 2000, 3000];
+// array used for storing values that correspond to each gradient color
+legend.grades = [];
 
 legend.onAdd = function (map) {
 
@@ -22,13 +27,14 @@ legend.setThresholds = function(thresholds){
     legend.grades = thresholds;
     legend_div.innerHTML='';
     
-    for (var i = 0; i < thresholds.length && i < gradientColors.length; i++) {
+    for (var i = 0; i < thresholds.length && i < gradientColors[c].length; i++) {
         legend_div.innerHTML +=
-            '<i style="background:' + gradientColors[i] + '"></i> ' +
+            '<i style="background:' + gradientColors[c][i] + '"></i> ' +
             thresholds[i] + (thresholds[i + 1] != undefined ? '&ndash;' + thresholds[i + 1] + '<br>' : '+');
     }
 }
 
+// used to sort an array from lowest-highest
 function sortNumber(a,b)
 {
   return a - b;
@@ -177,6 +183,11 @@ var ColorControl = L.Control.extend({
             if(fxns=="random"){
                 // look for the field in objectColors
                 contents = $.grep(objectColors, function(e){ return e.id == value; });
+                // reset gradient to default color for next time it's used
+                c=0; 
+                // and update the value of tempFields
+                tempField = colorControl.selectedFields()[0];
+                
                 // if an object with the same val hasn't already been colored, get a color
                 if (contents.length > 0){
                     return contents[0].color;
@@ -186,13 +197,17 @@ var ColorControl = L.Control.extend({
                     objectColors.push(temp);
                     return temp.color;
                 }
+                
             } 
             if(fxns=="gradient"){
+                // add a gradient
                 this.setGradient;
+                // and update the value of tempFields
+                tempField = colorControl.selectedFields()[0];
                 if(value!=undefined){
-                    for (var i = Math.min(this.thresholds.length,gradientColors.length); i >= 0; i--) {
+                    for (var i = Math.min(this.thresholds.length,gradientColors[c].length); i >= 0; i--) {
                         if(value >= this.thresholds[i]){
-                            return gradientColors[i];
+                            return gradientColors[c][i];
                         }
                     }
                     //return '#ffffff';
@@ -201,19 +216,9 @@ var ColorControl = L.Control.extend({
             // if NOT opaqueflag and field is empty, color pinkish
             return 'rgba(0, 0, 0, 0.0)';
         }
-        
-        //TODO: given an object(or value), get its color
-        //if selected function is random, return random color
-        //otherwise, color will depend on selectedField, the value of that field, and thresholds set using setGradient()
-        //???? is it possible to make color a continuous function of value ????
     },
     
-    // colorControl.setGradient()
     setGradient : function(){
-        //TODO: store thresholds of different gradient colors using array of all values
-        //use "this.getAllValues()" to determine range and  "this.thresholds";
-        //Many ways: find total range split into equal sized ranges
-        //           sort values in order and split into equal sized groups
        
         var field = this.appliedField;
         var arr = $.map(islandsCollection, function(o){return o.properties[field];});
@@ -238,22 +243,31 @@ var ColorControl = L.Control.extend({
         var Qlow = Math.ceil(0.05*arr.length);
         var Qhigh = Math.ceil(0.95*arr.length);
         // set the gradient based on the array value for each percentile
-        legend.grades = [minimum, arr[Qlow], arr[Q1], arr[Q3], arr[Qhigh], maximum];
+        legend.grades = [minimum, arr[Qlow], arr[Q1], arr[Q3], arr[Qhigh]];
         
         legend.setThresholds(legend.grades);
         this.thresholds = legend.grades;
         
         // log things for debug
 //        console.log(field);
-        console.log(arr);
+//        console.log(arr);
 //        console.log(maximum);
 //        console.log(minimum);
-        console.log(this.thresholds);
+//        console.log(this.thresholds);
 //        console.log(IQR);
 //        console.log(Qlow);
 //        console.log(Qhigh);
+//        console.log(c);
+        
+        // change the gradient if apply is hit for the same field
+        // if not, keep it the same
+        if (colorControl.selectedFields()[0] == tempField){
+            if(c<(gradientColors.length-1)) c++;
+            else c=0;
+        } else c = 0; 
         
         gradientFlag = 0; //indicate success
+        
     },
     
     selectedFields : function(){
@@ -366,23 +380,6 @@ function applyStyle(feature,style){
     }
 }
 
-//
-//function applyColor(){
-//    //if gradient coloring is selected
-//    if(colorControl.selectedFunctions()[0]==='gradient'){
-//        //iterate through all islands. generate array of the values of the selected field
-//    
-//        //use that array to set the gradient
-//    }
-//    
-//    //iterate through all island layers and set style = colorControl.getStyle();   
-//    
-//    //apply new styles?
-//}
-//function clearColor(){
-//    //iterate through all island layers and set style = some style   
-//}
-
 //********************************************************************************************************
 
 //Create a color object (put it in the top left)
@@ -418,8 +415,8 @@ colorControl.getAllValues = function(e){
     }
     return vals;
 }
-colorControl.onApply = function(e){
 
+colorControl.onApply = function(e){
     opaqueFlag=false;
     if(colorControl.selectedFunctions()[0]!="random"){
         colorControl.setGradient();
@@ -429,10 +426,10 @@ colorControl.onApply = function(e){
         }
     }
     else if(legend._map){
+        // change the gradient coloration
         legend.removeFrom(map);
     }
-    objectColors = [];
-    //document.getElementById("legendButton").addEventListener("click", hideColors);
+    objectColors = []; // discard random colors that have been saved
     recolorIsles();
 }
 colorControl.onClear = function(e){
@@ -440,8 +437,7 @@ colorControl.onClear = function(e){
     if(legend._map){
         legend.removeFrom(map);
     }
-    objectColors = [];
-    //document.getElementById("legendButton").addEventListener("click", hideColors);
+    objectColors = []; // discard random colors that have been saved
     recolorIsles();
 }
 
