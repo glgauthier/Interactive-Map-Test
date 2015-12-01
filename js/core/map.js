@@ -217,17 +217,36 @@ map.on('locationerror', onLocationError);
 
 //**********************************************************************************************
 
+var helpWindow = document.createElement("DIV").innerHTML = '<iframe src="https://docs.google.com/document/d/11a5uMYyAtVFpasV2QbwML8ftwQgKn9n_pIhnUJoiBo8/pub?embedded=true"></iframe>';
+
 // Displays question mark and vpc logo
 var VPCinfo = L.control({position: "bottomleft"});
     
 VPCinfo.onAdd = function (map) {
     this._div = L.DomUtil.create('div', 'VPCinfo'); // create a div with a class "info"
-    this._div.innerHTML = '<div class="info" style="width:auto;">'+
-        '<span ng-click="showAbout()"><img src="image/about.png"  style="cursor:pointer;padding-right:7px;"></span>'+
-        '<a href="http://veniceprojectcenter.org" target="_blank"><img src="image/vpc25logo.png"></a>'+
-        '</div>';
+    
+    var vpcSpan = document.createElement("SPAN");
+    vpcSpan.innerHTML = '<img src="image/about.png"  style="cursor:pointer;padding-right:7px;">';
+    vpcSpan.onclick = showAbout;
+    
+    this._div.appendChild(vpcSpan);
+    
+    var vpcLogo = document.createElement("A");
+    vpcLogo.innerHTML = '<img src="image/vpc25logo.png">';
+    vpcLogo.href = "http://veniceprojectcenter.org";
+    vpcLogo.target ="_blank";
+    
+    this._div.appendChild(vpcLogo);
+    
     return this._div;
 };
+
+function showAbout(){
+    console.log("show");
+}
+function hideAbout(){
+    console.log("hide");
+}
 
 VPCinfo.addTo(map);
 
