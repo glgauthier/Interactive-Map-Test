@@ -60,9 +60,15 @@ function overlay(currentLayer) {
     makeHTMLinfo(properties,"inner","JSON");
    
     addOverlayInfo("inner",properties.Numero);
-    // test for appending additional info
-    $(document.getElementById("inner")).append('<br /> <br /><a href="http://www.venipedia.org/wiki/index.php?title=Islands"  target="_blank" onMouseOver="return changeImage()" onMouseOut= "return changeImageBack()"> <img name="jsbutton" src="image/venipedia.png" width="80" height="70" border="0" alt="javascript button" align="left"></a>'  
+    
+    
+    // Add in the venipedia and cartography buttons
+    $(document.getElementById("inner")).append('<br /> <br /><a href="" id="venipedia"  target="_blank" onMouseOver="return changeImage()" onMouseOut= "return changeImageBack()"> <img name="jsbutton" src="image/venipedia.png" width="80" height="70" border="0" alt="javascript button" align="left"></a>'  
          + '<a href="http://cartography.veniceprojectcenter.org/" target="_blank" class="button">View on a historical map</a>');
+    
+    // generate correct venipedia link for associated island
+    var link = "http://www.venipedia.org/wiki/index.php?title=Island_of_" + encodeURIComponent(properties.Nome_Isola.replace(/ /g, "_")); 
+    document.getElementById("venipedia").href = link;
     
     // function for getting rid of overlay when you click on the screen
     // update later to remove only when clicking outside of 'overlay' div
