@@ -79,6 +79,7 @@ html, body
 /*white box for text overlay*/
 #overlay div {
     width: 80%;
+    max-width: 500px;
     height: calc(100% - 150px);
     margin: auto;
     float: center;
