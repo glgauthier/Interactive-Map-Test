@@ -1,9 +1,9 @@
 var loadingScreen = {
     opts: {
       lines: 13 // The number of lines to draw
-    , length: 28 // The length of each line
-    , width: 14 // The line thickness
-    , radius: 42 // The radius of the inner circle
+    , length: 20 // The length of each line
+    , width: 7 // The line thickness
+    , radius: 20 // The radius of the inner circle
     , scale: 1 // Scales overall size of the spinner
     , corners: 1 // Corner roundness (0..1)
     , color: '#000' // #rgb or #rrggbb or array of colors
@@ -67,14 +67,23 @@ var loadingScreen = {
     }
 }
 
-var closeButton = document.createElement("INPUT");
-closeButton.setAttribute("type", "button");
-closeButton.value = "Im Impatient";
-closeButton.onclick = function(){
-    loadingScreen.hide();
-}
+//var closeButton = document.createElement("INPUT");
+//closeButton.setAttribute("type", "button");
+//closeButton.value = "I'm Impatient";
+//closeButton.onclick = function(){
+//    loadingScreen.hide();
+//}
 
-loadingScreen.container.appendChild(closeButton);
+//document.getElementById("loadingBottom").appendChild(closeButton);
+
+// set close button based on "a.Close" css specifications
+// we use CSS here so the button's look is completely customizable
+document.getElementById("loadingTop").innerHTML = "<b>Loading...</b>";
+$(document.getElementById("loadingBottom")).append(
+    '<a onclick = "loadingScreen.hide()" class = "Close">' +
+    'Load in Background (Im Impatient)' +
+    '</a>'
+);
 
 loadingScreen.show();
 loadingScreen.hide();
