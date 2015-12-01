@@ -86,6 +86,10 @@ getGroup("https://cityknowledge.firebaseio.com/groups/Island%20Church%20Data.jso
 //    return new L.marker(latlng, {icon: conventIcon}).bindPopup("I am a convent");
 //}});
 
+getGroup("https://cityknowledge.firebaseio.com/groups/Minor_Lagoon_Islands_2015.json",{tag:"Wiki Data"},{pointToLayer: function(feature,latlng){
+    return new L.marker(latlng, {icon: vpcicon});
+}});
+
 // the above layer probably matches up with the images in
 //https://cityknowledge.firebaseio.com/groups/convent%20floor%20plans.json"
 
