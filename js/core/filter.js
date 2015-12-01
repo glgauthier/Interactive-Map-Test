@@ -354,8 +354,10 @@ filter.onApply = function(e){
         var feature = feature_layers[i].feature;
         if(!feature.properties.Numero && feature.properties.islands){
             for(var n=0,nLen=feature.properties.islands.length;(n<nLen)&&(show==false);n++){
-                if(feature_layers[islandIndeces[feature.properties.islands[n]]].feature.visible){
-                    show = true;
+                if(islandIndeces[feature.properties.islands[n]]){
+                    if(feature_layers[islandIndeces[feature.properties.islands[n]]].feature.visible){
+                        show = true;
+                    }
                 }
             }
             if(feature.visible != show){

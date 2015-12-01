@@ -60,7 +60,9 @@ getGroup("https://cityknowledge.firebaseio.com/groups/belltowers%20MAPS%2015.jso
 getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOTELS08_PT_15.json",{tag: "HotelsMap"},{pointToLayer: function(feature,latlng){
     return new L.marker(latlng, {icon: hotelIcon}).bindPopup("I am a church");
 }});
-getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOLES_PT_15.json",{tag: "Sewer Outlets"});
+getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOLES_PT_15.json",{tag: "Sewer Outlets"},{onEachFeature:setupHighlight,pointToLayer: function(feature,latlng){
+    return new L.marker(latlng, {icon: sewerIcon}).bindPopup("poop");
+}});
 
 // ~~~~~~~~ layers with just lat/long ~~~~~~~~~~~~~~~~~~~~~
 //getGroup("https://cityknowledge.firebaseio.com/groups/Hostels,%20Hotels.json","Hotels",{pointToLayer: function(feature,latlng){
