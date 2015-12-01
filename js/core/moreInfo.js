@@ -179,7 +179,7 @@ function addOverlayInfo(id,num){
             for (var i = 0; i < arrayLength; i++) {  
                 if($.inArray(num,target[i].islands)!=-1) {
                     if(first) {
-                        $(document.getElementById(id)).append('<br><b>'+ layers[k]+'</b>'+'</br>');
+                        $(document.getElementById(id)).append('<br><b><center>'+ layers[k]+'</center></b></br>');
                         first = false;
                     }
                     tempData.push(target[i]);
@@ -201,6 +201,29 @@ function addOverlayInfo(id,num){
                     // canals
                     else if(target[i].data.Nome_Rio){
                         $(document.getElementById(id)).append(target[i].data.Nome_Rio+'</br>');
+                    }
+                    else if(layers[k]=="Wiki Data"){
+                        $(document.getElementById(id)).append(
+                            '<b>About: </b>'+ target[i].data.Blurb+'</br>' +
+                            '<a href="" id="bib" target="_blank" class="button">View Bibliography</a></br>' +
+                            '<table border="1" style="width:100%">'+
+                            '<tr>'+
+                                '<td>'+ 'Handicap Accessible' + '</td>' +
+                                '<td>'+ target[i].data.Handicap_Accessibility + '</td>' +
+                            '</tr>' + '<tr>'+
+                                '<td>'+ 'Inhabited?' + '</td>' +
+                                '<td>'+ target[i].data.Inhabited + '</td>' +
+                            '</tr>' + '<tr>'+
+                                '<td>'+ 'Type' + '</td>' +
+                                '<td>'+ target[i].data.Type + '</td>' +
+                            '</tr>' + '<tr>'+
+                                '<td>'+ 'Usage' + '</td>' +
+                                '<td>'+ target[i].data.Usage + '</td>' +
+                            '</tr>' +
+                            '</table>'
+                        );
+                        // add the correct link to the button
+                        document.getElementById("bib").href = target[i].data.Bibliography;
                     }
                     // still need to add name support for the following OR just look for a field
                     // that either has "Name" or "Nome" as part of it
