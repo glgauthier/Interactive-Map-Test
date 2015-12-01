@@ -85,11 +85,10 @@ function zoomToFeature(e) {
     overlay(currentLayer);
 }
 
-function saveAndHighlight(parent, feature, layer) {
-    console.log("saveAndHighlight");
-    saveFeature(parent, feature, layer)
-    setupHighlight(feature,layer);
-}
+//function saveAndHighlight(parent, feature, layer) {
+//    saveFeature(parent, feature, layer)
+//    setupHighlight(feature,layer);
+//}
 
 function saveFeature(parent, feature, layer){
     var obj = {
@@ -126,7 +125,11 @@ function setupHighlight(feature, layer) {
 // add base geojson to map with islands data
 var islands_layer = L.geoJson(null, {
     style: Island_style,
-    onEachFeature: partial(saveAndHighlight,islands_layer)
+    onEachFeature: function(feature,layer){
+        saveFeature(islands_layer,feature,layer);
+        setupHighlight(feature,layer);
+    }
+    //onEachFeature: partial(saveAndHighlight,islands_layer)
 }).addTo(map);
 
 function refreshFilter(){

@@ -2,11 +2,13 @@
 
 //Add a data set to be displayed on the map!
 //options = { tag, filter: boolean function(obj)};
+//customArgs = SEE http://leafletjs.com/reference.html#geojson-options
 function getGroup(URL,options,customArgs){
     //$.getJSON(URL,partial(getGroupCallback,tag,customArgs,URL));
     $.getJSON(URL,function(msg){getGroupCallback(options,customArgs,URL,msg);});
 }
 
+//Add an Island Base Layer to the map!
 //options = { searchInclude: string[], searchExclude: string[]};
 function getIslands(path,options){
     $.getJSON(path,function(msg){
