@@ -119,16 +119,6 @@ getGroup("https://ckdata.firebaseio.com/groups/MERGE%20Stores%202012.json",{filt
     return new L.marker(latlng, {icon: storeIcon});
 }});
 
-
-// ~~~~~~~~ useful datasets not tagged by location ~~~~~~~~
-// https://cityknowledge.firebaseio.com/groups/SUBGROUP%20Boat%20Traffic%20Counts%20by%20Station.json
-// https://cityknowledge.firebaseio.com/groups/SUBGROUP%20Latest%20Traffic%20Counts%20By%20Station.json
-
-//var poly = new Array({x:0,y:0},{x:2,y:0},{x:2,y:2},{x:0,y:2},{x:0,y:0});
-//var point = {x:1,y:1};
-//console.log(point);
-//console.log(pointInPoly(point,poly));
-
 //****************************************************************************
 // observe featureCollections as things are added
 // add in popups for each item as it loads in
