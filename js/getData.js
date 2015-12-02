@@ -101,7 +101,7 @@ getGroup("https://ckdata.firebaseio.com/groups/MERGE%20Stores%202012.json",{filt
     if(obj["2015"]) return true;
     
 }},{pointToLayer: function(feature,latlng){
-    return new L.marker(latlng, {icon: storeIcon}).bindPopup("I am a store");
+    return new L.marker(latlng, {icon: storeIcon}).bindPopup("<img style=\"width:100%\" src=\"" + feature.properties['2015'].picture_url + "\"/><br/>" + "Name: " + feature.properties['2015'].name + "<br/> Address: " + feature.properties['2015'].address_number + " " + feature.properties['2015'].address_street +  "<br/> Nace+ Code: " + feature.properties['2015'].nace_plus_code + "<br/> Good Sold: " + feature.properties['2015'].nace_plus_descr + "<br/> Store Type: " + feature.properties['2015'].shop_type);
 }});
 
 

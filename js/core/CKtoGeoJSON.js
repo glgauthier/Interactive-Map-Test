@@ -284,8 +284,9 @@ function findLonLat(obj){
             }
         }
     }
-    if(lon && lat && parseFloat(lon) && parseFloat(lat))
-        return [parseFloat(lon),parseFloat(lat)];
+//    if(lon && lat && parseFloat(lon) && parseFloat(lat))
+//        return [parseFloat(lon),parseFloat(lat)];
+    return[lon,lat];
 }
     
 function isInt(value) {
