@@ -7,7 +7,17 @@ var legend_div = L.DomUtil.create('div', 'info legend');
 var objectColors;
 
 // color gradients
-var gradientColors = [['#edf8fb','#b3cde3','#8c96c6','#8856a7','#810f7c'],['#fef0d9','#fdcc8a','#fc8d59','#e34a33','#b30000'],['#f1eef6','#d7b5d8','#df65b0','#dd1c77','#980043'],['#edf8fb','#b2e2e2','#66c2a4','#2ca25f','#006d2c']];
+//var gradientColors = [
+//    ['#edf8fb','#b3cde3','#8c96c6','#8856a7','#810f7c'],
+//    ['#fef0d9','#fdcc8a','#fc8d59','#e34a33','#b30000'],
+//    ['#f1eef6','#d7b5d8','#df65b0','#dd1c77','#980043'],
+//    ['#edf8fb','#b2e2e2','#66c2a4','#2ca25f','#006d2c']];
+var gradientColors = [
+    ['#f7fcfd','#e0ecf4','#bfd3e6','#9ebcda','#8c96c6','#8c6bb1','#88419d','#6e016b'],
+    ['#fff7ec','#fee8c8','#fdd49e','#fdbb84','#fc8d59','#ef6548','#d7301f','#990000'],
+    ['#f7f4f9','#e7e1ef','#d4b9da','#c994c7','#df65b0','#e7298a','#ce1256','#91003f'],
+    ['#f7fcfd','#e5f5f9','#ccece6','#99d8c9','#66c2a4','#41ae76','#238b45','#005824']
+]
 var tempField; // used for switching between gradients
 var c = 0; // used for switching between gradients (gradientColors[c][x])
 
@@ -205,7 +215,7 @@ var ColorControl = L.Control.extend({
                 // and update the value of tempFields
                 tempField = colorControl.selectedFields()[0];
                 if(value!=undefined){
-                    for (var i = Math.min(this.thresholds.length,gradientColors[c].length); i >= 0; i--) {
+                    for (var i = Math.min(this.thresholds.length,gradientColors[c].length)-1; i >= 0; i--) {
                         if(value >= this.thresholds[i]){
                             return gradientColors[c][i];
                         }
@@ -228,22 +238,27 @@ var ColorControl = L.Control.extend({
             return; // indicate failure
         }
         
-        var maximum = Math.max.apply(this,arr);
-        var minimum = Math.min.apply(this,arr);
-       
-        legend.grades = [];
+//        var maximum = Math.max.apply(this,arr);
+//        var minimum = Math.min.apply(this,arr);
+//       
+//        legend.grades = [];
+//        
+//        // sort the array of values from min-max
+//        arr = arr.sort(sortNumber);
+//        // find the index for each quartile
+//        // see https://en.wikipedia.org/wiki/Quartile 
+//        // I changed the max/min outliers so it'd display better
+//        var Q1 = Math.ceil(0.25*arr.length);
+//        var Q3 = Math.ceil(0.75*arr.length);
+//        var Qlow = Math.ceil(0.05*arr.length);
+//        var Qhigh = Math.ceil(0.95*arr.length);
+//        // set the gradient based on the array value for each percentile
+//        legend.grades = [minimum, arr[Qlow], arr[Q1], arr[Q3], arr[Qhigh]];
         
-        // sort the array of values from min-max
-        arr = arr.sort(sortNumber);
-        // find the index for each quartile
-        // see https://en.wikipedia.org/wiki/Quartile 
-        // I changed the max/min outliers so it'd display better
-        var Q1 = Math.ceil(0.25*arr.length);
-        var Q3 = Math.ceil(0.75*arr.length);
-        var Qlow = Math.ceil(0.05*arr.length);
-        var Qhigh = Math.ceil(0.95*arr.length);
-        // set the gradient based on the array value for each percentile
-        legend.grades = [minimum, arr[Qlow], arr[Q1], arr[Q3], arr[Qhigh]];
+        var stats = new geostats(arr);
+        var a = stats.getClassJenks(8);
+        
+        legend.grades = stats.bounds;
         
         legend.setThresholds(legend.grades);
         this.thresholds = legend.grades;
