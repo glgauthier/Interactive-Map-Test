@@ -52,15 +52,15 @@ getIslands('IslesLagoon_multi.geojson'),{searchInclude: ['Nome_Isola','Numero']}
 
 // ~~~~~~~~~~ layers with maps/working points ~~~~~~~~~~~~~
 //var getReq = $.getJSON("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json",getGroupCallback);
-getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json",{tag: "Bridges"},{style: style2, onEachFeature:setupHighlight});
+getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json",{tag: "Bridges"},{style: standOut, onEachFeature:setupHighlight});
 getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canals.json",{tag: "Canals"},{onEachFeature:setupHighlight});
 //featureCollections["Canals"].bindPopup("I am a canal");
 
 //getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canal%20Segments.json","Canal Segments",{style: style2});
-getGroup("https://cityknowledge.firebaseio.com/groups/belltowers%20MAPS%2015.json",{tag:"Bell Towers"},{style: style2, onEachFeature:setupHighlight,pointToLayer: function(feature,latlng){
+getGroup("https://cityknowledge.firebaseio.com/groups/belltowers%20MAPS%2015.json",{tag:"Bell Towers"},{onEachFeature:setupHighlight,pointToLayer: function(feature,latlng){
     return new L.marker(latlng, {icon: churchIcon}).bindPopup("Hover over for more info")}});
 getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOTELS08_PT_15.json",{tag: "HotelsMap"},{pointToLayer: function(feature,latlng){
-    return new L.marker(latlng, {icon: hotelIcon}).bindPopup("I am a church");
+    return new L.marker(latlng, {icon: hotelIcon}).bindPopup("I am a hotel");
 }});
 getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOLES_PT_15.json",{tag: "Sewer Outlets"},{onEachFeature:setupHighlight,pointToLayer: function(feature,latlng){
     return new L.marker(latlng, {icon: sewerIcon}).bindPopup("poop");
@@ -83,9 +83,9 @@ getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOLES_PT_15.json",{ta
 
 // ~~~~~~~~ historical data (still just lat/long) ~~~~~~~~~
 //getGroup("https://cityknowledge.firebaseio.com/groups/Demolished%20Churches.json");
-getGroup("https://cityknowledge.firebaseio.com/groups/Island%20Church%20Data.json",{tag:"Island Churches"},{pointToLayer: function(feature,latlng){
-    return new L.marker(latlng, {icon: conventIcon}).bindPopup("I am a church");
-}});
+//getGroup("https://cityknowledge.firebaseio.com/groups/Island%20Church%20Data.json",{tag:"Island Churches"},{pointToLayer: function(feature,latlng){
+//    return new L.marker(latlng, {icon: conventIcon}).bindPopup("I am a church");
+//}});
 //getGroup("https://cityknowledge.firebaseio.com/groups/Convents%20Data.json", "Convents",{pointToLayer: function(feature,latlng){
 //    return new L.marker(latlng, {icon: conventIcon}).bindPopup("I am a convent");
 //}});
