@@ -51,32 +51,26 @@ getIslands('IslesLagoon_multi.geojson'),{searchInclude: ['Nome_Isola','Numero','
 
 // ~~~~~~~~~~ layers with maps/working points ~~~~~~~~~~~~~
 //var getReq = $.getJSON("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json",getGroupCallback);
-getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json",{tag: "Bridges",moreInfo:function(properties){
-    return properties.data.Nome_Ponte+'</br>'
-},summary: {
-    html: function(obj){
-        return '<b>Summary:</b> </br>' + 
-        'Count: ' + obj + '</br>';
-    },
-    initial: 0,
-    summarize: function(obj){
-        obj++;
-        return obj;
-    }
+getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json",{tag: "Bridges",moreInfo:function(targets){
+    var output = '';
+    var count = 0;
+    targets.forEach(function(target){
+        output += target.data.Nome_Ponte+'</br>'
+        count++;
+    });
+    output += '<b>Count:</b> '+count+'</br>';
+    return output;
 }},{style: standOut, onEachFeature:setupHighlight});
 
-getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canals.json",{tag: "Canals",moreInfo:function(properties){
-    return properties.data.Nome_Rio+'</br>'
-},summary: {
-    html: function(obj){
-        return '<b>Summary:</b> </br>' + 
-        'Count: ' + obj + '</br>';
-    },
-    initial: 0,
-    summarize: function(obj){
-        obj++;
-        return obj;
-    }
+getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canals.json",{tag: "Canals",moreInfo:function(targets){
+    var output = '';
+    var count = 0;
+    targets.forEach(function(target){
+        output += target.data.Nome_Rio+'</br>'
+        count++;
+    });
+    output += '<b>Count:</b> '+count+'</br>';
+    return output;
 }},{onEachFeature:function(feature,layer){
     setupHighlight(feature,layer);
     layer.bindPopup(
@@ -85,18 +79,15 @@ getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canals.json",{tag: 
 }});
 
 //getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canal%20Segments.json","Canal Segments",{style: style2});
-getGroup("https://cityknowledge.firebaseio.com/groups/belltowers%20MAPS%2015.json",{tag:"Bell Towers",moreInfo:function(properties){
-    return properties.data.NAME+'</br>'
-},summary: {
-    html: function(obj){
-        return '<b>Summary:</b> </br>' + 
-        'Count: ' + obj + '</br>';
-    },
-    initial: 0,
-    summarize: function(obj){
-        obj++;
-        return obj;
-    }
+getGroup("https://cityknowledge.firebaseio.com/groups/belltowers%20MAPS%2015.json",{tag:"Bell Towers",moreInfo:function(targets){
+    var output = '';
+    var count = 0;
+    targets.forEach(function(target){
+        output += target.data.NAME+'</br>'
+        count++;
+    });
+    output += '<b>Count:</b> '+count+'</br>';
+    return output;
 }},{onEachFeature:setupHighlight,pointToLayer: function(feature,latlng){
     return new L.marker(latlng, {icon: churchIcon}).bindPopup(
     "<b>" + feature.properties.data.NAME + "</b></br>" +
@@ -105,11 +96,27 @@ getGroup("https://cityknowledge.firebaseio.com/groups/belltowers%20MAPS%2015.jso
     );
 }});
 
-getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOTELS08_PT_15.json",{tag: "HotelsMap"},{pointToLayer: function(feature,latlng){
+getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOTELS08_PT_15.json",{tag: "HotelsMap",moreInfo:function(targets){
+    var output = '';
+    var count = 0;
+    targets.forEach(function(target){
+        count++;
+    });
+    output += '<b>Count:</b> '+count+'</br>';
+    return output;
+}},{pointToLayer: function(feature,latlng){
     return new L.marker(latlng, {icon: hotelIcon}).bindPopup("I am a hotel");
 }});
 
-getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOLES_PT_15.json",{tag: "Sewer Outlets"},{onEachFeature:setupHighlight,pointToLayer: function(feature,latlng){
+getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOLES_PT_15.json",{tag: "Sewer Outlets",moreInfo:function(targets){
+    var output = '';
+    var count = 0;
+    targets.forEach(function(target){
+        count++;
+    });
+    output += '<b>Count:</b> '+count+'</br>';
+    return output;
+}},{onEachFeature:setupHighlight,pointToLayer: function(feature,latlng){
     return new L.marker(latlng, {icon: sewerIcon}).bindPopup("outlet");
 }});
 
@@ -121,42 +128,40 @@ getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOLES_PT_15.json",{ta
 
 // ~~~~~~~~ historical data (still just lat/long) ~~~~~~~~~
 //getGroup("https://cityknowledge.firebaseio.com/groups/Demolished%20Churches.json");
-getGroup("https://cityknowledge.firebaseio.com/groups/Convents%20Data.json",{moreInfo:function(properties){
-    return 'About: ' + properties.data["Historic Background"] + '</br>' +
-        'Current Use: ' + properties.data["Curret Use"] + '</br>' +
-        'Founded in' + properties.data["Year Founded"] + '</br>'
-},summary: {
-    html: function(obj){
-        return '<b>Summary:</b> </br>' + 
-        'Count: ' + obj + '</br>';
-    },
-    initial: 0,
-    summarize: function(obj,properties){
-        obj++;
-        return obj;
-    }
+getGroup("https://cityknowledge.firebaseio.com/groups/Convents%20Data.json",{moreInfo:function(targets){
+    var output = '';
+    targets.forEach(function(target){
+        output += 'About: ' + target.data["Historic Background"] + '</br>' +
+            'Current Use: ' + target.data["Curret Use"] + '</br>' +
+            'Founded in' + target.data["Year Founded"] + '</br>'
+    });
+    return output;
 }},{pointToLayer: function(feature,latlng){
     return new L.marker(latlng, {icon: conventIcon}).bindPopup("I am a convent");
 }});
 
-getGroup("https://cityknowledge.firebaseio.com/groups/Minor_Lagoon_Islands_2015.json",{tag:"Wiki Data",moreInfo: function(properties){
-    return '<b>About: </b>'+ properties.data.Blurb+'</br>' +
+getGroup("https://cityknowledge.firebaseio.com/groups/Minor_Lagoon_Islands_2015.json",{tag:"Wiki Data",moreInfo: function(targets){
+    var output = '';
+    targets.forEach(function(target){
+        output+='<b>About: </b>'+ target.data.Blurb+'</br>' +
         '<a href="" id="bib" target="_blank" class="button">View Bibliography</a></br>' +
         '<table border="1" style="width:100%">'+
         '<tr>'+
             '<td>'+ 'Handicap Accessible' + '</td>' +
-            '<td>'+ properties.data.Handicap_Accessibility + '</td>' +
+            '<td>'+ target.data.Handicap_Accessibility + '</td>' +
         '</tr>' + '<tr>'+
             '<td>'+ 'Inhabited?' + '</td>' +
-            '<td>'+ properties.data.Inhabited + '</td>' +
+            '<td>'+ target.data.Inhabited + '</td>' +
         '</tr>' + '<tr>'+
             '<td>'+ 'Type' + '</td>' +
-            '<td>'+ properties.data.Type + '</td>' +
+            '<td>'+ targets.data.Type + '</td>' +
         '</tr>' + '<tr>'+
             '<td>'+ 'Usage' + '</td>' +
-            '<td>'+ properties.data.Usage + '</td>' +
+            '<td>'+ target.data.Usage + '</td>' +
         '</tr>' +
         '</table>'
+    });
+    return output;
 }},{pointToLayer: function(feature,latlng){
     return new L.marker(latlng, {icon: vpcicon});
 }});

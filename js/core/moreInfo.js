@@ -164,27 +164,13 @@ function tabs(int_num){
 function addOverlayInfo(id,num){
     
     for(key in featureCollections){
-        if(featureCollections[key].groupOptions){
-            var first = true;
-            var summary = featureCollections[key].groupOptions.summary;
-            var summaryVal = summary ? (summary.initial || 0) : undefined;
-            featureCollections[key].eachLayer(function(layer){
-                var target = layer.feature.properties;
-                if($.inArray(num,target.islands)!=-1) {
-                    if(first) {
-                        $(document.getElementById(id)).append('<br><b><center>'+ key +'</center></b></br>');
-                        first = false;
-                    }
-                    if(featureCollections[key].groupOptions.moreInfo){
-                        $(document.getElementById(id)).append(featureCollections[key].groupOptions.moreInfo(target));
-                    }
-                    if(summary && summary.summarize){
-                        summaryVal = summary.summarize(summaryVal,target);
-                    }
-                }
+        if(featureCollections[key].groupOptions && featureCollections[key].groupOptions.moreInfo){
+            var targets = $.map(featureCollections[key]._layers, function(e){return e.feature.properties}).filter(function(target){
+                return $.inArray(num,target.islands)!=-1;
             });
-            if(first == false && summary && summary.html){
-                 $(document.getElementById(id)).append(summary.html(summaryVal));
+            if(targets.length>0){
+                $(document.getElementById(id)).append('<br><b><center>'+ key+'</center></b></br>');
+                $(document.getElementById(id)).append(featureCollections[key].groupOptions.moreInfo(targets));
             }
         }
     }
