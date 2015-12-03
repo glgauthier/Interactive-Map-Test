@@ -165,24 +165,29 @@ function addOverlayInfo(id,num){
 
     // figure out what overlays are turned on/being used
     layers = Object.keys(featureCollections);
+    var tempData = [];
     for(var k =0; k<layers.length; k++){
         // if the layer has objects, keep goung 
         if (!$.isEmptyObject(featureCollections[layers[k]]._layers)){
-            //console.log(layers[k]);
-            
-            
             // pull out what's tagged by isle
             var target = $.map(featureCollections[layers[k]]._layers, function(e){return e.feature.properties});
             var arrayLength = target.length;
-            var tempData = [];
             var first = true; // flag for displaying layers[k] (category title)
             for (var i = 0; i < arrayLength; i++) {  
                 if($.inArray(num,target[i].islands)!=-1) {
+// **************** TO DO *********************************************************                  
+                    // everything below gone except for making a new div for the overlay set,
+                    // pulling in your html (specified in the object)
+                    // possibly keep the following for future stuff:
+                    //      making the title (next 4 lines) 
+                    //      adding all objects on the isle to tempData[];
+// ******^^^^^^***** TO DO ********************************************************* 
                     if(first) {
                         $(document.getElementById(id)).append('<br><b><center>'+ layers[k]+'</center></b></br>');
                         first = false;
                     }
                     tempData.push(target[i]);
+                     
                     // bridges
                     if(target[i].data.Nome_Ponte){
                         //console.log(target[i].data.Nome_Ponte);
@@ -200,9 +205,9 @@ function addOverlayInfo(id,num){
                     // convents
                     else if(layers[k]=="Convents Data"){
                         $(document.getElementById(id)).append(
-                            'About' + target[i].data["Historic Background"] + '</br>' +
-                            'Current Use' + target[i].data["Curret Use"] + '</br>' +
-                            'Year Founded' + target[i].data["Year Founded"] + '</br>'
+                            'About: ' + target[i].data["Historic Background"] + '</br>' +
+                            'Current Use: ' + target[i].data["Curret Use"] + '</br>' +
+                            'Founded in' + target[i].data["Year Founded"] + '</br>'
                         );
                     }
                     else if(layers[k]=="Wiki Data"){
@@ -228,13 +233,10 @@ function addOverlayInfo(id,num){
                         // add the correct link to the button
                         document.getElementById("bib").href = target[i].data.Bibliography;
                     }
-                    // still need to add name support for the following OR just look for a field
-                    // that either has "Name" or "Nome" as part of it
-                    // shops
-                    // hotels
-                    // sewer outlets
                 }
             }
         }
+        
     }
+    console.log(tempData);
 }
