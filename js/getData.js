@@ -51,8 +51,13 @@ getIslands('IslesLagoon_multi.geojson'),{searchInclude: ['Nome_Isola','Numero']}
 
 // ~~~~~~~~~~ layers with maps/working points ~~~~~~~~~~~~~
 //var getReq = $.getJSON("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json",getGroupCallback);
-getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json",{tag: "Bridges"},{style: standOut, onEachFeature:setupHighlight});
-getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canals.json",{tag: "Canals"},{onEachFeature:function(feature,layer){
+getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json",{tag: "Bridges",moreInfo:function(properties){
+    return properties.data.Nome_Ponte+'</br>'
+}},{style: standOut, onEachFeature:setupHighlight});
+
+getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canals.json",{tag: "Canals",moreInfo:function(properties){
+    return properties.data.Nome_Rio+'</br>'
+}},{onEachFeature:function(feature,layer){
     setupHighlight(feature,layer);
     layer.bindPopup(
         '<b><center>' + feature.properties.data.Nome_Rio + '</center></b>'
@@ -60,7 +65,9 @@ getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canals.json",{tag: 
 }});
 
 //getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canal%20Segments.json","Canal Segments",{style: style2});
-getGroup("https://cityknowledge.firebaseio.com/groups/belltowers%20MAPS%2015.json",{tag:"Bell Towers"},{onEachFeature:setupHighlight,pointToLayer: function(feature,latlng){
+getGroup("https://cityknowledge.firebaseio.com/groups/belltowers%20MAPS%2015.json",{tag:"Bell Towers",moreInfo:function(properties){
+    return properties.data.NAME+'</br>'
+}},{onEachFeature:setupHighlight,pointToLayer: function(feature,latlng){
     return new L.marker(latlng, {icon: churchIcon}).bindPopup(
     "<b>" + feature.properties.data.NAME + "</b></br>" +
     "Code: " + feature.properties.data.CODE + "</br>" +
@@ -73,7 +80,7 @@ getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOTELS08_PT_15.json",
 }});
 
 getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOLES_PT_15.json",{tag: "Sewer Outlets"},{onEachFeature:setupHighlight,pointToLayer: function(feature,latlng){
-    return new L.marker(latlng, {icon: sewerIcon}).bindPopup("poop");
+    return new L.marker(latlng, {icon: sewerIcon}).bindPopup("outlet");
 }});
 
 // ~~~~~~~~ layers with just lat/long ~~~~~~~~~~~~~~~~~~~~~
@@ -84,11 +91,33 @@ getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOLES_PT_15.json",{ta
 
 // ~~~~~~~~ historical data (still just lat/long) ~~~~~~~~~
 //getGroup("https://cityknowledge.firebaseio.com/groups/Demolished%20Churches.json");
-getGroup("https://cityknowledge.firebaseio.com/groups/Convents%20Data.json",null,{pointToLayer: function(feature,latlng){
+getGroup("https://cityknowledge.firebaseio.com/groups/Convents%20Data.json",{moreInfo:function(properties){
+    return 'About: ' + properties.data["Historic Background"] + '</br>' +
+        'Current Use: ' + properties.data["Curret Use"] + '</br>' +
+        'Founded in' + properties.data["Year Founded"] + '</br>'
+}},{pointToLayer: function(feature,latlng){
     return new L.marker(latlng, {icon: conventIcon}).bindPopup("I am a convent");
 }});
 
-getGroup("https://cityknowledge.firebaseio.com/groups/Minor_Lagoon_Islands_2015.json",{tag:"Wiki Data"},{pointToLayer: function(feature,latlng){
+getGroup("https://cityknowledge.firebaseio.com/groups/Minor_Lagoon_Islands_2015.json",{tag:"Wiki Data",moreInfo: function(properties){
+    return '<b>About: </b>'+ properties.data.Blurb+'</br>' +
+        '<a href="" id="bib" target="_blank" class="button">View Bibliography</a></br>' +
+        '<table border="1" style="width:100%">'+
+        '<tr>'+
+            '<td>'+ 'Handicap Accessible' + '</td>' +
+            '<td>'+ properties.data.Handicap_Accessibility + '</td>' +
+        '</tr>' + '<tr>'+
+            '<td>'+ 'Inhabited?' + '</td>' +
+            '<td>'+ properties.data.Inhabited + '</td>' +
+        '</tr>' + '<tr>'+
+            '<td>'+ 'Type' + '</td>' +
+            '<td>'+ properties.data.Type + '</td>' +
+        '</tr>' + '<tr>'+
+            '<td>'+ 'Usage' + '</td>' +
+            '<td>'+ properties.data.Usage + '</td>' +
+        '</tr>' +
+        '</table>'
+}},{pointToLayer: function(feature,latlng){
     return new L.marker(latlng, {icon: vpcicon});
 }});
 

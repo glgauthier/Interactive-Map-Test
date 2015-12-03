@@ -427,6 +427,8 @@ function initializeCollection(statusIndex,options,customArgs,groupURL,groupMSG){
             originalOnAdd.call(featureCollections[tag],map);
         }
         
+        featureCollections[tag].groupOptions = options;
+        
         layerController.addOverlay(featureCollections[tag],tag);
         
         return true;

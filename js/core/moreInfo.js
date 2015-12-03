@@ -162,39 +162,58 @@ function tabs(int_num){
 */
 
 function addOverlayInfo(id,num){
-
-    // figure out what overlays are turned on/being used
-    layers = Object.keys(featureCollections);
-    var tempData = [];
-    for(var k =0; k<layers.length; k++){
-        // if the layer has objects, keep goung 
-        if (!$.isEmptyObject(featureCollections[layers[k]]._layers)){
-            // pull out what's tagged by isle
-            var target = $.map(featureCollections[layers[k]]._layers, function(e){return e.feature.properties});
-            var arrayLength = target.length;
-            var first = true; // flag for displaying layers[k] (category title)
-            for (var i = 0; i < arrayLength; i++) {  
-                if($.inArray(num,target[i].islands)!=-1) {
-// **************** TO DO *********************************************************                  
-                    // everything below gone except for making a new div for the overlay set,
-                    // pulling in your html (specified in the object)
-                    // possibly keep the following for future stuff:
-                    //      making the title (next 4 lines) 
-                    //      adding all objects on the isle to tempData[];
-// ******^^^^^^***** TO DO ********************************************************* 
-                    if(first) {
-                        $(document.getElementById(id)).append('<br><b><center>'+ layers[k]+'</center></b></br>');
-                        first = false;
-                    }
-                    // otherwise add the function returns to the div that I already created
-                    // for that object layer (deals w/ case of more than 1 obj per layer per isle)
-                    
-                    
-                    tempData.push(target[i]); // populate with all objs on the isle for debugging
+    
+    for(key in featureCollections){
+        var first = true;
+        featureCollections[key].eachLayer(function(layer){
+            var target = layer.feature.properties;
+            if($.inArray(num,target.islands)!=-1) {
+                if(first) {
+                    $(document.getElementById(id)).append('<br><b><center>'+ key +'</center></b></br>');
+                    first = false;
+                }
+                if(featureCollections[key].groupOptions.moreInfo){
+                    $(document.getElementById(id)).append(featureCollections[key].groupOptions.moreInfo(target));
                 }
             }
-        }
-        
+        });
     }
-    console.log(tempData);
 }
+
+//function addOverlayInfo(id,num){
+//
+//    // figure out what overlays are turned on/being used
+//    layers = Object.keys(featureCollections);
+//    var tempData = [];
+//    for(var k =0; k<layers.length; k++){
+//        // if the layer has objects, keep goung 
+//        if (!$.isEmptyObject(featureCollections[layers[k]]._layers)){
+//            // pull out what's tagged by isle
+//            var target = $.map(featureCollections[layers[k]]._layers, function(e){return e.feature.properties});
+//            var arrayLength = target.length;
+//            var first = true; // flag for displaying layers[k] (category title)
+//            for (var i = 0; i < arrayLength; i++) {  
+//                if($.inArray(num,target[i].islands)!=-1) {
+//// **************** TO DO *********************************************************                  
+//                    // everything below gone except for making a new div for the overlay set,
+//                    // pulling in your html (specified in the object)
+//                    // possibly keep the following for future stuff:
+//                    //      making the title (next 4 lines) 
+//                    //      adding all objects on the isle to tempData[];
+//// ******^^^^^^***** TO DO ********************************************************* 
+//                    if(first) {
+//                        $(document.getElementById(id)).append('<br><b><center>'+ layers[k]+'</center></b></br>');
+//                        first = false;
+//                    }
+//                    // otherwise add the function returns to the div that I already created
+//                    // for that object layer (deals w/ case of more than 1 obj per layer per isle)
+//                    
+//                    
+//                    tempData.push(target[i]); // populate with all objs on the isle for debugging
+//                }
+//            }
+//        }
+//        
+//    }
+//    console.log(tempData);
+//}
