@@ -1,7 +1,7 @@
 // ~~~~~~~~ Functions for Retrievings Data ~~~~~~~~~~~~~~~~~~~~~
 
 //Add a data set to be displayed on the map!
-//options = { tag, filter: boolean function(obj)};
+//options = { tag: string, filter: boolean function(obj),moreInfo: string(HTML) function(feature)};
 //customArgs = SEE http://leafletjs.com/reference.html#geojson-options
 function getGroup(URL,options,customArgs){
     //$.getJSON(URL,partial(getGroupCallback,tag,customArgs,URL));
@@ -49,7 +49,6 @@ function getIslands(path,options){
 getIslands('IslesLagoon_single.geojson',{searchInclude: ['Nome_Isola','Numero']});
 getIslands('IslesLagoon_multi.geojson'),{searchInclude: ['Nome_Isola','Numero']};
 
-
 // ~~~~~~~~~~ layers with maps/working points ~~~~~~~~~~~~~
 //var getReq = $.getJSON("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json",getGroupCallback);
 getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json",{tag: "Bridges"},{style: standOut, onEachFeature:setupHighlight});
@@ -72,6 +71,7 @@ getGroup("https://cityknowledge.firebaseio.com/groups/belltowers%20MAPS%2015.jso
 getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOTELS08_PT_15.json",{tag: "HotelsMap"},{pointToLayer: function(feature,latlng){
     return new L.marker(latlng, {icon: hotelIcon}).bindPopup("I am a hotel");
 }});
+
 getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOLES_PT_15.json",{tag: "Sewer Outlets"},{onEachFeature:setupHighlight,pointToLayer: function(feature,latlng){
     return new L.marker(latlng, {icon: sewerIcon}).bindPopup("poop");
 }});

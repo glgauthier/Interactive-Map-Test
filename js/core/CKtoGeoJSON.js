@@ -1,4 +1,6 @@
 //Take a JSON object from the CK console and return a valid GeoJSON object with the same information.
+//Looks for geometry (points or polygons) --> feature.geometry
+//Original Object --> feature.properties
 function CKtoGeoJSON(CKjson){
     
     //Create an empty GeoJSON object to be filled with data and returned

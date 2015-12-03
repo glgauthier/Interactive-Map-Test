@@ -307,19 +307,9 @@ function getGroupCallback(options,customArgs,groupURL,msg) {
     
     var count = 0;
     for(var obj in jsonList.members){
-        //var URL = "https://"+ groupURL.split("/")[2]+"/data/" + obj + ".json";
-        //console.log(URL);
-        //$.getJSON(URL,function(msg){getEntryCallback(statusIndex,options,customArgs,groupURL,jsonList,msg);});
         if(count == 0){
             getNextEntry(statusIndex,options,customArgs,groupURL,jsonList);
         }
-        
-//        $.ajax({
-//            dataType: "json",
-//            url: URL,
-//            success: function(msg){getEntryCallback(statusIndex,options,customArgs,groupURL,jsonList,msg);},
-//            async:false
-//        });
         count++;
     }
     loadStatus[statusIndex].maxCount = count;
@@ -389,7 +379,7 @@ function getEntryCallback(statusIndex,options,customArgs,groupURL,groupMSG,msg) 
     var jsonObj = msg;
     //console.log(jsonObj);
     
-    if(!options){
+    if(!options || typeof options != 'object'){
         options = {};
     }
     
