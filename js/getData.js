@@ -53,10 +53,30 @@ getIslands('IslesLagoon_multi.geojson'),{searchInclude: ['Nome_Isola','Numero']}
 //var getReq = $.getJSON("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json",getGroupCallback);
 getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json",{tag: "Bridges",moreInfo:function(properties){
     return properties.data.Nome_Ponte+'</br>'
+},summary: {
+    html: function(obj){
+        return '<b>Summary:</b> </br>' + 
+        'Count: ' + obj + '</br>';
+    },
+    initial: 0,
+    summarize: function(obj){
+        obj++;
+        return obj;
+    }
 }},{style: standOut, onEachFeature:setupHighlight});
 
 getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canals.json",{tag: "Canals",moreInfo:function(properties){
     return properties.data.Nome_Rio+'</br>'
+},summary: {
+    html: function(obj){
+        return '<b>Summary:</b> </br>' + 
+        'Count: ' + obj + '</br>';
+    },
+    initial: 0,
+    summarize: function(obj){
+        obj++;
+        return obj;
+    }
 }},{onEachFeature:function(feature,layer){
     setupHighlight(feature,layer);
     layer.bindPopup(
@@ -67,6 +87,16 @@ getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canals.json",{tag: 
 //getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canal%20Segments.json","Canal Segments",{style: style2});
 getGroup("https://cityknowledge.firebaseio.com/groups/belltowers%20MAPS%2015.json",{tag:"Bell Towers",moreInfo:function(properties){
     return properties.data.NAME+'</br>'
+},summary: {
+    html: function(obj){
+        return '<b>Summary:</b> </br>' + 
+        'Count: ' + obj + '</br>';
+    },
+    initial: 0,
+    summarize: function(obj){
+        obj++;
+        return obj;
+    }
 }},{onEachFeature:setupHighlight,pointToLayer: function(feature,latlng){
     return new L.marker(latlng, {icon: churchIcon}).bindPopup(
     "<b>" + feature.properties.data.NAME + "</b></br>" +
@@ -95,6 +125,16 @@ getGroup("https://cityknowledge.firebaseio.com/groups/Convents%20Data.json",{mor
     return 'About: ' + properties.data["Historic Background"] + '</br>' +
         'Current Use: ' + properties.data["Curret Use"] + '</br>' +
         'Founded in' + properties.data["Year Founded"] + '</br>'
+},summary: {
+    html: function(obj){
+        return '<b>Summary:</b> </br>' + 
+        'Count: ' + obj + '</br>';
+    },
+    initial: 0,
+    summarize: function(obj){
+        obj++;
+        return obj;
+    }
 }},{pointToLayer: function(feature,latlng){
     return new L.marker(latlng, {icon: conventIcon}).bindPopup("I am a convent");
 }});
@@ -117,6 +157,16 @@ getGroup("https://cityknowledge.firebaseio.com/groups/Minor_Lagoon_Islands_2015.
             '<td>'+ properties.data.Usage + '</td>' +
         '</tr>' +
         '</table>'
+},summary: {
+    html: function(obj){
+        return '<b>Summary:</b> </br>' + 
+        'Count: ' + obj + '</br>';
+    },
+    initial: 0,
+    summarize: function(obj){
+        obj++;
+        return obj;
+    }
 }},{pointToLayer: function(feature,latlng){
     return new L.marker(latlng, {icon: vpcicon});
 }});
