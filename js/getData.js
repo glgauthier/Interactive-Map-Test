@@ -1,11 +1,11 @@
 // ~~~~~~~~ Functions for Retrievings Data ~~~~~~~~~~~~~~~~~~~~~
 
 //Add a data set to be displayed on the map!
-//options = { tag: string, filter: boolean function(obj),moreInfo: string(HTML) function(feature)};
+//groupOptions = { tag: string, filter: boolean function(obj),moreInfo: string(HTML) function(feature)};
 //customArgs = SEE http://leafletjs.com/reference.html#geojson-options
-function getGroup(URL,options,customArgs){
+function getGroup(URL,groupOptions,customArgs){
     //$.getJSON(URL,partial(getGroupCallback,tag,customArgs,URL));
-    $.getJSON(URL,function(msg){getGroupCallback(options,customArgs,URL,msg);});
+    $.getJSON(URL,function(msg){getGroupCallback(groupOptions,customArgs,URL,msg);});
 }
 
 //Add an Island Base Layer to the map!
@@ -46,8 +46,8 @@ function getIslands(path,options){
 //***********************************************************************************************
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-getIslands('IslesLagoon_single.geojson',{searchInclude: ['Nome_Isola','Numero']});
-getIslands('IslesLagoon_multi.geojson'),{searchInclude: ['Nome_Isola','Numero']};
+getIslands('IslesLagoon_single.geojson',{searchInclude: ['Nome_Isola','Numero','Codice']});
+getIslands('IslesLagoon_multi.geojson'),{searchInclude: ['Nome_Isola','Numero','Codice']};
 
 // ~~~~~~~~~~ layers with maps/working points ~~~~~~~~~~~~~
 //var getReq = $.getJSON("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json",getGroupCallback);
@@ -157,16 +157,6 @@ getGroup("https://cityknowledge.firebaseio.com/groups/Minor_Lagoon_Islands_2015.
             '<td>'+ properties.data.Usage + '</td>' +
         '</tr>' +
         '</table>'
-},summary: {
-    html: function(obj){
-        return '<b>Summary:</b> </br>' + 
-        'Count: ' + obj + '</br>';
-    },
-    initial: 0,
-    summarize: function(obj){
-        obj++;
-        return obj;
-    }
 }},{pointToLayer: function(feature,latlng){
     return new L.marker(latlng, {icon: vpcicon});
 }});
