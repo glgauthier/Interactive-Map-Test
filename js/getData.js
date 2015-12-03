@@ -43,6 +43,12 @@ function getIslands(path,options){
     });
 }
 
+function OuterHTML(element) {
+    var container = document.createElement("div");
+    container.appendChild(element.cloneNode(true));
+    return container.innerHTML;
+}
+
 //***********************************************************************************************
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
