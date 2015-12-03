@@ -178,6 +178,12 @@ getGroup("https://cityknowledge.firebaseio.com/groups/Minor_Lagoon_Islands_2015.
 getGroup("https://ckdata.firebaseio.com/groups/MERGE%20Stores%202012.json",{filter:function(obj){
     if(obj["2015"]) return true;
     
+},moreInfo: function(targets){
+    var output = '';
+    targets.forEach(function(target){
+        output+= '<b>' + target["2015"].name + '</b></br>';
+    });
+    return output;
 }},{pointToLayer: function(feature,latlng){
     return new L.marker(latlng, {icon: storeIcon}).bindPopup(
     //"<img style=\"width:100%\" src=\"" + feature.properties['2015'].picture_url + "\"/><br/>" + 
