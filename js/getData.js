@@ -43,12 +43,6 @@ function getIslands(path,options){
     });
 }
 
-function OuterHTML(element) {
-    var container = document.createElement("div");
-    container.appendChild(element.cloneNode(true));
-    return container.innerHTML;
-}
-
 //***********************************************************************************************
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -180,9 +174,12 @@ getGroup("https://ckdata.firebaseio.com/groups/MERGE%20Stores%202012.json",{filt
     
 },moreInfo: function(targets){
     var output = '';
+    var count = 0;
     targets.forEach(function(target){
-        output+= '<b>' + target["2015"].name + '</b></br>';
+        //output+= target["2015"].name + '</br>';
+        count++;
     });
+    output+= '<b>Count:</b> '+ count + '</br>';
     return output;
 }},{pointToLayer: function(feature,latlng){
     return new L.marker(latlng, {icon: storeIcon}).bindPopup(
