@@ -131,7 +131,7 @@ getGroup("https://cityknowledge.firebaseio.com/groups/Convents%20Data.json",{mor
         'Count: ' + obj + '</br>';
     },
     initial: 0,
-    summarize: function(obj){
+    summarize: function(obj,properties){
         obj++;
         return obj;
     }

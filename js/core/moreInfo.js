@@ -179,7 +179,7 @@ function addOverlayInfo(id,num){
                         $(document.getElementById(id)).append(featureCollections[key].groupOptions.moreInfo(target));
                     }
                     if(summary && summary.summarize){
-                        summaryVal = summary.summarize(summaryVal);
+                        summaryVal = summary.summarize(summaryVal,target);
                     }
                 }
             });
