@@ -84,7 +84,7 @@ getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOLES_PT_15.json",{ta
 
 // ~~~~~~~~ historical data (still just lat/long) ~~~~~~~~~
 //getGroup("https://cityknowledge.firebaseio.com/groups/Demolished%20Churches.json");
-getGroup("https://cityknowledge.firebaseio.com/groups/Convents%20Data.json",{tag:"Convents Data"},{pointToLayer: function(feature,latlng){
+getGroup("https://cityknowledge.firebaseio.com/groups/Convents%20Data.json",null,{pointToLayer: function(feature,latlng){
     return new L.marker(latlng, {icon: conventIcon}).bindPopup("I am a convent");
 }});
 

@@ -289,7 +289,7 @@ layerController.getContainer().ondblclick = function(e){
 var loadStatus = [];
 
 function getGroupCallback(options,customArgs,groupURL,msg) {
-    jsonList = msg;
+    var jsonList = msg;
     //console.log(jsonList.members);
     var statusIndex = loadStatus.length;
     loadStatus.push({});
@@ -316,7 +316,7 @@ function getGroupCallback(options,customArgs,groupURL,msg) {
 }
 
 function getNextEntry(statusIndex,options,customArgs,groupURL,groupMSG){
-    jsonList = groupMSG;
+    var jsonList = groupMSG;
     //console.log(jsonList.members);
     
     if(options && options.tag){
@@ -340,7 +340,7 @@ function getNextEntry(statusIndex,options,customArgs,groupURL,groupMSG){
 }
 
 function finishGetEntries(statusIndex,options,customArgs,groupURL,msg){
-    jsonList = msg;
+    var jsonList = msg;
     //console.log(jsonList.members);
     
     if(options && options.tag){
