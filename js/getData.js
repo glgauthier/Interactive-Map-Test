@@ -53,17 +53,12 @@ getIslands('IslesLagoon_multi.geojson'),{searchInclude: ['Nome_Isola','Numero']}
 // ~~~~~~~~~~ layers with maps/working points ~~~~~~~~~~~~~
 //var getReq = $.getJSON("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json",getGroupCallback);
 getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json",{tag: "Bridges"},{style: standOut, onEachFeature:setupHighlight});
-getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canals.json",{tag: "Canals"},{onEachFeature:setupHighlight});
-
-//(featureCollections["Canals"])
-//{
-//    console.log("made it");
-//    if(Object.keys(featureCollections["Canals"]._layers).length != 0){
-//        console.log("made it");
-//        featureCollections["Canals"].bindPopup("I am a canal");
-//    }
-//}
-
+getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canals.json",{tag: "Canals"},{onEachFeature:function(feature,layer){
+    setupHighlight(feature,layer);
+    layer.bindPopup(
+        '<b><center>' + feature.properties.data.Nome_Rio + '</center></b>'
+    );
+}});
 
 //getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canal%20Segments.json","Canal Segments",{style: style2});
 getGroup("https://cityknowledge.firebaseio.com/groups/belltowers%20MAPS%2015.json",{tag:"Bell Towers"},{onEachFeature:setupHighlight,pointToLayer: function(feature,latlng){
@@ -83,27 +78,15 @@ getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOLES_PT_15.json",{ta
 
 // ~~~~~~~~ layers with just lat/long ~~~~~~~~~~~~~~~~~~~~~
 //getGroup("https://cityknowledge.firebaseio.com/groups/Hostels,%20Hotels.json","Hotels",{pointToLayer: function(feature,latlng){
-////    return new L.CircleMarker(latlng, {
-////                    radius: 5,
-////                    fillColor: "#A3C990",
-////                    color: "#000",
-////                    weight: 1,
-////                    opacity: 1,
-////                    fillOpacity: 0.4
-////                });
 //    return new L.marker(latlng, {icon: churchIcon});
 //}});
 //getGroup("https://cityknowledge.firebaseio.com/groups/Bed%20&%20Bfast,%20Apartments.json","Bed and Breakfasts");
-//getGroup("https://cityknowledge.firebaseio.com/groups/store%20locations.json","Stores"); //2014 data
 
 // ~~~~~~~~ historical data (still just lat/long) ~~~~~~~~~
 //getGroup("https://cityknowledge.firebaseio.com/groups/Demolished%20Churches.json");
-//getGroup("https://cityknowledge.firebaseio.com/groups/Island%20Church%20Data.json",{tag:"Island Churches"},{pointToLayer: function(feature,latlng){
-//    return new L.marker(latlng, {icon: conventIcon}).bindPopup("I am a church");
-//}});
-//getGroup("https://cityknowledge.firebaseio.com/groups/Convents%20Data.json", "Convents",{pointToLayer: function(feature,latlng){
-//    return new L.marker(latlng, {icon: conventIcon}).bindPopup("I am a convent");
-//}});
+getGroup("https://cityknowledge.firebaseio.com/groups/Convents%20Data.json",null,{pointToLayer: function(feature,latlng){
+    return new L.marker(latlng, {icon: conventIcon}).bindPopup("I am a convent");
+}});
 
 getGroup("https://cityknowledge.firebaseio.com/groups/Minor_Lagoon_Islands_2015.json",{tag:"Wiki Data"},{pointToLayer: function(feature,latlng){
     return new L.marker(latlng, {icon: vpcicon});
@@ -116,25 +99,13 @@ getGroup("https://ckdata.firebaseio.com/groups/MERGE%20Stores%202012.json",{filt
     if(obj["2015"]) return true;
     
 }},{pointToLayer: function(feature,latlng){
-    return new L.marker(latlng, {icon: storeIcon});
+    return new L.marker(latlng, {icon: storeIcon}).bindPopup(
+    //"<img style=\"width:100%\" src=\"" + feature.properties['2015'].picture_url + "\"/><br/>" + 
+        "<b>" + feature.properties['2015'].name + "</b>" +
+        "<br/> Address: " + feature.properties['2015'].address_number + 
+        " " + feature.properties['2015'].address_street +  
+        "<br/> Nace+ Code: " + feature.properties['2015'].nace_plus_code +
+        "<br/> Good Sold: " + feature.properties['2015'].nace_plus_descr +
+        "<br/> Store Type: " + feature.properties['2015'].shop_type
+    );
 }});
-
-//****************************************************************************
-// observe featureCollections as things are added
-// add in popups for each item as it loads in
-Object.observe(featureCollections, function(changes){
-    console.log(changes);
-    if(changes[0].name == "Canals"){
-        featureCollections["Canals"]._popupContent = "JUNK";
-    } 
-    if(changes[0].name == "MERGE Stores 2012"){
-        featureCollections["MERGE Stores 2012"]._popupContent = "Helloo";
-//        featureCollections["MERGE Stores 2012"]._popupContent = 
-//            "Name: " + feature.properties['2015'].name + 
-//        "<br/> Address: " + feature.properties['2015'].address_number + 
-//        " " + feature.properties['2015'].address_street +  
-//        "<br/> Nace+ Code: " + feature.properties['2015'].nace_plus_code + 
-//        "<br/> Good Sold: " + feature.properties['2015'].nace_plus_descr + 
-//        "<br/> Store Type: " + feature.properties['2015'].shop_type;
-    }
-});

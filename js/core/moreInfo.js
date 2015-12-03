@@ -193,14 +193,17 @@ function addOverlayInfo(id,num){
                         //console.log(target[i].data.NAME);
                         $(document.getElementById(id)).append(target[i].data.NAME+'</br>');
                     }
-                    // island churches
-                    else if(target[i].data["Full Name"]){
-                        //console.log(target[i].data["Full Name"]);
-                        $(document.getElementById(id)).append(target[i].data["Full Name"]+'</br>');
-                    }
-                    // canals
+                     // canals
                     else if(target[i].data.Nome_Rio){
                         $(document.getElementById(id)).append(target[i].data.Nome_Rio+'</br>');
+                    }
+                    // convents
+                    else if(layers[k]=="Convents Data"){
+                        $(document.getElementById(id)).append(
+                            'About' + target[i].data["Historic Background"] + '</br>' +
+                            'Current Use' + target[i].data["Curret Use"] + '</br>' +
+                            'Year Founded' + target[i].data["Year Founded"] + '</br>'
+                        );
                     }
                     else if(layers[k]=="Wiki Data"){
                         $(document.getElementById(id)).append(
