@@ -20,7 +20,7 @@ var gradientColors = [
     ['#4575b4','#74add1','#abd9e9','#e0f3f8','#fee090','#fdae61','#f46d43','#d73027']
 ]
 var tempField; // used for switching between gradients
-var c = 0; // used for switching between gradients (gradientColors[c][x])
+var gradientColorIndex = 0; // used for switching between gradients (gradientColors[c][x])
 
 var gradientFlag=0;
 
@@ -38,9 +38,9 @@ legend.setThresholds = function(thresholds){
     legend.grades = thresholds;
     legend_div.innerHTML='';
     
-    for (var i = 0; i < thresholds.length && i < gradientColors[c].length; i++) {
+    for (var i = 0; i < thresholds.length && i < gradientColors[gradientColorIndex].length; i++) {
         legend_div.innerHTML +=
-            '<i style="background:' + gradientColors[c][i] + '"></i> ' +
+            '<i style="background:' + gradientColors[gradientColorIndex][i] + '"></i> ' +
             thresholds[i] + (thresholds[i + 1] != undefined ? '&ndash;' + thresholds[i + 1] + '<br>' : '+');
     }
 }
@@ -195,7 +195,7 @@ var ColorControl = L.Control.extend({
                 // look for the field in objectColors
                 contents = $.grep(objectColors, function(e){ return e.id == value; });
                 // reset gradient to default color for next time it's used
-                c=0; 
+                gradientColorIndex=gradientColors.length-1; 
                 // and update the value of tempFields
                 tempField = colorControl.selectedFields()[0];
                 
@@ -216,9 +216,9 @@ var ColorControl = L.Control.extend({
                 // and update the value of tempFields
                 tempField = colorControl.selectedFields()[0];
                 if(value!=undefined){
-                    for (var i = Math.min(this.thresholds.length,gradientColors[c].length)-1; i >= 0; i--) {
+                    for (var i = Math.min(this.thresholds.length,gradientColors[gradientColorIndex].length)-1; i >= 0; i--) {
                         if(value >= this.thresholds[i]){
-                            return gradientColors[c][i];
+                            return gradientColors[gradientColorIndex][i];
                         }
                     }
                     //return '#ffffff';
@@ -278,9 +278,9 @@ var ColorControl = L.Control.extend({
         // change the gradient if apply is hit for the same field
         // if not, keep it the same
         if (colorControl.selectedFields()[0] == tempField){
-            if(c<(gradientColors.length-1)) c++;
-            else c=0;
-        } else c = 0; 
+            if(gradientColorIndex<(gradientColors.length-1)) gradientColorIndex++;
+            else gradientColorIndex = 0;
+        } else gradientColorIndex = 0; 
         
         gradientFlag = 0; //indicate success
         
@@ -455,6 +455,7 @@ colorControl.onClear = function(e){
     }
     objectColors = []; // discard random colors that have been saved
     recolorIsles();
+    gradientColorIndex=gradientColors.length-1; 
 }
 
 map.addControl(colorControl);
