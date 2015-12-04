@@ -5,7 +5,6 @@ function dictionary(original){
         case 'Superficie':          return "Area";
         case 'sum_pop_11':          return "2011 Population Total";
         case 'pop_den_11':          return "2011 Population Density";
-        case  'MERGE Stores 2012' : return "Stores";
         default:                    return original;
     }
 }

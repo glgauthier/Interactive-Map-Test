@@ -77,7 +77,7 @@ html, body
 }
 
 /*white box for text overlay*/
-#overlay div {
+#inner{
     width: 80%;
     max-width: 500px;
     height: calc(100% - 150px);
@@ -228,4 +228,34 @@ td {
 th {
   background: lightblue;
   border-color: white;
+}
+
+#Bell_Towers{
+    border: 3px solid;
+    border-color:aqua;
+    background-color:cadetblue;
+    margin-top:5px;
+    margin-bottom:5px;
+}
+#Wiki_Data{
+    border: 3px solid;
+    border-color:coral;
+    background-color:darksalmon;
+    margin-top:5px;
+    margin-bottom:5px;
+}
+#Bridges{
+    border: 3px solid;
+    border-color:coral;
+    background-color:darksalmon;
+    margin-top:5px;
+    margin-bottom:5px;
+}
+#Stores{
+    border: 10px solid;
+    border-radius:5px;
+    border-color:forestgreen;
+    background-color:fuchsia;
+    margin-top:5px;
+    margin-bottom:5px;
 }

@@ -129,11 +129,13 @@ getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOLES_PT_15.json",{ta
 // ~~~~~~~~ historical data (still just lat/long) ~~~~~~~~~
 //getGroup("https://cityknowledge.firebaseio.com/groups/Demolished%20Churches.json");
 getGroup("https://cityknowledge.firebaseio.com/groups/Convents%20Data.json",{moreInfo:function(targets,tag){
+    var count=0;
     var output = '';
     targets.forEach(function(target){
         output += 'About: ' + target.data["Historic Background"] + '</br>' +
             'Current Use: ' + target.data["Curret Use"] + '</br>' +
-            'Founded in' + target.data["Year Founded"] + '</br>'
+            'Founded in' + target.data["Year Founded"] + '</br>';
+        count++;
     });
     output = '<center><b>'+ dictionary(tag) +'</b> ('+count+' Total)</br></center>' + output;
     return output;
@@ -168,7 +170,7 @@ getGroup("https://cityknowledge.firebaseio.com/groups/Minor_Lagoon_Islands_2015.
 // the above layer probably matches up with the images in
 //https://cityknowledge.firebaseio.com/groups/convent%20floor%20plans.json"
 
-getGroup("https://ckdata.firebaseio.com/groups/MERGE%20Stores%202012.json",{filter:function(obj){
+getGroup("https://ckdata.firebaseio.com/groups/MERGE%20Stores%202012.json",{tag:'Stores',filter:function(obj){
     if(obj["2015"]) return true;
     
 },moreInfo: function(targets,tag){
