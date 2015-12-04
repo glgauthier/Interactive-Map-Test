@@ -10,7 +10,7 @@ function generateRandomColors() {
     return color;
 }
 
-function applyRamdomColors(field,value){
+function applyRandomColors(field,value){
     // look for the field in objectColors
     var contents = $.grep(objectColors, function(e){ return e.id == value; });
     // reset gradient to default color for next time it's used

@@ -189,7 +189,7 @@ var ColorControl = L.Control.extend({
             return 'rgba(0,0,0,0)';
         } else{
             if(fxns=="random"){
-               return applyRamdomColors(colorControl.selectedFields()[0],value);
+               return applyRandomColors(colorControl.selectedFields()[0],value);
             } 
             if(fxns=="gradient"){
                 // add a gradient
@@ -203,7 +203,7 @@ var ColorControl = L.Control.extend({
                         }
                     }
                     // if the field isn't a number, apply random colorization to it
-                    return applyRamdomColors(colorControl.selectedFields()[0],value);
+                    return applyRandomColors(colorControl.selectedFields()[0],value);
                 }
             }
             // if NOT opaqueflag and field is empty, color clear
