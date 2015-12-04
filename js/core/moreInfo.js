@@ -179,6 +179,8 @@ function addOverlayInfo(id,num){
                 // append a new div element to the more info window
                 $(outer).append(
                      $('<div>')
+                        //specify the class of the div
+                        .addClass("moreInfo")
                         //tag that div by the key
                         .attr("id", key.replace(/ /g, "_"))
                         // fill in moreInfo stuff into the new div

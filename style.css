@@ -175,6 +175,7 @@ a.button {
     background-color: white;
     text-decoration: none;
     color: initial;
+    box-shadow: 0 0 15px rgba(0,0,0,0.3);
 }
 
 a.button:hover { 
@@ -230,32 +231,31 @@ th {
   border-color: white;
 }
 
-#Bell_Towers{
-    border: 3px solid;
-    border-color:aqua;
-    background-color:cadetblue;
+/*div styling for layer info window divs*/
+.moreInfo{
+    padding:10px;
     margin-top:5px;
     margin-bottom:5px;
+    
+    max-height:200px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    border-radius: 5px;
+    overflow: auto;
+    
+    background-color:whitesmoke;
+}
+#Bell_Towers{
+    border-color:aqua;
 }
 #Wiki_Data{
-    border: 3px solid;
     border-color:coral;
-    background-color:darksalmon;
-    margin-top:5px;
-    margin-bottom:5px;
 }
 #Bridges{
-    border: 3px solid;
     border-color:coral;
-    background-color:darksalmon;
-    margin-top:5px;
-    margin-bottom:5px;
 }
 #Stores{
     border: 10px solid;
     border-radius:5px;
     border-color:forestgreen;
     background-color:fuchsia;
-    margin-top:5px;
-    margin-bottom:5px;
 }
