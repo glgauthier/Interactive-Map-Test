@@ -46,7 +46,9 @@ function overlay(currentLayer) {
     
     // currently have an issue with the scroll bar appearing on the outer div containing the map
     // instead of the info window
-    document.getElementById("inner").innerHTML= '<a onclick = "overlay()" class = "Xbutton">X</a> <b><center>Island Information</center></b>'
+    document.getElementById("inner").innerHTML= 
+        '<a onclick = "overlay()" class = "Xbutton">X</a>' + '</br>'+
+        '<center><h2>'+ (properties.Nome_Isola ? properties.Nome_Isola : 'Island Information') + '</h2></center>'
         +' <br />';
 //        + (properties ?
 //        '<b>' + 'Name: ' + properties.Nome_Isola + '</b><br />' 
