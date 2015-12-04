@@ -51,25 +51,25 @@ getIslands('IslesLagoon_multi.geojson'),{searchInclude: ['Nome_Isola','Numero','
 
 // ~~~~~~~~~~ layers with maps/working points ~~~~~~~~~~~~~
 //var getReq = $.getJSON("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json",getGroupCallback);
-getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json",{tag: "Bridges",moreInfo:function(targets){
-    var output = '</br>';
+getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json",{tag: "Bridges",moreInfo:function(targets,tag){
+    var output = '';
     var count = 0;
     targets.forEach(function(target){
-        output += target.data.Nome_Ponte+'</br>'
+        output += '<a target="_blank" href=http://www.venipedia.org/wiki/index.php?title='+ encodeURIComponent(target.data.Nome_Ponte.replace(/ /g, "_")) + '>' + target.data.Nome_Ponte+'</a></br>';
         count++;
     });
-    output += '<b>Count:</b> '+count+'</br>';
+    output = '<center><b>'+ dictionary(tag) +'</b> ('+count+' Total)</br></center>' + output;
     return output;
 }},{style: standOut, onEachFeature:setupHighlight});
 
-getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canals.json",{tag: "Canals",moreInfo:function(targets){
-    var output = '</br>';
+getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canals.json",{tag: "Canals",moreInfo:function(targets,tag){
+    var output = '';
     var count = 0;
     targets.forEach(function(target){
         output += target.data.Nome_Rio+'</br>'
         count++;
     });
-    output += '<b>Count:</b> '+count+'</br>';
+    output = '<center><b>'+ dictionary(tag) +'</b> ('+count+' Total)</br></center>' + output;
     return output;
 }},{onEachFeature:function(feature,layer){
     setupHighlight(feature,layer);
@@ -79,14 +79,14 @@ getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canals.json",{tag: 
 }});
 
 //getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canal%20Segments.json","Canal Segments",{style: style2});
-getGroup("https://cityknowledge.firebaseio.com/groups/belltowers%20MAPS%2015.json",{tag:"Bell Towers",moreInfo:function(targets){
-    var output = '</br>';
+getGroup("https://cityknowledge.firebaseio.com/groups/belltowers%20MAPS%2015.json",{tag:"Bell Towers",moreInfo:function(targets,tag){
+    var output = '';
     var count = 0;
     targets.forEach(function(target){
         output += target.data.NAME+'</br>'
         count++;
     });
-    output += '<b>Count:</b> '+count+'</br>';
+    output = '<center><b>'+ dictionary(tag) +'</b> ('+count+' Total)</br></center>' + output;
     return output;
 }},{onEachFeature:setupHighlight,pointToLayer: function(feature,latlng){
     return new L.marker(latlng, {icon: churchIcon}).bindPopup(
@@ -96,25 +96,25 @@ getGroup("https://cityknowledge.firebaseio.com/groups/belltowers%20MAPS%2015.jso
     );
 }});
 
-getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOTELS08_PT_15.json",{tag: "HotelsMap",moreInfo:function(targets){
-    var output = '</br>';
+getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOTELS08_PT_15.json",{tag: "HotelsMap",moreInfo:function(targets,tag){
+    var output = '';
     var count = 0;
     targets.forEach(function(target){
         count++;
     });
-    output += '<b>Count:</b> '+count+'</br>';
+    output = '<center><b>'+ dictionary(tag) +'</b> ('+count+' Total)</br></center>' + output;
     return output;
 }},{pointToLayer: function(feature,latlng){
     return new L.marker(latlng, {icon: hotelIcon}).bindPopup("I am a hotel");
 }});
 
-getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOLES_PT_15.json",{tag: "Sewer Outlets",moreInfo:function(targets){
-    var output = '</br>';
+getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOLES_PT_15.json",{tag: "Sewer Outlets",moreInfo:function(targets,tag){
+    var output = '';
     var count = 0;
     targets.forEach(function(target){
         count++;
     });
-    output += '<b>Count:</b> '+count+'</br>';
+    output = '<center><b>'+ dictionary(tag) +'</b> ('+count+' Total)</br></center>' + output;
     return output;
 }},{onEachFeature:setupHighlight,pointToLayer: function(feature,latlng){
     return new L.marker(latlng, {icon: sewerIcon}).bindPopup("outlet");
@@ -128,20 +128,21 @@ getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOLES_PT_15.json",{ta
 
 // ~~~~~~~~ historical data (still just lat/long) ~~~~~~~~~
 //getGroup("https://cityknowledge.firebaseio.com/groups/Demolished%20Churches.json");
-getGroup("https://cityknowledge.firebaseio.com/groups/Convents%20Data.json",{moreInfo:function(targets){
-    var output = '</br>';
+getGroup("https://cityknowledge.firebaseio.com/groups/Convents%20Data.json",{moreInfo:function(targets,tag){
+    var output = '';
     targets.forEach(function(target){
         output += 'About: ' + target.data["Historic Background"] + '</br>' +
             'Current Use: ' + target.data["Curret Use"] + '</br>' +
             'Founded in' + target.data["Year Founded"] + '</br>'
     });
+    output = '<center><b>'+ dictionary(tag) +'</b> ('+count+' Total)</br></center>' + output;
     return output;
 }},{pointToLayer: function(feature,latlng){
     return new L.marker(latlng, {icon: conventIcon}).bindPopup("I am a convent");
 }});
 
-getGroup("https://cityknowledge.firebaseio.com/groups/Minor_Lagoon_Islands_2015.json",{tag:"Wiki Data",moreInfo: function(targets){
-    var output = '</br>';
+getGroup("https://cityknowledge.firebaseio.com/groups/Minor_Lagoon_Islands_2015.json",{tag:"Wiki Data",moreInfo: function(targets,tag){
+    var output = '';
     targets.forEach(function(target){
         output+='<b>About: </b>'+ target.data.Blurb+'</br>' +
         '<a href="" id="bib" target="_blank" class="button">View Bibliography</a></br>' +
@@ -152,15 +153,13 @@ getGroup("https://cityknowledge.firebaseio.com/groups/Minor_Lagoon_Islands_2015.
         '</tr>' + '<tr>'+
             '<td>'+ 'Inhabited?' + '</td>' +
             '<td>'+ target.data.Inhabited + '</td>' +
-//        '</tr>' + '<tr>'+
-//            //'<td>'+ 'Type' + '</td>' +
-//            //'<td>'+ targets.data.Type + '</td>' +
         '</tr>' + '<tr>'+
             '<td>'+ 'Usage' + '</td>' +
             '<td>'+ target.data.Usage + '</td>' +
         '</tr>' +
         '</table>'
     });
+    output = '<center><b>'+ dictionary(tag) +'</b></br></center>' + output;
     return output;
 }},{pointToLayer: function(feature,latlng){
     return new L.marker(latlng, {icon: vpcicon});
@@ -172,7 +171,7 @@ getGroup("https://cityknowledge.firebaseio.com/groups/Minor_Lagoon_Islands_2015.
 getGroup("https://ckdata.firebaseio.com/groups/MERGE%20Stores%202012.json",{filter:function(obj){
     if(obj["2015"]) return true;
     
-},moreInfo: function(targets){
+},moreInfo: function(targets,tag){
 // **************************************
 // !!!!!!!! THIS IS A TEST ONLY !!!!!!!! - I'm going to be modifying it 
 // further as I explore making a table-generation function, setting up titles, and overall styling
@@ -201,7 +200,7 @@ getGroup("https://ckdata.firebaseio.com/groups/MERGE%20Stores%202012.json",{filt
 //                + '</br>'+'</br>';
         count++;
     });
-    output = ' ('+count+' Stores)</br>' + output;
+    output = '<center><b>'+ dictionary(tag) +'</b> ('+count+' Total)</br></center>' + output;
     return output;
 }},{pointToLayer: function(feature,latlng){
     return new L.marker(latlng, {icon: storeIcon}).bindPopup(

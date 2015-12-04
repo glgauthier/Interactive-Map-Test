@@ -175,9 +175,11 @@ function addOverlayInfo(id,num){
                 return $.inArray(num,target.islands)!=-1;
             });
             if(targets.length>0){
-                $(document.getElementById(id)).append('</br><b>'+ dictionary(key) + '<b>');
-                $(document.getElementById(id)).append(featureCollections[key].groupOptions.moreInfo(targets));
+                // create a div for that key
+
+                $(document.getElementById(id)).append(featureCollections[key].groupOptions.moreInfo(targets,key));
             }
         }
     }
 }
+

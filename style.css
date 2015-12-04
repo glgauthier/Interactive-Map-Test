@@ -217,13 +217,13 @@ a.Close:hover {
 }
 
 /*table settings*/
+
 td {
   width: 4rem;
   height: 2rem;
   border: 1px solid #ccc;
   text-align: center;
   background: lightblue;
-  border-color: white;
 }
 th {
   background: lightblue;
