@@ -66,7 +66,7 @@ getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canals.json",{tag: 
     var output = '';
     var count = 0;
     targets.forEach(function(target){
-        output += target.data.Nome_Rio+'</br>'
+        output += '<a target="_blank" href=http://www.venipedia.org/wiki/index.php?title='+ encodeURIComponent(target.data.Nome_Rio.replace(/ /g, "_")) + '>' + target.data.Nome_Rio+'</a></br>';
         count++;
     });
     output = '<center><b>'+ dictionary(tag) +'</b> ('+count+' Total)</br></center>' + output;

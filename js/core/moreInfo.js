@@ -70,7 +70,7 @@ function overlay(currentLayer) {
     
     // now generate the cartography app link
     // link should be cartography.veniceprojectcenter.org/#?feature="Island%20of%20Blah"
-    link = 'http://cartography.veniceprojectcenter.org/index.html?feature=' +
+    link = 'http://cartography.veniceprojectcenter.org/index.html?map=debarbari&layer=island&feature=' +
         encodeURIComponent('Island of '+properties.Nome_Isola);
     document.getElementById("historical").href = link;
     
