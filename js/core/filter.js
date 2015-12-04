@@ -284,7 +284,7 @@ function createDropdown(object,options){
             for(var i = 0;i<object.length;i++){
                 var option = document.createElement("OPTION");
                 option.text = dictionary(object[i]);
-                option.value = dictionary(object[i]);
+                option.value = object[i];
                 dropdown.add(option);
             }
         }
@@ -293,14 +293,14 @@ function createDropdown(object,options){
         for(property in object){
             var option = document.createElement("OPTION");
             option.text = dictionary(property);
-            option.value = dictionary(property);
+            option.value = property;
             dropdown.add(option);
         }
     }
     else{
         var option = document.createElement("OPTION");
         option.text = dictionary(object);
-        option.value = dictionary(object);
+        option.value = object;
         dropdown.add(option);
     }
     
