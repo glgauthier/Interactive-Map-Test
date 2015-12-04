@@ -28,48 +28,30 @@ function overlay(currentLayer) {
     // toggle the state of the function flag, this affects hilighting 
     overlayFlag ^= true;
 
-//    currentLayer.setStyle({
-//        fillColor: '#FEB24C',
-//        weight: 0,
-//        opacity: 1,
-//        color: 'white',
-//        dashArray: '3',
-//        fillOpacity: 1.0
-//    });
-    
     // if the info box is being turned off don't do any additional work
     if(!currentLayer){return;}
     
     // make life a little easier
     var properties = currentLayer.feature.properties;
-    // print out whatever info you want to the 'inner' div of the 'overlay' div of index.html
-    
-    // currently have an issue with the scroll bar appearing on the outer div containing the map
-    // instead of the info window
-    
-//    document.getElementById('inner').innerHTML = '<div class = "Xbutton" id = "Xbutton" onclick = "overlay()">X</div>';
+
     document.getElementById('inner').innerHTML=
         '<div id ="topBar">'+'<a class = "Xbutton" id = "Xbutton" onclick = "overlay()">X</a>'+
         '<h2><center>' + (properties.Nome_Isola ? properties.Nome_Isola : 'Island Information') + '</center></h2></div>'
         +' <br />';
     
-    
-
     makeHTMLinfo(properties,"inner","JSON");
    
     addOverlayInfo("inner",properties.Numero);
     
-    
     // Add in the venipedia and cartography buttons
-    $(document.getElementById("inner")).append('<br /> <br /><div id = "imgButton"><a href="" id="venipedia"  target="_blank" onMouseOver="return changeImage()" onMouseOut= "return changeImageBack()"> <img name="jsbutton" src="image/venipedia.png" width="80" height="70" border="0" alt="javascript button" align="left"></a></div>'  
-         + '<a id="historical" href="" target="_blank" class="button">View on a historical map</a>');
+    $(document.getElementById("inner")).append('<br /> <br /><div id = "bottomBar"><a href="" id="venipedia"  target="_blank" onMouseOver="return changeImage()" onMouseOut= "return changeImageBack()"> <img name="jsbutton" src="image/venipedia.png" width="80" height="70" border="0" alt="javascript button" align="left"></a>'  
+         + '</br> <a id="historical" href="" target="_blank" class="button">View on a historical map</a></div>');
     
     // generate correct venipedia link for associated island
     var link = "http://www.venipedia.org/wiki/index.php?title=Island_of_" + encodeURIComponent(properties.Nome_Isola.replace(/ /g, "_")); 
     document.getElementById("venipedia").href = link;
     
     // now generate the cartography app link
-    // link should be cartography.veniceprojectcenter.org/#?feature="Island%20of%20Blah"
     link = 'http://cartography.veniceprojectcenter.org/index.html?map=debarbari&layer=island&feature=' +
         encodeURIComponent('Island of '+properties.Nome_Isola);
     document.getElementById("historical").href = link;
