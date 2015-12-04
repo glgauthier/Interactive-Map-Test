@@ -3,9 +3,6 @@
 var legend = L.control({position: 'bottomright'});
 var legend_div = L.DomUtil.create('div', 'info legend');
 
-// array used for keeping track of what items are randomly colored
-var objectColors;
-
 // color gradients
 //var gradientColors = [
 //    ['#edf8fb','#b3cde3','#8c96c6','#8856a7','#810f7c'],
@@ -192,23 +189,7 @@ var ColorControl = L.Control.extend({
             return 'rgba(0,0,0,0)';
         } else{
             if(fxns=="random"){
-                // look for the field in objectColors
-                contents = $.grep(objectColors, function(e){ return e.id == value; });
-                // reset gradient to default color for next time it's used
-                gradientColorIndex=gradientColors.length-1; 
-                // and update the value of tempFields
-                tempField = colorControl.selectedFields()[0];
-                
-                // if an object with the same val hasn't already been colored, get a color
-                if (contents.length > 0){
-                    return contents[0].color;
-                } else {
-                    // otherwise, use the color from the object with the same val
-                    var temp = {id:value,color:generateRandomColors()};
-                    objectColors.push(temp);
-                    return temp.color;
-                }
-                
+               return applyRamdomColors(colorControl.selectedFields()[0],value);
             } 
             if(fxns=="gradient"){
                 // add a gradient
@@ -221,11 +202,12 @@ var ColorControl = L.Control.extend({
                             return gradientColors[gradientColorIndex][i];
                         }
                     }
-                    //return '#ffffff';
+                    // if the field isn't a number, apply random colorization to it
+                    return applyRamdomColors(colorControl.selectedFields()[0],value);
                 }
             }
-            // if NOT opaqueflag and field is empty, color pinkish
-            return 'rgba(0, 0, 0, 0.0)';
+            // if NOT opaqueflag and field is empty, color clear
+            return 'rgba(0,0,0,0)';
         }
     },
     
