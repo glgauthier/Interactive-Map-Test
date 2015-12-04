@@ -52,7 +52,7 @@ getIslands('IslesLagoon_multi.geojson'),{searchInclude: ['Nome_Isola','Numero','
 // ~~~~~~~~~~ layers with maps/working points ~~~~~~~~~~~~~
 //var getReq = $.getJSON("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json",getGroupCallback);
 getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json",{tag: "Bridges",moreInfo:function(targets){
-    var output = '';
+    var output = '</br>';
     var count = 0;
     targets.forEach(function(target){
         output += target.data.Nome_Ponte+'</br>'
@@ -63,7 +63,7 @@ getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json",{tag:
 }},{style: standOut, onEachFeature:setupHighlight});
 
 getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canals.json",{tag: "Canals",moreInfo:function(targets){
-    var output = '';
+    var output = '</br>';
     var count = 0;
     targets.forEach(function(target){
         output += target.data.Nome_Rio+'</br>'
@@ -80,7 +80,7 @@ getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canals.json",{tag: 
 
 //getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canal%20Segments.json","Canal Segments",{style: style2});
 getGroup("https://cityknowledge.firebaseio.com/groups/belltowers%20MAPS%2015.json",{tag:"Bell Towers",moreInfo:function(targets){
-    var output = '';
+    var output = '</br>';
     var count = 0;
     targets.forEach(function(target){
         output += target.data.NAME+'</br>'
@@ -97,7 +97,7 @@ getGroup("https://cityknowledge.firebaseio.com/groups/belltowers%20MAPS%2015.jso
 }});
 
 getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOTELS08_PT_15.json",{tag: "HotelsMap",moreInfo:function(targets){
-    var output = '';
+    var output = '</br>';
     var count = 0;
     targets.forEach(function(target){
         count++;
@@ -109,7 +109,7 @@ getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOTELS08_PT_15.json",
 }});
 
 getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOLES_PT_15.json",{tag: "Sewer Outlets",moreInfo:function(targets){
-    var output = '';
+    var output = '</br>';
     var count = 0;
     targets.forEach(function(target){
         count++;
@@ -129,7 +129,7 @@ getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOLES_PT_15.json",{ta
 // ~~~~~~~~ historical data (still just lat/long) ~~~~~~~~~
 //getGroup("https://cityknowledge.firebaseio.com/groups/Demolished%20Churches.json");
 getGroup("https://cityknowledge.firebaseio.com/groups/Convents%20Data.json",{moreInfo:function(targets){
-    var output = '';
+    var output = '</br>';
     targets.forEach(function(target){
         output += 'About: ' + target.data["Historic Background"] + '</br>' +
             'Current Use: ' + target.data["Curret Use"] + '</br>' +
@@ -141,7 +141,7 @@ getGroup("https://cityknowledge.firebaseio.com/groups/Convents%20Data.json",{mor
 }});
 
 getGroup("https://cityknowledge.firebaseio.com/groups/Minor_Lagoon_Islands_2015.json",{tag:"Wiki Data",moreInfo: function(targets){
-    var output = '';
+    var output = '</br>';
     targets.forEach(function(target){
         output+='<b>About: </b>'+ target.data.Blurb+'</br>' +
         '<a href="" id="bib" target="_blank" class="button">View Bibliography</a></br>' +
@@ -152,9 +152,9 @@ getGroup("https://cityknowledge.firebaseio.com/groups/Minor_Lagoon_Islands_2015.
         '</tr>' + '<tr>'+
             '<td>'+ 'Inhabited?' + '</td>' +
             '<td>'+ target.data.Inhabited + '</td>' +
-        '</tr>' + '<tr>'+
-            '<td>'+ 'Type' + '</td>' +
-            '<td>'+ targets.data.Type + '</td>' +
+//        '</tr>' + '<tr>'+
+//            //'<td>'+ 'Type' + '</td>' +
+//            //'<td>'+ targets.data.Type + '</td>' +
         '</tr>' + '<tr>'+
             '<td>'+ 'Usage' + '</td>' +
             '<td>'+ target.data.Usage + '</td>' +
@@ -173,17 +173,35 @@ getGroup("https://ckdata.firebaseio.com/groups/MERGE%20Stores%202012.json",{filt
     if(obj["2015"]) return true;
     
 },moreInfo: function(targets){
+// **************************************
+// !!!!!!!! THIS IS A TEST ONLY !!!!!!!! - I'm going to be modifying it 
+// further as I explore making a table-generation function, setting up titles, and overall styling
+// **************************************
     var output = '';
     var count = 0;
+    output ='<table border="1" style="width:100%">' +
+                    '<tr>' +
+                        '<th>Name</th>' +
+                        '<th>Address</th>' +
+                        '<th>Good Sold</th>' +
+                    '</tr>';
     targets.forEach(function(target){
-        output+=  'Name: ' + (target["2015"].name ? target["2015"].name : 'N/A') + '</br>' +
-                 'Location: ' + target["2015"].address_number 
-                 +' '+ target['2015'].address_street + 
-                 '</br>Good sold: ' + (target["2015"].nace_plus_descr ? target["2015"].nace_plus_descr : 'N/A')
-                + '</br>'+'</br>';
+        output +=
+        '<tr>'+
+            '<td>'+ (target["2015"].name ? target["2015"].name : 'N/A') + '</td>' +
+            '<td>'+ target["2015"].address_number 
+                 +' '+ target['2015'].address_street + '</td>' +
+            '<td>'+ (target["2015"].nace_plus_descr=='undefined' ? 'N/A': target["2015"].nace_plus_descr) + '</td>' +
+        '</tr>' ;        
+            
+//                'Name: ' + (target["2015"].name ? target["2015"].name : 'N/A') + '</br>' +
+//                 'Location: ' + target["2015"].address_number 
+//                 +' '+ target['2015'].address_street + 
+//                 '</br>Good sold: ' + (target["2015"].nace_plus_descr ? target["2015"].nace_plus_descr : 'N/A')
+//                + '</br>'+'</br>';
         count++;
     });
-    output = '<b>Total Number of Stores:</b> '+ count + '</br></br>' + output;
+    output = ' ('+count+' Stores)</br>' + output;
     return output;
 }},{pointToLayer: function(feature,latlng){
     return new L.marker(latlng, {icon: storeIcon}).bindPopup(
