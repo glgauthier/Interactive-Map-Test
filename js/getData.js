@@ -183,7 +183,7 @@ getGroup("https://ckdata.firebaseio.com/groups/MERGE%20Stores%202012.json",{filt
                 + '</br>'+'</br>';
         count++;
     });
-    output+= '<b>Count:</b> '+ count + '</br>';
+    output = '<b>Total Number of Stores:</b> '+ count + '</br></br>' + output;
     return output;
 }},{pointToLayer: function(feature,latlng){
     return new L.marker(latlng, {icon: storeIcon}).bindPopup(
