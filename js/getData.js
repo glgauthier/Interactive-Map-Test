@@ -38,6 +38,20 @@ function getIslands(path,options){
             }
         }
         
+        var params = getUrlParameters();
+        
+        if(!params.layerTag || params.layerTag == 'islands'){
+            for(key in params){
+                if(params.hasOwnProperty(key)&&key!='layerTag'){
+                    var layer = findIslandLayer(key,params[key]);
+                    if(layer){
+                        map.fitBounds(layer.getBounds());
+                        return;
+                    }
+                }
+            }
+        }
+        
         searchControl.refresh();
         recolorIsles();
     });

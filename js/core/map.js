@@ -12,6 +12,8 @@ var overlayFlag = 0;
 
 var map = L.map('map').setView([45.4375, 12.3358], 13);
 
+
+
 //**********************************************************************************************
 var defaultLayer = L.tileLayer('https://api.tiles.mapbox.com/v4/mapbox.run-bike-hike/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6IjZjNmRjNzk3ZmE2MTcwOTEwMGY0MzU3YjUzOWFmNWZhIn0.Y8bhBaUMqFiPrDRW9hieoQ', {
     maxZoom: 20, minZoom: 10,
@@ -278,30 +280,106 @@ layerController.getContainer().ondblclick = function(e){
     if(e.stopPropagation){
         e.stopPropagation();
     }
+};
+
+//*******************************************************************************************
+
+function objHasPropertyEqualTo(object,property,value){
+    if(typeof object == 'object'){
+        for(key in object){
+            if(object.hasOwnProperty(key)){
+                if(key==property){
+                    if(object[key]==value){return true;};
+                }
+                else if(objHasPropertyEqualTo(object[key],property,value)) return true;
+            }
+        }
+    }
+    return false;
+};
+
+function findFeature_Layer(key,value){
+    for(var i=0,iLen=feature_layers.length;i<iLen;i++){
+        if(objHasPropertyEqualTo(feature_layers[i].feature.properties,key,value)){
+            return feature_layers[i];
+        }
+    }
+};
+
+function findIslandLayer(key,value){
+    var layers = []
+    islands_layer.eachLayer(function(layer){
+        if(objHasPropertyEqualTo(layer.feature.properties,key,value)){
+            console.log(layer);
+            layers.push(layer);
+        }
+    });
+    return layers[0];
+};
+
+function findTagLayer(tag,key,value){
+    var layers = []
+    featureCollections[tag].eachLayer(function(layer){
+        if(objHasPropertyEqualTo(layer.feature.properties,key,value)){
+            layers.push(layer);
+        }
+    });
+    return layers[0];
+}
+
+function findLayer(tag,key,value){
+    if(!tag){
+        return findFeature_Layer(key,value).layer;
+    }
+    else if(tag == 'island'){
+        return findIslandLayer(key,value)
+    }
+    else{
+        return findTagLayer(tag,key,value);
+    }
 }
 
 //*******************************************************************************************
 
-//*******************************************************************************************
-
 //Save the loading status of every data group added
-//array of vars. var = {count,complete,maxCount}
+//array of vars. var = {sendCount,sendComplete,maxCount,recieveCount,recieveComplete,function onInitialize(tag),function onRecieveComplete(tag)}
 var loadStatus = [];
 
-function getGroupCallback(options,customArgs,groupURL,msg) {
-    var jsonList = msg;
+function getGroupCallback(options,customArgs,groupURL,groupMSG) {
+    var jsonList = groupMSG;
     //console.log(jsonList.members);
     var statusIndex = loadStatus.length;
     loadStatus.push({});
+    
+    loadStatus[statusIndex].sendCount = 0;
+    loadStatus[statusIndex].recieveCount = 0;
+    loadStatus[statusIndex].onRecieveComplete = function(tag){};
+    loadStatus[statusIndex].onInitialize = function(tag){
+        var params = getUrlParameters();
+        
+        if(params.layerTag && params.layerTag == tag){
+            loadStatus[statusIndex].onRecieveComplete = function(){
+                for(key in params){
+                    if(params.hasOwnProperty(key)&&key!='layerTag'){
+                        var layer = findLayer(params.layerTag,key,params[key]);
+                        console.log(layer);
+                        if(layer){
+                            map.fitBounds(layer.getBounds());
+                            return;
+                        }
+                    }
+                }
+            }
+            featureCollections[tag].addTo(map);
+        }
+    };
     
     if(options && options.tag){
         initializeCollection(statusIndex,options,customArgs,groupURL,jsonList);
     }
     
-    loadStatus[statusIndex].count = 0;
-    
     if(options && featureCollections[options.tag]){
-        loadStatus[statusIndex].complete = false;
+        loadStatus[statusIndex].recieveComplete = false;
         return;
     }
     
@@ -313,44 +391,44 @@ function getGroupCallback(options,customArgs,groupURL,msg) {
         count++;
     }
     loadStatus[statusIndex].maxCount = count;
-}
+};
 
 function getNextEntry(statusIndex,options,customArgs,groupURL,groupMSG){
     var jsonList = groupMSG;
     //console.log(jsonList.members);
     
     if(options && options.tag){
-        if(loadStatus[statusIndex].complete == true) return;
+        if(loadStatus[statusIndex].sendComplete == true) return;
         initializeCollection(statusIndex,options,customArgs,groupURL,jsonList);
     }
 
     var count = 0;
     for(var obj in jsonList.members){
-        if(count>=loadStatus[statusIndex].count){
+        if(count>=loadStatus[statusIndex].sendCount){
             var URL = "https://"+ groupURL.split("/")[2]+"/data/" + obj + ".json";
             //console.log(URL);
             $.getJSON(URL,function(msg){getEntryCallback(statusIndex,options,customArgs,groupURL,jsonList,msg);});
             count++;
-            loadStatus[statusIndex].count=count;
+            loadStatus[statusIndex].sendCount=count;
             return false;
         }
     }
-    loadStatus[statusIndex].complete = true;
+    loadStatus[statusIndex].sendComplete = true;
     return true;
-}
+};
 
 function finishGetEntries(statusIndex,options,customArgs,groupURL,msg){
     var jsonList = msg;
     //console.log(jsonList.members);
     
     if(options && options.tag){
-        if(loadStatus[statusIndex].complete == true) return;
+        if(loadStatus[statusIndex].sendComplete == true) return;
         initializeCollection(statusIndex,options,customArgs,groupURL,jsonList);
     }
 
     var count = 0;
     for(var obj in jsonList.members){
-        if(count>=loadStatus[statusIndex].count){
+        if(count>=loadStatus[statusIndex].sendCount){
             var URL = "https://"+ groupURL.split("/")[2]+"/data/" + obj + ".json";
             //console.log(URL);
             //$.getJSON(URL,function(msg){getEntryCallback(statusIndex,options,customArgs,groupURL,jsonList,msg);});
@@ -362,17 +440,22 @@ function finishGetEntries(statusIndex,options,customArgs,groupURL,msg){
                 },
                 complete: function(){
                     loadingScreen.remove();
+                    loadStatus[statusIndex].recieveCount++;
+                    if(loadStatus[statusIndex].recieveCount>=loadStatus[statusIndex].sendCount){
+                        loadStatus[statusIndex].recieveComplete=true;
+                        loadStatus[statusIndex].onRecieveComplete(options.tag);
+                    }
                 },
                 beforeSend: function(){
                     loadingScreen.add();
+                    loadStatus[statusIndex].sendCount++;
                 }
             });
         }
         count++;
-        loadStatus[statusIndex].count=count;
     }
-    loadStatus[statusIndex].complete = true;
-}
+    loadStatus[statusIndex].sendComplete = true;
+};
 
 // callback function for pulling JSON file, run code related to it in HERE ONLY
 function getEntryCallback(statusIndex,options,customArgs,groupURL,groupMSG,msg) {
@@ -403,11 +486,12 @@ function getEntryCallback(statusIndex,options,customArgs,groupURL,groupMSG,msg) 
             console.log(jsonObj);
         }
     }
-}
+};
 
 function initializeCollection(statusIndex,options,customArgs,groupURL,groupMSG){
     var tag = options.tag;
     if(!featureCollections.hasOwnProperty(tag)){
+        
         customArgs = customArgs || {};
         
         var originalOnEachFeature = customArgs.onEachFeature;
@@ -431,10 +515,12 @@ function initializeCollection(statusIndex,options,customArgs,groupURL,groupMSG){
         
         layerController.addOverlay(featureCollections[tag],tag);
         
+        loadStatus[statusIndex].onInitialize(tag);
+        
         return true;
     }
     return false;
-}
+};
 
 
 
