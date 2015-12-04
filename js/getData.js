@@ -43,12 +43,6 @@ function getIslands(path,options){
     });
 }
 
-function OuterHTML(element) {
-    var container = document.createElement("div");
-    container.appendChild(element.cloneNode(true));
-    return container.innerHTML;
-}
-
 //***********************************************************************************************
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -177,15 +171,19 @@ getGroup("https://cityknowledge.firebaseio.com/groups/Minor_Lagoon_Islands_2015.
 
 getGroup("https://ckdata.firebaseio.com/groups/MERGE%20Stores%202012.json",{filter:function(obj){
     if(obj["2015"]) return true;
+    
 },moreInfo: function(targets){
     var output = '';
+    var count = 0;
     targets.forEach(function(target){
-        output+= 'Name: ' + (target["2015"].name ? target["2015"].name : 'N/A') + '</br>' +
+        output+=  'Name: ' + (target["2015"].name ? target["2015"].name : 'N/A') + '</br>' +
                  'Location: ' + target["2015"].address_number 
                  +' '+ target['2015'].address_street + 
                  '</br>Good sold: ' + (target["2015"].nace_plus_descr ? target["2015"].nace_plus_descr : 'N/A')
                 + '</br>'+'</br>';
+        count++;
     });
+    output+= '<b>Count:</b> '+ count + '</br>';
     return output;
 }},{pointToLayer: function(feature,latlng){
     return new L.marker(latlng, {icon: storeIcon}).bindPopup(
