@@ -58,13 +58,13 @@ function getIslands(path,options){
 }
 
 //***********************************************************************************************
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+//------- Island Layers --------//
 getIslands('IslesLagoon_single.geojson',{searchInclude: ['Nome_Isola','Numero','Codice']});
 getIslands('IslesLagoon_multi.geojson'),{searchInclude: ['Nome_Isola','Numero','Codice']};
 
-// ~~~~~~~~~~ layers with maps/working points ~~~~~~~~~~~~~
-//var getReq = $.getJSON("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json",getGroupCallback);
+
+//------- Bridge Layers --------//
 getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json",{tag: "Bridges",moreInfo:function(targets,tag){
     var output = '';
     var count = 0;
@@ -76,6 +76,8 @@ getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json",{tag:
     return output;
 }},{style: standOut, onEachFeature:setupHighlight});
 
+
+//------- Canal Layers --------//
 getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canals.json",{tag: "Canals",moreInfo:function(targets,tag){
     var output = '';
     var count = 0;
@@ -92,7 +94,7 @@ getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canals.json",{tag: 
     );
 }});
 
-//getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canal%20Segments.json","Canal Segments",{style: style2});
+//------- Belltower Layers --------//
 getGroup("https://cityknowledge.firebaseio.com/groups/belltowers%20MAPS%2015.json",{tag:"Bell Towers",moreInfo:function(targets,tag){
     var output = '';
     var count = 0;
@@ -110,6 +112,8 @@ getGroup("https://cityknowledge.firebaseio.com/groups/belltowers%20MAPS%2015.jso
     );
 }});
 
+
+//------- Hotel Layers --------//
 getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOTELS08_PT_15.json",{tag: "HotelsMap",moreInfo:function(targets,tag){
     var output = '';
     var count = 0;
@@ -122,6 +126,8 @@ getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOTELS08_PT_15.json",
     return new L.marker(latlng, {icon: hotelIcon}).bindPopup("I am a hotel");
 }});
 
+
+//------- Sewer Outlet Layers --------//
 getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOLES_PT_15.json",{tag: "Sewer Outlets",moreInfo:function(targets,tag){
     var output = '';
     var count = 0;
@@ -134,14 +140,7 @@ getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOLES_PT_15.json",{ta
     return new L.marker(latlng, {icon: sewerIcon}).bindPopup("outlet");
 }});
 
-// ~~~~~~~~ layers with just lat/long ~~~~~~~~~~~~~~~~~~~~~
-//getGroup("https://cityknowledge.firebaseio.com/groups/Hostels,%20Hotels.json","Hotels",{pointToLayer: function(feature,latlng){
-//    return new L.marker(latlng, {icon: churchIcon});
-//}});
-//getGroup("https://cityknowledge.firebaseio.com/groups/Bed%20&%20Bfast,%20Apartments.json","Bed and Breakfasts");
-
-// ~~~~~~~~ historical data (still just lat/long) ~~~~~~~~~
-//getGroup("https://cityknowledge.firebaseio.com/groups/Demolished%20Churches.json");
+//------- Convent Layers --------//
 getGroup("https://cityknowledge.firebaseio.com/groups/Convents%20Data.json",{moreInfo:function(targets,tag){
     var count=0;
     var output = '';
@@ -157,6 +156,7 @@ getGroup("https://cityknowledge.firebaseio.com/groups/Convents%20Data.json",{mor
     return new L.marker(latlng, {icon: conventIcon}).bindPopup("I am a convent");
 }});
 
+//------- WikiData Minor Lagoon Islands Layers --------//
 getGroup("https://cityknowledge.firebaseio.com/groups/Minor_Lagoon_Islands_2015.json",{tag:"Wiki Data",moreInfo: function(targets,tag){
     var output = '';
     targets.forEach(function(target){
@@ -181,9 +181,8 @@ getGroup("https://cityknowledge.firebaseio.com/groups/Minor_Lagoon_Islands_2015.
     return new L.marker(latlng, {icon: vpcicon});
 }});
 
-// the above layer probably matches up with the images in
-//https://cityknowledge.firebaseio.com/groups/convent%20floor%20plans.json"
 
+//------- Store Layers --------//
 getGroup("https://ckdata.firebaseio.com/groups/MERGE%20Stores%202012.json",{tag:'Stores',filter:function(obj){
     if(obj["2015"]) return true;
     
