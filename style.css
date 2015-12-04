@@ -72,7 +72,7 @@ html, body
     width:100%;
     height:100%;
     text-align:left;
-    z-index: 1000;
+    z-index: 10;
     background: rgba(0,0,0,0.2);
 }
 
@@ -80,22 +80,38 @@ html, body
 #inner{
     width: 80%;
     max-width: 500px;
-    height: calc(100% - 150px);
+    height: calc(100% - 220px);
     margin: auto;
     float: center;
-    top:0; bottom:0; left:0; right:0;
+    top:0;
+    bottom:0; 
+    left:0; 
+    right:0;
     text-align:left;
-    padding: 6px 8px;
+    padding:6px 8px;
     font: 14px/16px Arial, Helvetica, sans-serif;
     background: white;
     background: rgba(255,255,255,0.8);
     box-shadow: 0 0 15px rgba(0,0,0,0.2);
     border-radius: 5px;
-    overflow: auto;
+    overflow:auto;
     position: absolute;
+    
+}
+
+
+#inner::-webkit-scrollbar {
+-webkit-appearance: none;
+width: 10px;
+}
+#inner::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background-color: rgba(0,0,0,.5);
+    -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
 }
 
 #overlay::first-line { 
+    margin-top:20px;
     text-align:center;
 }
 
@@ -184,18 +200,20 @@ a.button:hover {
 }
 
 /*button (so you can use href with a button set from script)*/
-a.Xbutton {
+
+a.Xbutton{
     border: 4px solid;
     border-radius: 15px;
     border-color: rgba(255,255,255,0.0);
     height: auto;
     float: right;
     background:  rgba(255,255,255,0.0);
-    color: initial;
+    box-shadow: 0 0 15px rgba(0,0,0,0.0);
+    color: #e5e5e5;
+    width:auto;
 }
-
-a.Xbutton:hover { 
-    border-color: powderblue;  
+a.Xbutton:hover{
+    border-color: powderblue; 
 }
 
 /*Button for closing out of the "loading..." screen*/
@@ -232,18 +250,43 @@ th {
 }
 
 /*div styling for layer info window divs*/
+#topBar	{ 
+    color: rgb(250, 250, 250);
+    position: fixed;
+    width: 80%;
+    max-width: 500px;
+    top:70px;
+    margin-left:-8px;
+    padding-right:16px;
+    background: rgba(87, 87, 87, 1);
+    box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    z-index:100;
+    border-top-left-radius:5px;
+    border-top-right-radius:5px;
+}
+
 .moreInfo{
     padding:10px;
-    margin-top:5px;
+    margin-top:10px;
     margin-bottom:5px;
-    
-    max-height:200px;
+    top:0;bottom:0;left:0;right:0;
+    max-height:250px;
     box-shadow: 0 0 15px rgba(0,0,0,0.3);
     border-radius: 5px;
     overflow: auto;
     
     background-color:whitesmoke;
 }
+.moreInfo::-webkit-scrollbar {
+-webkit-appearance: none;
+width: 10px;
+}
+.moreInfo::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background-color: rgba(0,0,0,.5);
+    -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
+}
+/*
 #Bell_Towers{
     border-color:aqua;
 }
@@ -258,4 +301,4 @@ th {
     border-radius:5px;
     border-color:forestgreen;
     background-color:fuchsia;
-}
+}*/

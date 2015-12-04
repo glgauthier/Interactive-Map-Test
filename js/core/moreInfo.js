@@ -46,24 +46,22 @@ function overlay(currentLayer) {
     
     // currently have an issue with the scroll bar appearing on the outer div containing the map
     // instead of the info window
-    document.getElementById("inner").innerHTML= '<a onclick = "overlay()" class = "Xbutton">X</a> <b><center>Island Information</center></b>'
+    
+//    document.getElementById('inner').innerHTML = '<div class = "Xbutton" id = "Xbutton" onclick = "overlay()">X</div>';
+    document.getElementById('inner').innerHTML=
+        '<div id ="topBar">'+'<a class = "Xbutton" id = "Xbutton" onclick = "overlay()">X</a>'+
+        '<h2><center>' + (properties.Nome_Isola ? properties.Nome_Isola : 'Island Information') + '</center></h2></div>'
         +' <br />';
-//        + (properties ?
-//        '<b>' + 'Name: ' + properties.Nome_Isola + '</b><br />' 
-//        + 'Codice: ' + properties.Codice + '</b><br />'
-//        + 'Island Number: ' + properties.Insula_Num + '</b><br />'
-//        + '2011 Census Tract Number: ' + properties.Numero + '</b><br />'
-//        + 'Total Population: ' + properties.sum_pop_11 + '</b><br />' 
-//        + '<b><br />Overlays: </b>' + layerController._layers
-//        :''); 
-//   
+    
+    
+
     makeHTMLinfo(properties,"inner","JSON");
    
     addOverlayInfo("inner",properties.Numero);
     
     
     // Add in the venipedia and cartography buttons
-    $(document.getElementById("inner")).append('<br /> <br /><a href="" id="venipedia"  target="_blank" onMouseOver="return changeImage()" onMouseOut= "return changeImageBack()"> <img name="jsbutton" src="image/venipedia.png" width="80" height="70" border="0" alt="javascript button" align="left"></a>'  
+    $(document.getElementById("inner")).append('<br /> <br /><div id = "imgButton"><a href="" id="venipedia"  target="_blank" onMouseOver="return changeImage()" onMouseOut= "return changeImageBack()"> <img name="jsbutton" src="image/venipedia.png" width="80" height="70" border="0" alt="javascript button" align="left"></a></div>'  
          + '<a id="historical" href="" target="_blank" class="button">View on a historical map</a>');
     
     // generate correct venipedia link for associated island
