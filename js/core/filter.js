@@ -125,6 +125,7 @@ var FilterControl = L.Control.extend({
     },
     
     minimize : function(bool){
+        var that = this;
         this.minimized = bool;
 
         this.div.innerHTML = '';
@@ -147,6 +148,9 @@ var FilterControl = L.Control.extend({
             applyButton.setAttribute("type", "button");
             applyButton.setAttribute("value","Apply");
             applyButton.onclick = this.onApply;
+            applyButton.ondblclick = function(){
+                
+            }
             this.div.appendChild(applyButton);
 
             var clearButton = document.createElement("INPUT");
@@ -155,6 +159,16 @@ var FilterControl = L.Control.extend({
             clearButton.setAttribute("value","Clear");
             clearButton.onclick = this.onClear;
             this.div.appendChild(clearButton);
+            
+            var infoButton = document.createElement("INPUT");
+            applyStyle(infoButton,FilterElement_style(infoButton));
+            infoButton.setAttribute("type", "button");
+            infoButton.setAttribute("value","Info");
+            infoButton.onclick = function(){
+                that.onApply();
+                overlayMulti(islands_layer);
+            };
+            this.div.appendChild(infoButton);
         }
     },
     
