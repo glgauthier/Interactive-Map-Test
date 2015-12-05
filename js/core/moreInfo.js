@@ -89,7 +89,10 @@ function printObject(obj,filter,path)
     var output = '';
 
     if(!obj){
-        return  obj + '<br />';
+        if(!filter || path.some(filter)){
+            output +=  obj + '<br />';
+        }
+        return output;
     }
     
     if(obj.constructor === Array){

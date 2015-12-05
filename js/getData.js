@@ -65,7 +65,15 @@ getIslands('IslesLagoon_multi.geojson'),{searchInclude: ['Nome_Isola','Numero','
 
 //------- Bridge Layers --------//
 getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json",{tag: "Bridges",generalInfo: function(target){
-    return printObject(target);
+    return printObject(target.data,function(str){
+        switch(str){
+            case 'Nome_Ponte':
+            case 'Superficie':
+                return true;
+            default:
+                return false;
+        }
+    });
 },moreInfo:function(targets,tag){
     var output = '';
     var count = 0;
@@ -80,7 +88,15 @@ getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json",{tag:
 
 //------- Canal Layers --------//
 getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canals.json",{tag: "Canals",generalInfo: function(target){
-    return printObject(target);
+    return printObject(target.data,function(str){
+        switch(str){
+            case 'Nome_Rio':
+            case 'Superficie':
+                return true;
+            default:
+                return false;
+        }
+    });
 },moreInfo:function(targets,tag){
     var output = '';
     var count = 0;
@@ -98,7 +114,14 @@ getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canals.json",{tag: 
 
 //------- Belltower Layers --------//
 getGroup("https://cityknowledge.firebaseio.com/groups/belltowers%20MAPS%2015.json",{tag:"Bell Towers",generalInfo: function(target){
-    return printObject(target);
+    return printObject(target.data,function(str){
+        switch(str){
+            case 'NAME':
+                return true;
+            default:
+                return false;
+        }
+    });
 },moreInfo:function(targets,tag){
     var output = '';
     var count = 0;
@@ -119,7 +142,15 @@ getGroup("https://cityknowledge.firebaseio.com/groups/belltowers%20MAPS%2015.jso
 
 //------- Hotel Layers --------//
 getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOTELS08_PT_15.json",{tag: "HotelsMap",generalInfo: function(target){
-    return printObject(target);
+    return printObject(target.data,function(str){
+        switch(str){
+            case 'name':
+            case 'beds':
+                return true;
+            default:
+                return false;
+        }
+    });
 },moreInfo:function(targets,tag){
     var output = '';
     var count = 0;
