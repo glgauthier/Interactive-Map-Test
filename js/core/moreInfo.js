@@ -83,9 +83,9 @@ function makeHTMLinfo(props,id,type)
     }
 }
 
-function printObject(props,depth)
+function printObject(props,filter,path)
 {
-    depth = depth || 0;
+    path = path || [];
     var output = '';
 
     if(!props){
@@ -103,9 +103,11 @@ function printObject(props,depth)
         output += ']<br />';
     }
     else if(typeof props === 'object'){
-        //output+= tabs(depth) + '<b>'+property + '</b>: ';
         for(property in props){
-            output += tabs(depth) + '<b>' + dictionary(property) + ':</b> '+printObject(props[property],depth+1);
+            if(!filter || filter(property) || typeof props[property] == 'object' || path.some(filter)){
+                var result = printObject(props[property],filter,path.concat([property]));
+                if(result != '') output += tabs(path.length) + '<b>' + dictionary(property) + ':</b> '+result;
+            }
         }
     }
     else{
