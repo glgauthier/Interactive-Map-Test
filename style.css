@@ -264,7 +264,7 @@ th {
     border-top-right-radius:5px;
 }
 
-#bottomBar{
+.bottomBar-left{
     color: rgb(250, 250, 250);
     position: fixed;
     width: 80%;
@@ -272,6 +272,25 @@ th {
     bottom:70px;
     margin-left:-8px;
     padding-right:16px;
+    padding-bottom:10px;
+    background: rgb(255, 255, 255);
+    box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    z-index:100;
+    border-bottom-left-radius:0px;
+    border-bottom-right-radius:0px;
+    height:60px;
+}
+
+.bottomBar-right{
+    color: rgb(250, 250, 250);
+    position:fixed;
+    margin-right:10px;
+    width: 40%;
+    max-width: 250px;
+    bottom:70px;
+    margin-right:0;
+    margin-left:0px;
+    padding-right:0px;
     padding-bottom:10px;
     background: rgb(255, 255, 255);
     box-shadow: 0 0 15px rgba(0,0,0,0.3);
@@ -318,3 +337,44 @@ width: 10px;
     border-color:forestgreen;
     background-color:fuchsia;
 }*/
+
+#inner2{
+    
+}
+#venipedia{ 
+}
+#venipediaImage {
+    position:fixed;
+    padding:80px 70px;
+    background-image: url('image/venipedia.png');
+    background-size:80px 70px;
+    background-repeat: no-repeat;
+    
+}
+#venipediaImage:hover {
+   padding:80px 70px;
+    background-image: url('image/venipedia2.png');
+    background-size:80px 70px;
+    background-repeat: no-repeat;
+    
+}
+
+#cartography{
+}
+#cartographyImage{
+    padding:80px 70px;
+    background-image: url('image/hMap.png');
+    background-size:80px 70px;
+    background-repeat: no-repeat;
+    background-position: 100% 0px;
+    
+}
+#cartographyImage:hover{
+    padding:80px 70px;
+    background-image: url('image/hMap2.png');
+    background-size:80px 70px;
+    background-repeat: no-repeat;
+    background-position: calc(100%+10px) 0px;
+}
+#inner2{z-index:170;}
+

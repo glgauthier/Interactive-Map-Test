@@ -44,8 +44,25 @@ function overlay(currentLayer) {
     addOverlayInfo("inner",properties.Numero);
     
     // Add in the venipedia and cartography buttons
-    $(document.getElementById("inner")).append('<br /> <br /><div id = "bottomBar"><a href="" id="venipedia"  target="_blank" onMouseOver="return changeImage()" onMouseOut= "return changeImageBack()"> <img name="jsbutton" src="image/venipedia.png" width="80" height="70" border="0" alt="javascript button" align="left"></a>'  
-         + '</br> <a id="historical" href="" target="_blank" class="button">View on a historical map</a></div>');
+//    $(document.getElementById("inner")).append('<br /> <br /><div id = "bottomBar"><a href="" id="venipedia"  target="_blank" onMouseOver='+ 'return changeImage("venipedia","jsbutton","venipedia2.png")' + 'onMouseOut=' +"return changeImageBack('venipedia','jsbutton','venipedia.png')" + '> <img name="jsbutton" src="image/venipedia.png" width="80" height="70" border="0" alt="javascript button" align="left"></a>'  
+//         + '<a href="" id="historical" target="_blank" onMouseOver=' +
+//            'return changeImage("historical","jsbutton2","hMap2.png")' +
+//            'onMouseOut=' + 'return changeImageBack("historical","jsbutton2","hMap.png")' +
+//            '> <img name="jsbutton2" src="image/hMap.png" width="80" height="70" border="0" alt="javascript button" align="right"></a></div>');
+//    $(document.getElementById('inner')).append($('<div>')
+//                        //specify the class of the div
+//                        .addClass("bottomBar")
+//                        //tag that div by the key
+//                        //.attr("id", key.replace(/ /g, "_"))
+//                        // fill in moreInfo stuff into the new div
+//                        .append('<a href="" id="venipedia"  target="_blank">'+ '<div id="venipediaImage"></div></a>')
+//                        //.append('<a href="" id="cartography"  target="_blank">'+ '<div id="cartographyImage"></div></a>')
+//                                               
+//                                               
+//    );
+    $(document.getElementById("inner")).append('<div id="inner2" class="bottomBar-left">');
+    $(document.getElementById("inner2")).append('<a href="" id="venipedia"  target="_blank">'+ '<div id="venipediaImage">&nbsp;</div></a>');
+    $(document.getElementById("inner2")).append('<a href="" id="cartography" target="_blank">'+ '<div id="cartographyImage"></div></a>');
     
     // generate correct venipedia link for associated island
     var link = "http://www.venipedia.org/wiki/index.php?title=Island_of_" + encodeURIComponent(properties.Nome_Isola.replace(/ /g, "_")); 
@@ -54,7 +71,7 @@ function overlay(currentLayer) {
     // now generate the cartography app link
     link = 'http://cartography.veniceprojectcenter.org/index.html?map=debarbari&layer=island&feature=' +
         encodeURIComponent('Island of '+properties.Nome_Isola);
-    document.getElementById("historical").href = link;
+    document.getElementById("cartography").href = link;
     
     // function for getting rid of overlay when you click on the screen
     // update later to remove only when clicking outside of 'overlay' div
@@ -63,24 +80,7 @@ function overlay(currentLayer) {
             overlayOff(currentLayer);
         });
     });
-    
-    var myimgobj = document.images["jsbutton"];
-    
 };
-
-//supporting functions for venipedia button
-//http://www.javascript-coder.com/button/javascript-button-p1.phtml
-function changeImage()
-{
-    document.images["jsbutton"].src= "image/venipedia2.png";
-    return true;
-}
-
-function changeImageBack()
-{
-    document.images["jsbutton"].src = "image/venipedia.png";
-    return true;
-}
 
 function makeHTMLinfo(props,id,type)
 {
