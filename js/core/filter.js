@@ -125,7 +125,6 @@ var FilterControl = L.Control.extend({
     },
     
     minimize : function(bool){
-        var that = this;
         this.minimized = bool;
 
         this.div.innerHTML = '';
@@ -165,7 +164,6 @@ var FilterControl = L.Control.extend({
             infoButton.setAttribute("type", "button");
             infoButton.setAttribute("value","Info");
             infoButton.onclick = function(){
-                that.onApply();
                 overlayMulti(islands_layer);
             };
             this.div.appendChild(infoButton);

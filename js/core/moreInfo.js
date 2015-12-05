@@ -53,7 +53,7 @@ function overlayMulti(islandLayer) {
     // update later to remove only when clicking outside of 'overlay' div
     $(document).ready(function() {
         $('#overlay').on('dblclick', function(e) { 
-            overlayOff(currentLayer);
+            overlayOff(islandLayer);
         });
     });
 };
