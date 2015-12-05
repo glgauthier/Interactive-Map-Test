@@ -206,7 +206,7 @@ mapInfo.addTo(map);
 //**********************************************************************************************
 // add location functionality
 // set this to true to auto-zoom on your location
-map.locate({setView: false, maxZoom: 18});
+map.locate({setView: false, maxZoom: 18, watch:true});
 
 // create a global var for the location layer - must be global so it can be toggled
 var locationLayer = L.layerGroup().addTo(map); 
