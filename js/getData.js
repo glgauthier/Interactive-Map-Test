@@ -154,10 +154,13 @@ getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOTELS08_PT_15.json",
 },moreInfo:function(targets,tag){
     var output = '';
     var count = 0;
+    var bedCount = 0;
     targets.forEach(function(target){
         count++;
+        bedCount += target.data.beds;
     });
     output = '<center><b>'+ dictionary(tag) +'</b> ('+count+' Total)</br></center>' + output;
+    output += '<b> Total Beds: </b>'+bedCount+'</br>';
     return output;
 }},{pointToLayer: function(feature,latlng){
     return new L.marker(latlng, {icon: hotelIcon}).bindPopup("I am a hotel");
