@@ -101,7 +101,14 @@ html, body
     position: absolute;
     
 }
-
+/* Apply to all divs within inner, this lets you
+*   dynamically resize boxes with overlay info
+*   BE CAREFUL, this is applied to
+*   #topBar, .bottomBar, and .moreInfo
+*/
+#inner * {
+    max-height:40%;
+}
 
 #inner::-webkit-scrollbar {
 -webkit-appearance: none;
@@ -299,11 +306,11 @@ th {
     margin-top:10px;
     margin-bottom:5px;
     top:0;bottom:0;left:0;right:0;
-    max-height:250px;
+    /*max-height:inherit; /*was 250px*/
     box-shadow: 0 0 15px rgba(0,0,0,0.3);
     border-radius: 5px;
     overflow: auto;
-    
+    height:auto;
     background-color:whitesmoke;
 }
 .moreInfo::-webkit-scrollbar {
@@ -315,6 +322,7 @@ width: 10px;
     background-color: rgba(0,0,0,.5);
     -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
 }
+
 
 /*box containing venipedia and cartography links*/
 #inner2{
