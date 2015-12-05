@@ -143,7 +143,7 @@ var islands_layer = L.geoJson(null, {
     onEachFeature: function(feature,layer){
         saveFeature(islands_layer,feature,layer);
         setupHighlight(feature,layer);
-        setupGeneralInfo('island',feature,layer);
+        setupGeneralInfo(printObject(feature.properties),feature,layer);
     }
     //onEachFeature: partial(saveAndHighlight,islands_layer)
 }).addTo(map);
