@@ -75,7 +75,7 @@ getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json",{tag:
     });
     output = '<center><b>'+ dictionary(tag) +'</b> ('+count+' Total)</br></center>' + output;
     return output;
-}},{style: standOut, onEachFeature:setupHighlight});
+}},{style: standOut});
 
 
 //------- Canal Layers --------//
@@ -91,7 +91,6 @@ getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Canals.json",{tag: 
     output = '<center><b>'+ dictionary(tag) +'</b> ('+count+' Total)</br></center>' + output;
     return output;
 }},{onEachFeature:function(feature,layer){
-    setupHighlight(feature,layer);
     layer.bindPopup(
         '<b><center>' + feature.properties.data.Nome_Rio + '</center></b>'
     );
@@ -109,7 +108,7 @@ getGroup("https://cityknowledge.firebaseio.com/groups/belltowers%20MAPS%2015.jso
     });
     output = '<center><b>'+ dictionary(tag) +'</b> ('+count+' Total)</br></center>' + output;
     return output;
-}},{onEachFeature:setupHighlight,pointToLayer: function(feature,latlng){
+}},{pointToLayer: function(feature,latlng){
     return new L.marker(latlng, {icon: churchIcon}).bindPopup(
     "<b>" + feature.properties.data.NAME + "</b></br>" +
     "Code: " + feature.properties.data.CODE + "</br>" +
@@ -145,7 +144,7 @@ getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOLES_PT_15.json",{ta
     });
     output = '<center><b>'+ dictionary(tag) +'</b> ('+count+' Total)</br></center>' + output;
     return output;
-}},{onEachFeature:setupHighlight,pointToLayer: function(feature,latlng){
+}},{pointToLayer: function(feature,latlng){
     return new L.marker(latlng, {icon: sewerIcon}).bindPopup("outlet");
 }});
 

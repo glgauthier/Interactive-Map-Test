@@ -55,30 +55,16 @@ function partial(func /*, 0..n args */) {
 // its location
 function highlightFeature(e) {
     var layer = e.target;
-    
-    // instead of updating info on one layer, an if statement can be used here to show info
-    // on multiple layers. for more info, see the following:
-    //http://gis.stackexchange.com/questions/68941/how-to-add-remove-legend-with-leaflet-layers-control
-    if(layer.feature.properties.islands){
-         //// islands stored layer.feature.properties.islands as an ARRAY
-         //mapInfo.update(layer.feature.properties.data);
-         //console.log("layer exists");
-        mapInfo.update(layer.feature.properties.data,layer.feature.properties.islands);
-    } else {
-         layer.setStyle(Highlight_style(layer.feature));
-         mapInfo.update(layer.feature.properties);
-    }
-    
+    layer.setStyle(Highlight_style(layer.feature));
 }
 
 function resetHighlight(e) {
-        var layer = e.target;
-       // console.log(e.target);
-        if(!layer.feature.properties.data){
-            islands_layer.resetStyle(e.target)
-        }
-    
-        mapInfo.update();
+    var layer = e.target;
+    // console.log(e.target);
+        
+    if(islands_layer.hasLayer(e.target)){
+        islands_layer.resetStyle(e.target)
+    }
 }
 
 function zoomToFeature(e) {
@@ -108,18 +94,45 @@ function saveFeature(parent, feature, layer){
 }
 
 function setupHighlight(feature, layer) {
-    if(layer.feature.properties.data){
-        layer.on({
-            mouseover: highlightFeature,
-            mouseout: resetHighlight
-        });
-    } else {
-        layer.on({
-            mouseover: highlightFeature,
-            mouseout: resetHighlight,
-            dblclick: zoomToFeature
-        });
-    }
+    var originalEvents = layer.on;
+    layer.on({
+        mouseover: function(e){
+            if(originalEvents.mouseover){
+                originalEvents.mouseover(e);
+            }
+            highlightFeature(e);
+        },
+        mouseout: function(e){
+            if(originalEvents.mouseout){
+                originalEvents.mouseout(e);
+            }
+            resetHighlight(e);
+        },
+        dblclick: function(e){
+            if(originalEvents.dblclick){
+                originalEvents.dblclick(e);
+            }
+            zoomToFeature(e)
+        }
+    });
+}
+
+function setupGeneralInfo(infoHtml,feature,layer){
+    var originalEvents = layer.on;
+    layer.on({
+        mouseover: function(e){
+            if(originalEvents.mouseover){
+                originalEvents.mouseover(e);
+            }
+            mapInfo.update(infoHtml);
+        },
+        mouseout: function(e){
+            if(originalEvents.mouseout){
+                originalEvents.mouseout(e);
+            }
+            mapInfo.update();
+        }
+    });
 }
 
 //**********************************************************************************************
@@ -130,6 +143,7 @@ var islands_layer = L.geoJson(null, {
     onEachFeature: function(feature,layer){
         saveFeature(islands_layer,feature,layer);
         setupHighlight(feature,layer);
+        setupGeneralInfo('island',feature,layer);
     }
     //onEachFeature: partial(saveAndHighlight,islands_layer)
 }).addTo(map);
@@ -168,13 +182,9 @@ mapInfo.onAdd = function (map){
 
 // method that we will use to update the control based on feature properties passed
 
-mapInfo.update = function (props,props2) {
-    
-    this._div.innerHTML = '<h4>General Information</h4>' +// + propString;
-       (props ?
-        '<h2>CK Console Data:</h2>' + printObject(props)
-        : 'Hover over a feature <br /> Double click for more info' ) 
-        + (props2 ? '<h2>Island Sort Algorithm Results:</h2>' + printObject(props2) : '');
+mapInfo.update = function (html) {
+    this._div.innerHTML = '<h4>General Information</h4>';
+    $(this._div).append(html);
 };
 
 mapInfo.addTo(map);
@@ -497,6 +507,9 @@ function initializeCollection(statusIndex,options,customArgs,groupURL,groupMSG){
         var originalOnEachFeature = customArgs.onEachFeature;
         customArgs.onEachFeature = function(feature,layer){
             saveFeature(featureCollections[tag],feature,layer);
+            if(options.generalInfo){
+                setupGeneralInfo(options.generalInfo(feature.properties),feature,layer);
+            }
             if(originalOnEachFeature){
                 originalOnEachFeature(feature,layer);
             }

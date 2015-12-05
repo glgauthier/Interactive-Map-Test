@@ -83,37 +83,41 @@ function makeHTMLinfo(props,id,type)
     }
 }
 
-function printObject(props,filter,path)
+function printObject(obj,filter,path)
 {
     path = path || [];
     var output = '';
 
-    if(!props){
-        return  props + '<br />';
+    if(!obj){
+        return  obj + '<br />';
     }
     
-    if(props.constructor === Array){
+    if(obj.constructor === Array){
         output += "["
-        if(props.length>0){
-            output+=props[0];
-            for(var i = 1;i<props.length;i++){
-                output += ', '+props[i];
+        if(obj.length>0){
+            output+=obj[0];
+            for(var i = 1;i<obj.length;i++){
+                output += ', '+obj[i];
             }
         }
         output += ']<br />';
     }
-    else if(typeof props === 'object'){
-        for(property in props){
-            if(!filter || filter(property) || typeof props[property] == 'object' || path.some(filter)){
-                var result = printObject(props[property],filter,path.concat([property]));
-                if(result != '') output += tabs(path.length) + '<b>' + dictionary(property) + ':</b> '+result;
+    else if(typeof obj === 'object'){
+        for(var property in obj){
+            var result = printObject(obj[property],filter,path.concat([property]));
+            if(!filter || filter (property) || typeof obj[property] == 'object' || path.some(filter)){
+                if(result != '') {
+                    output += tabs(path.length) + '<b>' + dictionary(property) + ':</b> '+result;
+                }
             }
+        }
+        if(path.length>0 && output != ''){
+            output = '<br />' + output;
         }
     }
     else{
-        output += props + '<br />';
+        output += obj + '<br />';
     }
-    
     return output;
 }
 
