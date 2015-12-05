@@ -80,20 +80,23 @@ html, body
 #inner{
     width: 80%;
     max-width: 500px;
-    height: calc(100% - 220px);
+    height: calc(100% - 260px);
     margin: auto;
     float: center;
-    top:0;
-    bottom:0; 
+    top:120px;
     left:0; 
     right:0;
     text-align:left;
-    padding:6px 8px;
+    padding-top:0px;
+    padding-bottom:0px;
+    max-height:100%;
+    padding-left:8px;
+    padding-right:8px;
     font: 14px/16px Arial, Helvetica, sans-serif;
     background: white;
     background: rgba(255,255,255,0.8);
     box-shadow: 0 0 15px rgba(0,0,0,0.2);
-    border-radius: 5px;
+    border-radius: 0px;
     overflow:auto;
     position: absolute;
     
@@ -248,7 +251,7 @@ th {
   border-color: white;
 }
 
-/*div styling for layer info window divs*/
+/*id styling for title bar of more info window*/
 #topBar	{ 
     color: rgb(250, 250, 250);
     position: fixed;
@@ -264,42 +267,33 @@ th {
     border-top-right-radius:5px;
 }
 
-.bottomBar-left{
+/*class styling for bottom bar of more info window*/
+.bottomBar{
     color: rgb(250, 250, 250);
     position: fixed;
     width: 80%;
     max-width: 500px;
-    bottom:70px;
+    bottom:60px;
     margin-left:-8px;
-    padding-right:16px;
-    padding-bottom:10px;
-    background: rgb(255, 255, 255);
-    box-shadow: 0 0 15px rgba(0,0,0,0.3);
-    z-index:100;
-    border-bottom-left-radius:0px;
-    border-bottom-right-radius:0px;
-    height:60px;
-}
-
-.bottomBar-right{
-    color: rgb(250, 250, 250);
-    position:fixed;
-    margin-right:10px;
-    width: 40%;
-    max-width: 250px;
-    bottom:70px;
-    margin-right:0;
-    margin-left:0px;
     padding-right:0px;
-    padding-bottom:10px;
     background: rgb(255, 255, 255);
     box-shadow: 0 0 15px rgba(0,0,0,0.3);
     z-index:100;
     border-bottom-left-radius:0px;
     border-bottom-right-radius:0px;
     height:60px;
+    padding:6px 8px;
+    padding-bottom:15px;
+    border:10px;
+    border-bottom-left-radius:5px;
+    border-bottom-right-radius:5px;
+        
 }
 
+/* Default class for overlay info box
+*       this can be overridden using specific ids 
+*       for the various overlays, such as #Bell_Towers{}
+*/
 .moreInfo{
     padding:10px;
     margin-top:10px;
@@ -321,47 +315,35 @@ width: 10px;
     background-color: rgba(0,0,0,.5);
     -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
 }
-/*
-#Bell_Towers{
-    border-color:aqua;
-}
-#Wiki_Data{
-    border-color:coral;
-}
-#Bridges{
-    border-color:coral;
-}
-#Stores{
-    border: 10px solid;
-    border-radius:5px;
-    border-color:forestgreen;
-    background-color:fuchsia;
-}*/
 
+/*box containing venipedia and cartography links*/
 #inner2{
     
 }
-#venipedia{ 
-}
+
+/*venipedia link setup*/
 #venipediaImage {
-    position:fixed;
+    position:absolute;
+    width:18%;
+    max-width:250px;
     padding:80px 70px;
     background-image: url('image/venipedia.png');
     background-size:80px 70px;
+    background-position: 0px 0px;
     background-repeat: no-repeat;
     
 }
 #venipediaImage:hover {
-   padding:80px 70px;
+    padding:80px 70px;
     background-image: url('image/venipedia2.png');
     background-size:80px 70px;
     background-repeat: no-repeat;
     
 }
 
-#cartography{
-}
+/*cartography link setup*/
 #cartographyImage{
+    position:inherit;
     padding:80px 70px;
     background-image: url('image/hMap.png');
     background-size:80px 70px;
@@ -374,7 +356,5 @@ width: 10px;
     background-image: url('image/hMap2.png');
     background-size:80px 70px;
     background-repeat: no-repeat;
-    background-position: calc(100%+10px) 0px;
+    
 }
-#inner2{z-index:170;}
-

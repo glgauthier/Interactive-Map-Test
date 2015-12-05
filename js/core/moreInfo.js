@@ -39,30 +39,16 @@ function overlay(currentLayer) {
         '<h2><center>' + (properties.Nome_Isola ? properties.Nome_Isola : 'Island Information') + '</center></h2></div>'
         +' <br />';
     
+    // add in info on the base geoJSON layers
     makeHTMLinfo(properties,"inner","JSON");
    
+    // add in info on all overlays with information shown on selected isle
     addOverlayInfo("inner",properties.Numero);
     
-    // Add in the venipedia and cartography buttons
-//    $(document.getElementById("inner")).append('<br /> <br /><div id = "bottomBar"><a href="" id="venipedia"  target="_blank" onMouseOver='+ 'return changeImage("venipedia","jsbutton","venipedia2.png")' + 'onMouseOut=' +"return changeImageBack('venipedia','jsbutton','venipedia.png')" + '> <img name="jsbutton" src="image/venipedia.png" width="80" height="70" border="0" alt="javascript button" align="left"></a>'  
-//         + '<a href="" id="historical" target="_blank" onMouseOver=' +
-//            'return changeImage("historical","jsbutton2","hMap2.png")' +
-//            'onMouseOut=' + 'return changeImageBack("historical","jsbutton2","hMap.png")' +
-//            '> <img name="jsbutton2" src="image/hMap.png" width="80" height="70" border="0" alt="javascript button" align="right"></a></div>');
-//    $(document.getElementById('inner')).append($('<div>')
-//                        //specify the class of the div
-//                        .addClass("bottomBar")
-//                        //tag that div by the key
-//                        //.attr("id", key.replace(/ /g, "_"))
-//                        // fill in moreInfo stuff into the new div
-//                        .append('<a href="" id="venipedia"  target="_blank">'+ '<div id="venipediaImage"></div></a>')
-//                        //.append('<a href="" id="cartography"  target="_blank">'+ '<div id="cartographyImage"></div></a>')
-//                                               
-//                                               
-//    );
-    $(document.getElementById("inner")).append('<div id="inner2" class="bottomBar-left">');
-    $(document.getElementById("inner2")).append('<a href="" id="venipedia"  target="_blank">'+ '<div id="venipediaImage">&nbsp;</div></a>');
-    $(document.getElementById("inner2")).append('<a href="" id="cartography" target="_blank">'+ '<div id="cartographyImage"></div></a>');
+    // add in the bottom bar
+    $(document.getElementById("inner")).append('<div id="inner2" class="bottomBar">');
+    // populate it with the venipedia and cartography links
+    $(document.getElementById("inner2")).append('<a href="" id="venipedia"  target="_blank">'+ '<div id="venipediaImage"></div></a>' + '<a href="" id="cartography" target="_blank">'+ '<div id="cartographyImage"></div></a>');
     
     // generate correct venipedia link for associated island
     var link = "http://www.venipedia.org/wiki/index.php?title=Island_of_" + encodeURIComponent(properties.Nome_Isola.replace(/ /g, "_")); 
