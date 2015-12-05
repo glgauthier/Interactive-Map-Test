@@ -388,7 +388,11 @@ function getGroupCallback(options,customArgs,groupURL,groupMSG) {
                         var layer = findLayer(params.layerTag,key,params[key]);
                         console.log(layer);
                         if(layer){
-                            map.fitBounds(layer.getBounds());
+                            if(layer.getBounds)
+                                map.fitBounds(layer.getBounds());
+                            else if(layer.getLatLng){
+                                map.setView(layer.getLatLng(),25)
+                            }
                             return;
                         }
                     }
