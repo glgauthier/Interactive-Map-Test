@@ -250,7 +250,10 @@ function onLocationFound(e) {
     locationMarker.on('click', function(){
         var bodyString = getOverlayInfo(nearestIsles);
         if(bodyString!='') overlayHTML('Nearest Features','<b><center> Island of ' + islandsCollection[nearestIsles[0]].properties.Nome_Isola +'</b></center><div class=moreInfo>'+ bodyString+'</div>');
-        else overlayHTML('Nearest Features','<b><center>Island of ' +islandsCollection[nearestIsles[0]].properties.Nome_Isola + '</b></center></br>No additional features found');
+        else if(nearestIsles.length>0) overlayHTML('Nearest Features','<b><center>Island of ' +islandsCollection[nearestIsles[0]].properties.Nome_Isola + '</b></center></br>No additional features found');
+        else{
+            overlayHTML('Nearest Features','No features found');
+        }
     });
     
 }
