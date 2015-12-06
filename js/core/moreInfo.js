@@ -207,6 +207,25 @@ function addOverlayInfo(id,num){
     if(!(num.constructor === Array)){
         num=[num];
     }
+    
+    var outer = document.getElementById(id);
+    // append a new div element to the more info window
+    var info = getOverlayInfo(num);
+    if(info!=''){
+        $(outer).append(
+         $('<div>')
+            //specify the class of the div
+            .addClass("moreInfo")
+            //tag that div by the key
+            .attr("id", key.replace(/ /g, "_"))
+            // fill in moreInfo stuff into the new div
+            .append(info)
+        );
+    }   
+}
+
+function getOverlayInfo(num){
+    var output = '';
     for(key in featureCollections){
         if(featureCollections[key].groupOptions && featureCollections[key].groupOptions.moreInfo){
             var targets = $.map(featureCollections[key]._layers, function(e){return e.feature.properties}).filter(function(target){
@@ -217,19 +236,10 @@ function addOverlayInfo(id,num){
                 });
             });
             if(targets.length>0){
-                var outer = document.getElementById(id);
-                // append a new div element to the more info window
-                $(outer).append(
-                     $('<div>')
-                        //specify the class of the div
-                        .addClass("moreInfo")
-                        //tag that div by the key
-                        .attr("id", key.replace(/ /g, "_"))
-                        // fill in moreInfo stuff into the new div
-                        .append(featureCollections[key].groupOptions.moreInfo(targets,key))
-                );
+                output += featureCollections[key].groupOptions.moreInfo(targets,key);
             }
         }
     }
+    return output;
 }
 

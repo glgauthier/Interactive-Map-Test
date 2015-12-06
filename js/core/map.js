@@ -240,13 +240,19 @@ function onLocationFound(e) {
     locationLayer.addLayer(locationRadius);
     if (markerFlag == false) markerFlag = true;
 
-    locationGeoJSON = locationLayer.toGeoJSON();
-    queryIslands_COLLECTION(islandsCollection,locationGeoJSON);
+    locationGeoJSON = locationMarker.toGeoJSON();
+    var nearestIsles = queryIslands_COLLECTION(islandsCollection,locationGeoJSON);
     
-  locationMarker.bindPopup("<center><b>Nearest Features</b><br>Within " + radius + " meters </center>");
-//    locationMarker.on('click', function(){
-//                overlayHTML('Nearest Features','stuff and things');
-//            });
+//  locationMarker.bindPopup("<center><b>Nearest Features</b><br>Within " + radius + " meters </center>" + '</br>' + getOverlayInfo(nearestIsles));
+   
+    
+    console.log(nearestIsles);
+    locationMarker.on('click', function(){
+        var bodyString = getOverlayInfo(nearestIsles);
+        if(bodyString!='') overlayHTML('Nearest Features','<b><center> Island of ' + islandsCollection[nearestIsles[0]].properties.Nome_Isola +'</b></center><div class=moreInfo>'+ bodyString+'</div>');
+        else overlayHTML('Nearest Features','<b><center>Island of ' +islandsCollection[nearestIsles[0]].properties.Nome_Isola + '</b></center></br>No additional features found');
+    });
+    
 }
 map.on('locationfound', onLocationFound);
 
