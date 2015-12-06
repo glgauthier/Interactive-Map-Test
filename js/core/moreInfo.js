@@ -25,6 +25,29 @@ function overlayOff(currentLayer){
 //  -to work with any layer (not just islands)?
 //  -translate fields
 
+function overlayHTML(HEAD,BODY) {
+	el = document.getElementById("overlay");
+	el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
+    
+    // toggle the state of the function flag, this affects hilighting 
+    overlayFlag ^= true;
+
+    // if the info box is being turned off don't do any additional work
+    if(!overlayFlag){return;}
+
+    document.getElementById('inner').innerHTML = '<div id ="topBar">'+'<a class = "Xbutton" id = "Xbutton" onclick = "overlay()">X</a>'+
+        '<h2><center>' + (HEAD ? HEAD : '') + '</center></h2></div>'
+        +' <br />' + (BODY ? BODY : '');
+    
+    // function for getting rid of overlay when you click on the screen
+    // update later to remove only when clicking outside of 'overlay' div
+    $(document).ready(function() {
+        $('#overlay').on('dblclick', function(e) { 
+            overlayOff(islandLayer);
+        });
+    });
+};
+
 function overlayMulti(islandLayer) {
 	el = document.getElementById("overlay");
 	el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";

@@ -212,6 +212,7 @@ markerFlag = false;
 // create a global var for the location layer - must be global so it can be toggled
 var locationLayer = L.layerGroup().addTo(map); 
 var locationMarker, locationRadius;
+
 // function to excecute when the user's location is found
 function onLocationFound(e) {
     console.log("added new marker");
@@ -239,9 +240,10 @@ function onLocationFound(e) {
     locationLayer.addLayer(locationRadius);
     if (markerFlag == false) markerFlag = true;
 
-    locationMarker.bindPopup("<center><b>You are here!</b><br>Within " + radius + " meters </center>");//.openPopup();
-    // make sure it stays on top of everything else
-    //locationLayer.bringToFront();
+   locationMarker.bindPopup("<center><b>Nearest Features</b><br>Within " + radius + " meters </center>");
+//    locationMarker.on('click', function(){
+//                overlayHTML('Nearest Features','');
+//            });
 }
 map.on('locationfound', onLocationFound);
 
