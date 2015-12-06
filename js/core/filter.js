@@ -378,6 +378,7 @@ filter.onApply = function(e){
     }
     
     refreshFilter();
+    searchControl.refresh();
 }
 //define onClear behavior
 filter.onClear = function(e){
@@ -390,6 +391,7 @@ filter.onClear = function(e){
     }
     refreshFilter();
     recolorIsles();
+    searchControl.refresh();
 }
 filter.getAllValues = function(e){
     var vals = [];
