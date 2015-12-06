@@ -211,7 +211,7 @@ map.locate({setView: false, maxZoom: 18, watch:true});
 markerFlag = false;
 // create a global var for the location layer - must be global so it can be toggled
 var locationLayer = L.layerGroup().addTo(map); 
-var locationMarker, locationRadius;
+var locationMarker, locationRadius, locationGeoJSON;
 
 // function to excecute when the user's location is found
 function onLocationFound(e) {
@@ -240,11 +240,14 @@ function onLocationFound(e) {
     locationLayer.addLayer(locationRadius);
     if (markerFlag == false) markerFlag = true;
 
-   locationMarker.bindPopup("<center><b>Nearest Features</b><br>Within " + radius + " meters </center>");
+    locationGeoJSON = locationLayer.toGeoJSON();
+    queryIslands_COLLECTION(islandsCollection,locationGeoJSON);
+    
+  locationMarker.bindPopup("<center><b>Nearest Features</b><br>Within " + radius + " meters </center>");
 //    locationMarker.on('click', function(){
-//                overlayHTML('Nearest Features','');
+//                overlayHTML('Nearest Features','stuff and things');
 //            });
-}
+//}
 map.on('locationfound', onLocationFound);
 
 // function to excecute when the users location isn't found
