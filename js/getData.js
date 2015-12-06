@@ -34,7 +34,7 @@ function getIslands(path,options){
                 searchControl.includeKeys(options.searchInclude);
             }
             if(options.searchExclude){
-                searchControl.searchExclude(options.searchExclude);
+                searchControl.excludeKeys(options.searchExclude);
             }
         }
         
@@ -61,7 +61,7 @@ function getIslands(path,options){
 
 //------- Island Layers --------//
 getIslands('IslesLagoon_single.geojson',{searchInclude: ['Nome_Isola','Numero','Codice']});
-getIslands('IslesLagoon_multi.geojson'),{searchInclude: ['Nome_Isola','Numero','Codice']};
+getIslands('IslesLagoon_multi.geojson',{searchInclude: ['Nome_Isola','Numero','Codice']});
 
 //------- Bridge Layers --------//
 getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json",{tag: "Bridges",generalInfo: function(target){

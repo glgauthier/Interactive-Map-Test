@@ -290,17 +290,22 @@ VPCinfo.onAdd = function (map) {
 };
 
 function showAbout(){
-    el = document.getElementById("help");
-	el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
-    $(document.getElementById("innerHelp")).append('<div class="floatingX" onclick = "hideAbout()" ></div>');
+    var el = document.getElementById("help");
+	el.style.visibility = "visible";
+    //$(document.getElementById("innerHelp")).append('<div class="floatingX" onclick = "hideAbout()" ></div>');
     document.getElementById("innerHelp").innerHTML = 
         '<a id="helpX" onclick = "hideAbout()" class = "Xbutton">Close Window</a>'+
         '<iframe id=helpContent src="https://docs.google.com/document/d/11a5uMYyAtVFpasV2QbwML8ftwQgKn9n_pIhnUJoiBo8/pub?embedded=true"></iframe>';
-
+    $('#help').on('click', function(event) {
+        if (!$(event.target).closest('#innerHelp').length) {
+            hideAbout();
+        }
+    });
 }
 function hideAbout(){
+    var el = document.getElementById("help");
     console.log("hide");
-    el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
+    el.style.visibility = "hidden";
 }
 
 VPCinfo.addTo(map);

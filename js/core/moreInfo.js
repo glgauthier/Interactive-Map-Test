@@ -42,8 +42,13 @@ function overlayHTML(HEAD,BODY) {
     // function for getting rid of overlay when you click on the screen
     // update later to remove only when clicking outside of 'overlay' div
     $(document).ready(function() {
-        $('#overlay').on('dblclick', function(e) { 
-            overlayOff(islandLayer);
+//        $('#overlay').on('dblclick', function(e) { 
+//            overlayOff(islandLayer);
+//        });
+        $('#overlay').on('click', function(event) {
+          if (!$(event.target).closest('#inner').length) {
+            overlayOff(currentLayer);
+          }
         });
     });
 };
@@ -75,8 +80,13 @@ function overlayMulti(islandLayer) {
     // function for getting rid of overlay when you click on the screen
     // update later to remove only when clicking outside of 'overlay' div
     $(document).ready(function() {
-        $('#overlay').on('dblclick', function(e) { 
-            overlayOff(islandLayer);
+//        $('#overlay').on('dblclick', function(e) { 
+//            overlayOff(islandLayer);
+//        });
+        $('#overlay').on('click', function(event) {
+          if (!$(event.target).closest('#inner').length) {
+            overlayOff(currentLayer);
+          }
         });
     });
 };
@@ -123,8 +133,13 @@ function overlay(currentLayer) {
     // function for getting rid of overlay when you click on the screen
     // update later to remove only when clicking outside of 'overlay' div
     $(document).ready(function() {
-        $('#overlay').on('dblclick', function(e) { 
+//        $('#overlay').on('dblclick', function(e) { 
+//            overlayOff(currentLayer);
+//        });
+        $('#overlay').on('click', function(event) {
+          if (!$(event.target).closest('#inner').length) {
             overlayOff(currentLayer);
+          }
         });
     });
 };
