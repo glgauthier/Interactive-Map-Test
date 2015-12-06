@@ -247,7 +247,7 @@ function onLocationFound(e) {
 //    locationMarker.on('click', function(){
 //                overlayHTML('Nearest Features','stuff and things');
 //            });
-//}
+}
 map.on('locationfound', onLocationFound);
 
 // function to excecute when the users location isn't found
