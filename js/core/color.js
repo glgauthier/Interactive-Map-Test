@@ -2,8 +2,11 @@
 // Create grades using http://colorbrewer2.org/
 var legend = L.control({position: 'bottomright'});
 var legend_div = L.DomUtil.create('div', 'legend');
-//legend_div.onmouseover('');
-//legend_div.onmouseout();
+//legend_div.onmousewheel= function(event) {
+//    console.log("scroll event");
+//    event.preventDefault();
+//    return false;
+//};
 
 // color gradients
 //var gradientColors = [

@@ -16,11 +16,11 @@ html, body
     line-height: 18px;
     color: #555;
     height:auto;
-    max-height: 140px;
+    max-height: 120px;
     background: rgba(255,255,255,0.8);
     padding: 6px 8px;
     border-radius: 5px;
-    overflow-y:scroll;
+    overflow:auto;
     z-index:100;
 }
 
