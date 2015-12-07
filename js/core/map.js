@@ -294,7 +294,7 @@ function showAbout(){
     //$(document.getElementById("innerHelp")).append('<div class="floatingX" onclick = "hideAbout()" ></div>');
     document.getElementById("innerHelp").innerHTML = 
         '<a id="helpX" onclick = "hideAbout()" class = "Xbutton">Close Window</a>'+
-        '<iframe id=helpContent src="https://docs.google.com/document/d/11a5uMYyAtVFpasV2QbwML8ftwQgKn9n_pIhnUJoiBo8/pub?embedded=true"></iframe>';
+        '<iframe id=helpContent scrolling="yes" src="https://docs.google.com/document/d/11a5uMYyAtVFpasV2QbwML8ftwQgKn9n_pIhnUJoiBo8/pub?embedded=true"></iframe>';
     $('#help').on('click', function(event) {
         if (!$(event.target).closest('#innerHelp').length) {
             hideAbout();
