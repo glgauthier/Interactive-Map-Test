@@ -221,9 +221,7 @@ getGroup("https://cityknowledge.firebaseio.com/groups/Convents%20Data.json",{gen
 }});
 
 //------- WikiData Minor Lagoon Islands Layers --------//
-getGroup("https://cityknowledge.firebaseio.com/groups/Minor_Lagoon_Islands_2015.json",{tag:"Wiki Data",preLoad: true,toggle:false,generalInfo: function(target){
-    return printObject(target);
-},moreInfo: function(targets,tag){
+getGroup("https://cityknowledge.firebaseio.com/groups/Minor_Lagoon_Islands_2015.json",{tag:"Wiki Data",preLoad: true,toggle:false,moreInfo: function(targets,tag){
     var output = '';
     targets.forEach(function(target){
         output+='<b>About: </b>'+ target.data.Blurb+'</br>' +
