@@ -43,7 +43,7 @@ legend.onAdd = function (map) {
 
 legend.setThresholds = function(thresholds){
     legend.grades = thresholds;
-    legend_div.innerHTML='';
+    legend_div.innerHTML='<center><b>'+dictionary(colorControl.appliedField)+'</b></center>';
     
     for (var i = 0; i < thresholds.length && i < gradientColors[gradientColorIndex].length; i++) {
         legend_div.innerHTML +=

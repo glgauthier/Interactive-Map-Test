@@ -11,19 +11,6 @@ html, body
     z-index:1;
 } 
 
-.legend {
-    font: 14px/16px Arial, Helvetica, sans-serif;
-    line-height: 18px;
-    color: #555;
-    height:auto;
-    max-height: 120px;
-    background: rgba(255,255,255,0.8);
-    padding: 6px 8px;
-    border-radius: 5px;
-    overflow:auto;
-    z-index:100;
-}
-
 .info {
     padding: 6px 8px;
     font: 14px/16px Arial, Helvetica, sans-serif;
@@ -57,9 +44,19 @@ html, body
 }
 
 .legend {
+    font: 14px/16px Arial, Helvetica, sans-serif;
     line-height: 18px;
     color: #555;
+    height:auto;
+    width:auto;
+    max-height: 165px;
+    background: rgba(255,255,255,0.8);
+    padding: 6px 8px;
+    border-radius: 5px;
+    overflow-y:auto;
+    z-index:100;
 }
+
 
 .legend i {
     width: 18px;
