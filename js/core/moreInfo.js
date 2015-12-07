@@ -47,7 +47,7 @@ function overlayHTML(HEAD,BODY) {
 //        });
         $('#overlay').on('click', function(event) {
           if (!$(event.target).closest('#inner').length) {
-            overlayOff(currentLayer);
+            overlayOff();
           }
         });
     });
@@ -99,7 +99,7 @@ function overlayMulti(islandLayer) {
 //        });
         $('#overlay').on('click', function(event) {
           if (!$(event.target).closest('#inner').length) {
-            overlayOff(currentLayer);
+            overlayOff(islandLayer);
           }
         });
     });
