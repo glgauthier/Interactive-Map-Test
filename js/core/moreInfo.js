@@ -68,6 +68,20 @@ function overlayMulti(islandLayer) {
         '<h2><center>' + ('Filter Results') + '</center></h2></div>'
         +' <br />';
     
+    
+    
+    var array = $.map(islandsCollection, function(o){return {name: o.properties.Nome_Isola, visible: o.visible};}); //collection to array
+    array = $.grep(array, function(e){ return e.visible == true; }); //search array for visible ones
+    array = $.map(array, function(o){return o.name;});// convert back to array of strings
+    if (array.length>0){
+        var str = '<div class=moreInfo> <b><center>Islands:</center></b>'; // create html content
+        for (i=0; i<array.length;  i++){
+            //'<a target="_blank" href = "index.html?Nome_Isola='+ encodeURIComponent(array[i]) + 
+            str+= array[i] + '</br>';
+        }
+        str = str + '</div>';
+        $(document.getElementById("inner")).append(str);
+    }
     var nums = [];
     
     islandLayer.eachLayer(function(layer){
