@@ -2,11 +2,16 @@
 // Create grades using http://colorbrewer2.org/
 var legend = L.control({position: 'bottomright'});
 var legend_div = L.DomUtil.create('div', 'legend');
-//legend_div.onmousewheel= function(event) {
-//    console.log("scroll event");
-//    event.preventDefault();
-//    return false;
-//};
+ // Disable dragging when user's cursor enters the element
+legend_div.addEventListener('mouseover', function () {
+    map.dragging.disable();
+    map.scrollWheelZoom.disable();
+});
+// Re-enable dragging when user's cursor leaves the element
+legend_div.addEventListener('mouseout', function () {
+    map.dragging.enable();
+    map.scrollWheelZoom.enable();
+});
 
 // color gradients
 //var gradientColors = [

@@ -11,19 +11,6 @@ var feature_layers = [];
 var overlayFlag = 0;
 
 var map = L.map('map').setView([45.4375, 12.3358], 13);
-map.getContainer().onmousewheel= function(event) {
-    
-//    if(event.defaultPrevented){
-//        console.log("legend event");
-//        event.stopPropagation();
-//        return false;
-//    }
-//    if ($(event.target).closest('.legend').length) {
-//        console.log("over legend");
-//        event.stopPropigation();
-//        return false;
-//    }
-};
 
 
 //**********************************************************************************************
