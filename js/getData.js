@@ -10,7 +10,7 @@ function getGroup(URL,groupOptions,customArgs){
 
 //Add an Island Base Layer to the map!
 //options = { searchInclude: string[], searchExclude: string[]};
-function getIslands(path,options){
+function getIslands(path,islandOptions){
     $.getJSON(path,function(msg){
         var layer = msg;
 
@@ -29,14 +29,7 @@ function getIslands(path,options){
             colorControl.minimize(filter.minimized);
         }
         
-        if(options){
-            if(options.searchInclude){
-                searchControl.includeKeys(options.searchInclude);
-            }
-            if(options.searchExclude){
-                searchControl.excludeKeys(options.searchExclude);
-            }
-        }
+        if(islandOptions) setIslandOptions(islandOptions);
         
         var params = getUrlParameters();
         
@@ -57,11 +50,49 @@ function getIslands(path,options){
     });
 }
 
+function setIslandOptions(islandOptions){
+    if(islandOptions){
+        if(islandOptions.searchInclude){
+            searchControl.includeKeys(islandOptions.searchInclude);
+        }
+        if(islandOptions.searchExclude){
+            searchControl.excludeKeys(islandOptions.searchExclude);
+        }
+    }
+    islands_layer.islandOptions = islandOptions;
+}
+
 //***********************************************************************************************
 
 //------- Island Layers --------//
-getIslands('IslesLagoon_single.geojson',{searchInclude: ['Nome_Isola','Numero','Codice']});
-getIslands('IslesLagoon_multi.geojson',{searchInclude: ['Nome_Isola','Numero','Codice']});
+getIslands('IslesLagoon_single.geojson');
+getIslands('IslesLagoon_multi.geojson');
+
+setIslandOptions({searchInclude: ['Nome_Isola','Numero','Codice'],generalInfo: function(target){
+    return printObject(target,function(str){
+            switch(str){
+                case 'Nome_Isola':
+                case 'Numero':
+                    return true;
+                default:
+                    return false;
+            }
+    });
+},moreInfo: function(targets){
+    var output ='';
+    if(targets.length==1){
+        output+='<b><center>Base Layer Data</center></b>';
+        output += printObject(targets[0]);
+    }
+    else if(targets.length>1){
+        output += '<b><center>Islands:</center></b>';
+        for (var i=0,iLen=targets.length; i<iLen; i++){
+            //'<a target="_blank" href = "index.html?Nome_Isola='+ encodeURIComponent(array[i]) + 
+            output += targets[i].Nome_Isola + '</br>';
+        }
+    }
+    return output;
+}});
 
 //------- Bridge Layers --------//
 getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json",{tag: "Bridges",generalInfo: function(target){
@@ -249,7 +280,6 @@ getGroup("https://cityknowledge.firebaseio.com/groups/Minor_Lagoon_Islands_2015.
 //------- Store Layers --------//
 getGroup("https://ckdata.firebaseio.com/groups/MERGE%20Stores%202012.json",{tag:'Stores',filter:function(obj){
     if(obj["2015"]) return true;
-    
 },generalInfo: function(target){
     return printObject(target);
 },moreInfo: function(targets,tag){
