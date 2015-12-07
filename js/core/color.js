@@ -1,7 +1,9 @@
 // create a legend for the colors
 // Create grades using http://colorbrewer2.org/
 var legend = L.control({position: 'bottomright'});
-var legend_div = L.DomUtil.create('div', 'info legend');
+var legend_div = L.DomUtil.create('div', 'legend');
+//legend_div.onmouseover('');
+//legend_div.onmouseout();
 
 // color gradients
 //var gradientColors = [
@@ -68,7 +70,7 @@ var ColorControl = L.Control.extend({
         this.object = object;
         this.thresholds = legend.grades;
         this.modifyDiv = modifyDiv;
-        this.div = this.div || L.DomUtil.create('div', 'info legend');
+        this.div = this.div || L.DomUtil.create('div', 'info');
         
         //on click, stop propogation
         this.div.onclick = function(e){

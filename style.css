@@ -12,8 +12,16 @@ html, body
 } 
 
 .legend {
+    font: 14px/16px Arial, Helvetica, sans-serif;
     line-height: 18px;
     color: #555;
+    height:auto;
+    max-height: 140px;
+    background: rgba(255,255,255,0.8);
+    padding: 6px 8px;
+    border-radius: 5px;
+    overflow-y:scroll;
+    z-index:100;
 }
 
 .info {
