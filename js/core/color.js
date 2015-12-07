@@ -445,6 +445,9 @@ colorControl.onApply = function(e){
         recolorIsles();
         
         if (gradientFlag == 1){
+            objectColors=objectColors.sort(function(obj1,obj2){
+                return obj1.id-obj2.id;
+            });
             legend.setValues(objectColors);
         }
         else{
@@ -454,6 +457,9 @@ colorControl.onApply = function(e){
     else{
         objectColors = []; // discard random colors that have been saved
         recolorIsles();
+        objectColors=objectColors.sort(function(obj1,obj2){
+            return obj1.id-obj2.id;
+        });
         legend.setValues(objectColors);
         legend.addTo(map);
     }
