@@ -131,3 +131,4 @@ searchControl.refresh();
 
 searchControl.addTo(map);
 searchControl._container.style.clear = 'none';
+searchControl._container.style.zIndex = 1010;
