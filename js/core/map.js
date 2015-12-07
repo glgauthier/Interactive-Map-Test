@@ -215,7 +215,7 @@ var locationMarker, locationRadius, locationGeoJSON;
 
 // function to excecute when the user's location is found
 function onLocationFound(e) {
-    console.log("added new marker");
+    //console.log("added new marker");
     // close old current location marker if it's outdated
     if (markerFlag==true){
         map.removeLayer(locationMarker);
@@ -246,7 +246,7 @@ function onLocationFound(e) {
 //  locationMarker.bindPopup("<center><b>Nearest Features</b><br>Within " + radius + " meters </center>" + '</br>' + getOverlayInfo(nearestIsles));
    
     
-    console.log(nearestIsles);
+    //console.log(nearestIsles);
     locationMarker.on('click', function(){
         var bodyString = getOverlayInfo(nearestIsles);
         if(bodyString!='') overlayHTML('Nearest Features','<b><center> Island of ' + islandsCollection[nearestIsles[0]].properties.Nome_Isola +'</b></center>'+ bodyString);
@@ -304,7 +304,6 @@ function showAbout(){
 }
 function hideAbout(){
     var el = document.getElementById("help");
-    console.log("hide");
     el.style.visibility = "hidden";
 }
 
@@ -395,6 +394,14 @@ function findLayer(tag,key,value){
 var loadStatus = [];
 
 function getGroupCallback(options,customArgs,groupURL,groupMSG) {
+    options = options || {};
+    if(!options.hasOwnProperty("preLoad")){
+        options.preLoad=false;
+    }
+    if(!options.hasOwnProperty("toggle")){
+        options.toggle=true;
+    }
+    
     var jsonList = groupMSG;
     //console.log(jsonList.members);
     var statusIndex = loadStatus.length;
@@ -427,11 +434,11 @@ function getGroupCallback(options,customArgs,groupURL,groupMSG) {
         }
     };
     
-    if(options && options.tag){
+    if(options.tag){
         initializeCollection(statusIndex,options,customArgs,groupURL,jsonList);
     }
     
-    if(options && featureCollections[options.tag]){
+    if(featureCollections[options.tag]){
         loadStatus[statusIndex].recieveComplete = false;
         return;
     }
@@ -569,9 +576,15 @@ function initializeCollection(statusIndex,options,customArgs,groupURL,groupMSG){
         
         featureCollections[tag].groupOptions = options;
         
-        layerController.addOverlay(featureCollections[tag],tag);
+        if(!options.preLoad){
+            layerController.addOverlay(featureCollections[tag],tag);
+        }
         
         loadStatus[statusIndex].onInitialize(tag);
+        
+        if(options.preLoad == true){
+            featureCollections[tag].addTo(map);
+        }
         
         return true;
     }

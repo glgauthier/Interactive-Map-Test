@@ -221,7 +221,7 @@ getGroup("https://cityknowledge.firebaseio.com/groups/Convents%20Data.json",{gen
 }});
 
 //------- WikiData Minor Lagoon Islands Layers --------//
-getGroup("https://cityknowledge.firebaseio.com/groups/Minor_Lagoon_Islands_2015.json",{tag:"Wiki Data",generalInfo: function(target){
+getGroup("https://cityknowledge.firebaseio.com/groups/Minor_Lagoon_Islands_2015.json",{tag:"Wiki Data",preLoad: true,toggle:false,generalInfo: function(target){
     return printObject(target);
 },moreInfo: function(targets,tag){
     var output = '';
@@ -244,7 +244,7 @@ getGroup("https://cityknowledge.firebaseio.com/groups/Minor_Lagoon_Islands_2015.
     output = '<center><b>'+ dictionary(tag) +'</b></br></center>' + output;
     return output;
 }},{pointToLayer: function(feature,latlng){
-    return new L.marker(latlng, {icon: vpcicon});
+    return new L.marker(latlng, {icon: noIcon});
 }});
 
 
