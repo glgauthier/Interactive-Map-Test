@@ -266,7 +266,7 @@ function getOverlayInfo(num){
                     //specify the class of the div
                     .addClass("moreInfo")
                     //tag that div by the key
-                    .attr("id", key.replace(/ /g, "_"))
+                    .attr("id", "baseLayer")//key.replace(/ /g, "_"))
                     // fill in moreInfo stuff into the new div
                     .append(islands_layer.islandOptions.moreInfo(targets)).clone()).html();
         }

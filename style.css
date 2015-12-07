@@ -361,7 +361,7 @@ width: 10px;
 /*Gis layer info box in more info window
 *   overrides properties set by #inner * {} 
 */
-#layerInfo{
+#baseLayer{
     height:240px;
     max-height:240px;
 }
