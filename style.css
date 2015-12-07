@@ -362,8 +362,8 @@ width: 10px;
 *   overrides properties set by #inner * {} 
 */
 #layerInfo{
-    height:230px;
-    max-height:230px;
+    height:240px;
+    max-height:240px;
 }
 /*box containing venipedia and cartography links*/
 #inner2{
