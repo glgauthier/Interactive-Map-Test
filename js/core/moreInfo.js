@@ -111,7 +111,9 @@ function overlay(currentLayer) {
         +' <br />';
     
     // add in info on the base geoJSON layers
-    makeHTMLinfo(properties,"inner","JSON");
+    $(document.getElementById("inner")).append('<div id = "layerInfo" class=moreInfo></div>');
+    $(document.getElementById("layerInfo")).append("<b><center>Base Layer Data</center></b>");
+    makeHTMLinfo(properties,"layerInfo","JSON");
    
     // add in info on all overlays with information shown on selected isle
     addOverlayInfo("inner",properties.Numero);
