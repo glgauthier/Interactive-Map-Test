@@ -125,7 +125,32 @@ function getIslands(path,islandOptions){
 //    });
 }
 function getIslandsGroup(path,islandOptions){
-    
+    $.ajax({
+        dataType: "json",
+        url: path,
+        success: function(msg){
+            for(property in msg){
+                if(msg.hasOwnProperty(property)){
+                    var newURL = var URL = "https://"+ path.split("/")[2]+"/data/" + msg[property] + ".json";
+                    $.ajax({
+                        dataType: "json",
+                        url: newURL,
+                        success: addIslands,
+                        complete: function(){
+                            loadingScreen.remove();
+                            if(loadingScreen.queue==0)  onAllIslandsLoaded();
+                        },
+                        beforeSend: function(){
+                            loadingScreen.add();
+                        }
+                    });
+                }
+            }
+        },
+        beforeSend: function(){
+            if(islandOptions) setIslandOptions(islandOptions);
+        }
+    });
 }
 
 //***********************************************************************************************
