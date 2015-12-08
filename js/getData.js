@@ -28,7 +28,12 @@ function addIslands(geoJSON){
         layer = {type:"FeatureCollection",features:[geoJSON]};
     }
     else{
-        console.error("Invalid island format: requires geoJSON Feature or featureCollection");
+        try{
+            addIslands(CKtoGeoJSON(geoJSON));
+        }
+        catch(e){
+            console.error("Invalid island format: requires geoJSON Feature or featureCollection");
+        }
         return;
     }
     
@@ -129,13 +134,17 @@ function getIslandsGroup(path,islandOptions){
         dataType: "json",
         url: path,
         success: function(msg){
-            for(property in msg){
-                if(msg.hasOwnProperty(property)){
-                    var newURL = "https://"+ path.split("/")[2]+"/data/" + msg[property] + ".json";
+            for(property in msg.members){
+                if(msg.members.hasOwnProperty(property)){
+                    var newURL = "https://"+ path.split("/")[2]+"/data/" + msg.members[property] + ".json";
                     $.ajax({
                         dataType: "json",
                         url: newURL,
-                        success: addIslands,
+                        success: function(msg2){
+                            var island = CKtoGeoJSON(msg2);
+                            island.properties=island.properties.data;
+                            addIslands(island);
+                        },
                         complete: function(){
                             loadingScreen.remove();
                             if(loadingScreen.queue==0)  onAllIslandsLoaded();
@@ -147,8 +156,12 @@ function getIslandsGroup(path,islandOptions){
                 }
             }
         },
+        complete: function(){
+            console.log('recieve1');
+        },
         beforeSend: function(){
             if(islandOptions) setIslandOptions(islandOptions);
+            console.log("send1");
         }
     });
 }
@@ -158,6 +171,8 @@ function getIslandsGroup(path,islandOptions){
 //------- Island Layers --------//
 getIslands('IslesLagoon_single.geojson');
 getIslands('IslesLagoon_multi.geojson');
+
+//getIslandsGroup("https://cityknowledge.firebaseio.com/groups/MAPS_Islands_2015.json");
 
 setIslandOptions({searchInclude: ['Nome_Isola','Numero','Codice'],generalInfo: function(target){
     return printObject(target,function(str){
@@ -184,7 +199,6 @@ setIslandOptions({searchInclude: ['Nome_Isola','Numero','Codice'],generalInfo: f
     }
     return output;
 }});
-
 
 //***********************************************************************************************
 
