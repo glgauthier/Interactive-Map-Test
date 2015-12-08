@@ -250,7 +250,7 @@ function findIslands(obj){
     
     for(property in obj){
         if(Object.prototype.hasOwnProperty.call(obj, property)){
-            if(stringContains((property.toString()).toUpperCase(),"ISLAND")||
+            if(property.toString() == "Numero" || stringContains((property.toString()).toUpperCase(),"ISLAND")||
                    stringContains((property.toString()).toUpperCase(),"ISOLA")){
                 if (obj[property].constructor === Array){
                     for(var i=0;i<obj[property].length;i++){
