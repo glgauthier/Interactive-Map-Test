@@ -131,7 +131,7 @@ function getIslandsGroup(path,islandOptions){
         success: function(msg){
             for(property in msg){
                 if(msg.hasOwnProperty(property)){
-                    var newURL = var URL = "https://"+ path.split("/")[2]+"/data/" + msg[property] + ".json";
+                    var newURL = "https://"+ path.split("/")[2]+"/data/" + msg[property] + ".json";
                     $.ajax({
                         dataType: "json",
                         url: newURL,
