@@ -8,48 +8,6 @@ function getGroup(URL,groupOptions,customArgs){
     $.getJSON(URL,function(msg){getGroupCallback(groupOptions,customArgs,URL,msg);});
 }
 
-//Add an Island Base Layer to the map!
-//options = { searchInclude: string[], searchExclude: string[]};
-function getIslands(path,islandOptions){
-    $.getJSON(path,function(msg){
-        var layer = msg;
-
-        for(var i=0,iLen=layer.features.length;i<iLen;i++){
-            var feature = layer.features[i];
-            feature.visible = true;
-            islandsCollection[feature.properties.Numero] = feature;
-        }
-        islands_layer.addData(layer);
-        if(!filter.object){
-            filter.setObject(layer.features[0].properties);
-            filter.minimize(filter.minimized);
-        }
-        if(!colorControl.object){
-            colorControl.setObject(layer.features[0].properties);
-            colorControl.minimize(filter.minimized);
-        }
-        
-        if(islandOptions) setIslandOptions(islandOptions);
-        
-        var params = getUrlParameters();
-        
-        if(!params.layerTag || params.layerTag == 'islands'){
-            for(key in params){
-                if(params.hasOwnProperty(key)&&key!='layerTag'){
-                    var layer = findIslandLayer(key,params[key]);
-                    if(layer){
-                        map.fitBounds(layer.getBounds());
-                        return;
-                    }
-                }
-            }
-        }
-        
-        searchControl.refresh();
-        recolorIsles();
-    });
-}
-
 function setIslandOptions(islandOptions){
     if(islandOptions){
         if(islandOptions.searchInclude){
@@ -60,6 +18,114 @@ function setIslandOptions(islandOptions){
         }
     }
     islands_layer.islandOptions = islandOptions;
+}
+function addIslands(geoJSON){
+    var layer;
+    if(geoJSON.type == "FeatureCollection"){
+        layer = geoJSON;
+    }
+    else if(geoJSON.type == "Feature"){
+        layer = {type:"FeatureCollection",features:[geoJSON]};
+    }
+    else{
+        console.error("Invalid island format: requires geoJSON Feature or featureCollection");
+        return;
+    }
+    
+    for(var i=0,iLen=layer.features.length;i<iLen;i++){
+        var feature = layer.features[i];
+        feature.visible = true;
+        islandsCollection[feature.properties.Numero] = feature;
+    }
+    islands_layer.addData(layer);
+    if(!filter.object){
+        filter.setObject(layer.features[0].properties);
+        filter.minimize(filter.minimized);
+    }
+    if(!colorControl.object){
+        colorControl.setObject(layer.features[0].properties);
+        colorControl.minimize(filter.minimized);
+    }
+
+    var params = getUrlParameters();
+
+    if(!params.layerTag || params.layerTag == 'islands'){
+        for(key in params){
+            if(params.hasOwnProperty(key)&&key!='layerTag'){
+                var layer = findIslandLayer(key,params[key]);
+                if(layer){
+                    map.fitBounds(layer.getBounds());
+                    return;
+                }
+            }
+        }
+    }
+
+    searchControl.refresh();
+    recolorIsles();
+}
+//Add an Island Base Layer to the map!
+//options = { searchInclude: string[], searchExclude: string[]};
+function getIslands(path,islandOptions){
+    $.ajax({
+        dataType: "json",
+        url: path,
+        success: addIslands,
+        complete: function(){
+            loadingScreen.remove();
+            if(loadingScreen.queue==0)  onAllIslandsLoaded();
+        },
+        beforeSend: function(){
+            loadingScreen.add();
+            if(islandOptions) setIslandOptions(islandOptions);
+        }
+    });
+
+//    $.getJSON(path,function(msg){
+//        var layer = msg;
+//
+//        for(var i=0,iLen=layer.features.length;i<iLen;i++){
+//            var feature = layer.features[i];
+//            feature.visible = true;
+//            islandsCollection[feature.properties.Numero] = feature;
+//        }
+//        islands_layer.addData(layer);
+//        if(!filter.object){
+//            filter.setObject(layer.features[0].properties);
+//            filter.minimize(filter.minimized);
+//        }
+//        if(!colorControl.object){
+//            colorControl.setObject(layer.features[0].properties);
+//            colorControl.minimize(filter.minimized);
+//        }
+//        
+//        if(islandOptions) setIslandOptions(islandOptions);
+//        
+//        var params = getUrlParameters();
+//        
+//        if(!params.layerTag || params.layerTag == 'islands'){
+//            for(key in params){
+//                if(params.hasOwnProperty(key)&&key!='layerTag'){
+//                    var layer = findIslandLayer(key,params[key]);
+//                    if(layer){
+//                        map.fitBounds(layer.getBounds());
+//                        return;
+//                    }
+//                }
+//            }
+//        }
+//        
+//        searchControl.refresh();
+//        recolorIsles();
+//        
+//        islandQueue--;
+//        if(islandQueue==0){
+//            onAllIslandsLoaded();
+//        }
+//    });
+}
+function getIslandsGroup(path,islandOptions){
+    
 }
 
 //***********************************************************************************************
@@ -93,6 +159,12 @@ setIslandOptions({searchInclude: ['Nome_Isola','Numero','Codice'],generalInfo: f
     }
     return output;
 }});
+
+
+//***********************************************************************************************
+
+function onAllIslandsLoaded(){
+    
 
 //------- Bridge Layers --------//
 getGroup("https://cityknowledge.firebaseio.com/groups/MAPS%20Bridges.json",{tag: "Bridges",generalInfo: function(target){
@@ -315,3 +387,6 @@ getGroup("https://ckdata.firebaseio.com/groups/MERGE%20Stores%202012.json",{tag:
         "<br/> Store Type: " + feature.properties['2015'].shop_type
     );
 }});
+
+    
+}
