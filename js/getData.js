@@ -301,7 +301,6 @@ function onAllIslandsLoaded(){
     }});
 
 
-<<<<<<< HEAD
 //------- Wiki Data Islands --------//
 getGroup("https://cityknowledge.firebaseio.com/groups/MERGE_Islands_2015.json",{tag:"Wiki Data",preLoad: true,toggle:false,moreInfo: function(targets,tag){
     var output = '';
@@ -333,7 +332,7 @@ getGroup("https://cityknowledge.firebaseio.com/groups/MERGE_Islands_2015.json",{
 }},{pointToLayer: function(feature,latlng){
     return new L.marker(latlng, {icon: noIcon});
 }});
-=======
+
     //------- Sewer Outlet Layers --------//
     getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOLES_PT_15.json",{tag: "Sewer Outlets",generalInfo: function(target){
         return printObject(target.data,function(str){
@@ -348,7 +347,6 @@ getGroup("https://cityknowledge.firebaseio.com/groups/MERGE_Islands_2015.json",{
     },moreInfo:function(targets,tag){
         var output = '';
         targets.forEach(function(target){
->>>>>>> origin/master
 
         });
         output = '<center><b>'+ dictionary(tag) +'</b> ('+targets.length+' Total)</br></center>' + output;
