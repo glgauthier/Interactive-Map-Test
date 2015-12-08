@@ -243,10 +243,10 @@ getGroup("https://cityknowledge.firebaseio.com/groups/Convents%20Data.json",{gen
 }});
 
 //------- WikiData Minor Lagoon Islands Layers --------//
-getGroup("https://cityknowledge.firebaseio.com/groups/Minor_Lagoon_Islands_2015.json",{tag:"Wiki Data",preLoad: true,toggle:false,moreInfo: function(targets,tag){
+getGroup("https://cityknowledge.firebaseio.com/groups/Minor_Lagoon_Islands_2015.json",{tag:"Wiki Data Minor",preLoad: true,toggle:false,moreInfo: function(targets,tag){
     var output = '';
     targets.forEach(function(target){
-        output+='<b>About: </b>'+ target.data.Blurb+'</br>' +
+        output+= (target.data.Blurb?'<b>About: </b>'+ target.data.Blurb+'</br>':'') +
         '<a href="'+ target.data.Bibliography +'" id="bib" target="_blank" class="button">View Bibliography</a></br>' +
         '<table border="1" style="width:100%">'+
         '<tr>'+
@@ -259,6 +259,68 @@ getGroup("https://cityknowledge.firebaseio.com/groups/Minor_Lagoon_Islands_2015.
             '<td>'+ 'Usage' + '</td>' +
             '<td>'+ target.data.Usage + '</td>' +
         '</tr>' +
+            (target.data.Boat_Stop ? '</tr>' + '<tr>'+
+            '<td>'+ 'Boat Stop(s)' + '</td>' +
+            '<td>'+ target.data.Boat_Stop + ': Line(s) ' + target.data.Boat_Line + '</td>' +
+        '</tr>'  :'' ) +
+        '</table>'
+    });
+    output = '<center><b>'+ dictionary(tag) +'</b></br></center>' + output;
+    return output;
+}},{pointToLayer: function(feature,latlng){
+    return new L.marker(latlng, {icon: noIcon});
+}});
+
+//------- WikiData Major Lagoon Islands Layers --------//
+getGroup("https://cityknowledge.firebaseio.com/groups/Major_Lagoon_Islands_2015.json",{tag:"Wiki Data Major",preLoad: true,toggle:false,moreInfo: function(targets,tag){
+    var output = '';
+    targets.forEach(function(target){
+        output+=(target.data.Blurb?'<b>About: </b>'+ target.data.Blurb+'</br>':'') +
+        '<a href="'+ target.data.Bibliography +'" id="bib" target="_blank" class="button">View Bibliography</a></br>' +
+        '<table border="1" style="width:100%">'+
+        '<tr>'+
+            '<td>'+ 'Handicap Accessible' + '</td>' +
+            '<td>'+ target.data.Handicap_Accessibility + '</td>' +
+        '</tr>' + '<tr>'+
+            '<td>'+ 'Sestiere' + '</td>' +
+            '<td>'+ target.data.Sestiere + '</td>' +
+        '</tr>' + '<tr>'+
+            '<td>'+ 'Usage' + '</td>' +
+            '<td>'+ target.data.Usage + '</td>' +
+        '</tr>' +
+            (target.data.Boat_Stop ? '</tr>' + '<tr>'+
+            '<td>'+ 'Boat Stop(s)' + '</td>' +
+            '<td>'+ target.data.Boat_Stop + ': Line(s) ' + target.data.Boat_Line + '</td>' +
+        '</tr>'  :'' ) +
+        '</table>'
+    });
+    output = '<center><b>'+ dictionary(tag) +'</b></br></center>' + output;
+    return output;
+}},{pointToLayer: function(feature,latlng){
+    return new L.marker(latlng, {icon: noIcon});
+}});
+
+//------- WikiData Inner City Islands Layers --------//
+getGroup("https://cityknowledge.firebaseio.com/groups/Inner_City_Islands_2015.json",{tag:"Wiki Data Inner City",preLoad: true,toggle:false,moreInfo: function(targets,tag){
+    var output = '';
+    targets.forEach(function(target){
+        output+=(target.data.Blurb?'<b>About: </b>'+ target.data.Blurb+'</br>':'') +
+        '<a href="'+ target.data.Bibliography +'" id="bib" target="_blank" class="button">View Bibliography</a></br>' +
+        '<table border="1" style="width:100%">'+
+        '<tr>'+
+            '<td>'+ 'Handicap Accessible' + '</td>' +
+            '<td>'+ target.data.Handicap_Accessibility + '</td>' +
+        '</tr>' + '<tr>'+
+            '<td>'+ 'Island Group' + '</td>' +
+            '<td>'+ target.data.Sestiere + '</td>' +
+        '</tr>' + '<tr>'+
+            '<td>'+ 'Usage' + '</td>' +
+            '<td>'+ target.data.Usage + '</td>' +
+        '</tr>' + 
+            (target.data.Boat_Stop ? '</tr>' + '<tr>'+
+            '<td>'+ 'Boat Stop(s)' + '</td>' +
+            '<td>'+ target.data.Boat_Stop + ': Line(s) ' + target.data.Boat_Line + '</td>' +
+        '</tr>'  :'' ) +
         '</table>'
     });
     output = '<center><b>'+ dictionary(tag) +'</b></br></center>' + output;
