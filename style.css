@@ -228,11 +228,12 @@ width: 10px;
 
 /*button (so you can use href with a button set from script)*/
 a.button {
+    margin:10px;
     border: 5px solid;
     border-radius: 5px;
     border-color: white;
     height: auto;
-    float: right;
+    float:right;
     background-color: white;
     text-decoration: none;
     color: initial;
