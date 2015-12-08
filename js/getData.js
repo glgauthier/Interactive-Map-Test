@@ -333,8 +333,6 @@ getGroup("https://cityknowledge.firebaseio.com/groups/Inner_City_Islands_2015.js
 //------- Store Layers --------//
 getGroup("https://ckdata.firebaseio.com/groups/MERGE%20Stores%202012.json",{tag:'Stores',filter:function(obj){
     if(obj["2015"]) return true;
-},generalInfo: function(target){
-    return printObject(target);
 },moreInfo: function(targets,tag){
 // **************************************
 // !!!!!!!! THIS IS A TEST ONLY !!!!!!!! - I'm going to be modifying it 
