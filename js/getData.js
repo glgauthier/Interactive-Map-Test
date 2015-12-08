@@ -243,12 +243,15 @@ getGroup("https://cityknowledge.firebaseio.com/groups/Convents%20Data.json",{gen
 }});
 
 //------- Wiki Data Islands --------//
-getGroup("https://cityknowledge.firebaseio.com/groups/Islands_2015.json",{tag:"Wiki Data",preLoad: true,toggle:false,moreInfo: function(targets,tag){
+getGroup("https://cityknowledge.firebaseio.com/groups/MERGE_Islands_2015.json",{tag:"Wiki Data",preLoad: true,toggle:false,moreInfo: function(targets,tag){
     var output = '';
     targets.forEach(function(target){
-        output+=(target.data.Blurb?'<b>About: </b>'+ target.data.Blurb+'</br>':'') +
+        if(target.media) var imageHash = Object.keys(target.media.images)[0];
+        output+=
+            (target.media ? '<img src="'+target.media.images[imageHash].small+'" id="embeddedImage">':'') +
+            (target.data.Blurb?'<b>About: </b>'+ target.data.Blurb+'</br>':'') +
         '<a href="'+ target.data.Bibliography +'" id="bib" target="_blank" class="button">View Bibliography</a></br>' +
-        '<table border="1" style="width:100%">'+
+        '</br><table border="1" style="width:100%">'+
         '<tr>'+
             '<td>'+ 'Handicap Accessible' + '</td>' +
             '<td>'+ target.data.Handicap_Accessibility + '</td>' +
