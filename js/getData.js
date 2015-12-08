@@ -87,7 +87,7 @@ setIslandOptions({searchInclude: ['Nome_Isola','Numero','Codice'],generalInfo: f
     else if(targets.length>1){
         output += '<center><b>Islands</b> ('+targets.length+' Total)</center>';
         targets.forEach(function(target){
-            output += targets.Nome_Isola + '</br>';
+            output += target.Nome_Isola + '</br>';
             
         });
     }
