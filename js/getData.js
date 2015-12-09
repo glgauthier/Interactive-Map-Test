@@ -5,7 +5,9 @@
 //customArgs = SEE http://leafletjs.com/reference.html#geojson-options
 function getGroup(URL,groupOptions,customArgs){
     //$.getJSON(URL,partial(getGroupCallback,tag,customArgs,URL));
-    $.getJSON(URL,function(msg){getGroupCallback(groupOptions,customArgs,URL,msg);});
+    $.getJSON(URL,function(msg){
+        if(!msg) return;
+        getGroupCallback(groupOptions,customArgs,URL,msg);});
 }
 
 function setIslandOptions(islandOptions){
@@ -75,7 +77,10 @@ function getIslands(path,islandOptions){
     $.ajax({
         dataType: "json",
         url: path,
-        success: addIslands,
+        success: function(msg){
+            if(!msg) return;
+            addIslands(msg);
+        },
         complete: function(){
             loadingScreen.remove();
             if(loadingScreen.queue==0)  onAllIslandsLoaded();
@@ -134,6 +139,7 @@ function getIslandsGroup(path,islandOptions){
         dataType: "json",
         url: path,
         success: function(msg){
+            if(!msg) return;
             for(property in msg.members){
                 if(msg.members.hasOwnProperty(property)){
                     var newURL = "https://"+ path.split("/")[2]+"/data/" + msg.members[property] + ".json";
