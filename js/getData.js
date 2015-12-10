@@ -229,7 +229,13 @@ function onAllIslandsLoaded(){
         });
         output = '<center><b>'+ dictionary(tag) +'</b> ('+targets.length+' Total)</br></center>' + output;
         return output;
-    }},{style: standOut});
+    }},{style: standOut, onEachFeature: function(feature,layer){
+        layer.on({
+            dblclick: function(e){
+                overlayHTML(feature.properties.data.Nome_Ponte||"Bridge",printObject(feature));
+            }
+        });
+    }});
 
 
     //------- Canal Layers --------//
@@ -254,6 +260,11 @@ function onAllIslandsLoaded(){
         layer.bindPopup(
             '<b><center>' + feature.properties.data.Nome_Rio + '</center></b>'
         );
+        layer.on({
+            dblclick: function(e){
+                overlayHTML(feature.properties.data.Nome_Rio,printObject(feature));
+            }
+        });
     }});
 
     //------- Belltower Layers --------//
@@ -304,9 +315,15 @@ getGroup("https://cityknowledge.firebaseio.com/groups/Bell%20Tower%20Page%20Fina
         "Tower ID: " + feature.properties.data["Bell Tower ID"] + "</br>" +
         "Tower Height: " + feature.properties.data["Bell Tower ID"] + "</br>"
         );
+    },onEachFeature: function(feature,layer){
+        layer.on({
+            dblclick: function(e){
+                overlayHTML(feature.properties.data["Common name"],printObject(feature));
+            }
+        });
     }});
 
-
+    
     //------- Hotel Layers --------//
     getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOTELS08_PT_15.json",{tag: "HotelsMap",generalInfo: function(target){
         return printObject(target.data,function(str){
@@ -329,12 +346,18 @@ getGroup("https://cityknowledge.firebaseio.com/groups/Bell%20Tower%20Page%20Fina
         return output;
     }},{style: hotelStyle,pointToLayer: function(feature,latlng){
         return new L.marker(latlng, {icon: hotelIcon}).bindPopup("I am a hotel");
+    },onEachFeature: function(feature,layer){
+        layer.on({
+            dblclick: function(e){
+                overlayHTML(feature.properties.data.name,printObject(feature));
+            }
+        });
     }});
 
     
 
 //------- Wiki Data Islands --------//
-getGroup("https://cityknowledge.firebaseio.com/groups/MERGE_Islands_2015.json",{tag:"Wiki Data",preLoad: true,toggle:false,moreInfo: function(targets,tag){
+getGroup("https://cityknowledge.firebaseio.com/groups/MERGE_Islands_2015.json",{tag:"Wiki Data",preLoad: false,toggle:true,moreInfo: function(targets,tag){
     var output = '';
     targets.forEach(function(target){
         if(target.media) var imageHash = Object.keys(target.media.images)[0];
@@ -365,6 +388,7 @@ getGroup("https://cityknowledge.firebaseio.com/groups/MERGE_Islands_2015.json",{
     return new L.marker(latlng, {icon: noIcon});
 }});
 
+    
     //------- Sewer Outlet Layers --------//
     getGroup("https://cityknowledge.firebaseio.com/groups/maps_HOLES_PT_15.json",{tag: "Sewer Outlets",generalInfo: function(target){
         return printObject(target.data,function(str){
@@ -385,6 +409,12 @@ getGroup("https://cityknowledge.firebaseio.com/groups/MERGE_Islands_2015.json",{
         return output;
     }},{pointToLayer: function(feature,latlng){
         return new L.marker(latlng, {icon: sewerIcon}).bindPopup("outlet");
+    },onEachFeature: function(feature,layer){
+        layer.on({
+            dblclick: function(e){
+                overlayHTML("Sewer Outlet",printObject(feature));
+            }
+        });
     }});
 
     //------- Convent Layers --------//
@@ -409,6 +439,12 @@ getGroup("https://cityknowledge.firebaseio.com/groups/MERGE_Islands_2015.json",{
         return output;
     }},{pointToLayer: function(feature,latlng){
         return new L.marker(latlng, {icon: conventIcon}).bindPopup("Convent");
+    },onEachFeature: function(feature,layer){
+        layer.on({
+            dblclick: function(e){
+                overlayHTML(feature.properties.data["Full Name"],printObject(feature));
+            }
+        });
     }});
 
 
@@ -454,6 +490,12 @@ getGroup("https://cityknowledge.firebaseio.com/groups/MERGE_Islands_2015.json",{
             "<br/> Good Sold: " + feature.properties['2015'].nace_plus_descr +
             "<br/> Store Type: " + feature.properties['2015'].shop_type
         );
+    },onEachFeature: function(feature,layer){
+        layer.on({
+            dblclick: function(e){
+                overlayHTML(feature.properties.data.store_type||feature.properties.data.store_name,printObject(feature));
+            }
+        });
     }});
 
     

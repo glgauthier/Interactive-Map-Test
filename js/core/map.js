@@ -111,7 +111,7 @@ function setupHighlight(feature, layer) {
             if(originalEvents.dblclick){
                 originalEvents.dblclick(e);
             }
-            zoomToFeature(e)
+            zoomToFeature(e);
         }
     });
 }
