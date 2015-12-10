@@ -234,7 +234,7 @@ function onLocationFound(e) {
     if (markerFlag == false) markerFlag = true;
 
     locationGeoJSON = locationMarker.toGeoJSON();
-    var nearestIsles = queryIslands_COLLECTION(islandsCollection,locationGeoJSON);
+    var nearestIsles = queryIslands_COLLECTION(islandsCollection,locationGeoJSON,true);
     
 //  locationMarker.bindPopup("<center><b>Nearest Features</b><br>Within " + radius + " meters </center>" + '</br>' + getOverlayInfo(nearestIsles));
    
