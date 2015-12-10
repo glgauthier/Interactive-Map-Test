@@ -531,8 +531,9 @@ function getEntryCallback(statusIndex,options,customArgs,groupURL,groupMSG,msg) 
         //var layer = L.geoJson(feature,customArgs);
         //featureCollections[options.tag].addLayer(layer);
         //saveFeature(featureCollections[options.tag],feature,layer);
+        
         try {
-            featureCollections[options.tag].addData(attachIslands(CKtoGeoJSON(jsonObj)));
+            featureCollections[options.tag].addData(attachIslands(CKtoGeoJSON(jsonObj),options.useNearest));
         }
         catch(err) {
             console.error("Could Not Make Valid GeoJSON from CK Data:");

@@ -281,7 +281,7 @@ function onAllIslandsLoaded(){
 //        );
 //    }});
     
-getGroup("https://cityknowledge.firebaseio.com/groups/Bell%20Tower%20Page%20Final.json",{tag:"Bell Towers",generalInfo: function(target){
+getGroup("https://cityknowledge.firebaseio.com/groups/Bell%20Tower%20Page%20Final.json",{tag:"Bell Towers",useNearest:true,generalInfo: function(target){
         return printObject(target.data,function(str){
             switch(str){
                 case 'Page name':
@@ -327,7 +327,7 @@ getGroup("https://cityknowledge.firebaseio.com/groups/Bell%20Tower%20Page%20Fina
         output = '<center><b>'+ dictionary(tag) +'</b> ('+targets.length+' Total)</br></center>' + output;
         output += '<b> Total Beds: </b>'+bedCount+'</br>';
         return output;
-    }},{pointToLayer: function(feature,latlng){
+    }},{style: hotelStyle,pointToLayer: function(feature,latlng){
         return new L.marker(latlng, {icon: hotelIcon}).bindPopup("I am a hotel");
     }});
 
