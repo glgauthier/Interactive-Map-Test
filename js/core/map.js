@@ -348,7 +348,7 @@ function findFeature_Layer(key,value){
 };
 
 function findIslandLayer(key,value){
-    var layers = []
+    var layers = [];
     islands_layer.eachLayer(function(layer){
         if(objHasPropertyEqualTo(layer.feature.properties,key,value)){
             console.log(layer);
