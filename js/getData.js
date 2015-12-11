@@ -378,7 +378,7 @@ getGroup("https://cityknowledge.firebaseio.com/groups/Bell%20Tower%20Page%20Fina
     
 
 //------- Wiki Data Islands --------//
-getGroup("https://cityknowledge.firebaseio.com/groups/MERGE_Islands_2015.json",{tag:"Wiki Data",preLoad: false,toggle:true,moreInfo: function(targets,tag){
+getGroup("https://cityknowledge.firebaseio.com/groups/MERGE_Islands_2015.json",{tag:"Wiki Data",preLoad: true,toggle:false,moreInfo: function(targets,tag){
     var output = '';
     targets.forEach(function(target){
         if(target.media) var imageHash = Object.keys(target.media.images)[0];
