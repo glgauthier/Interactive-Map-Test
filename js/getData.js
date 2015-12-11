@@ -199,22 +199,24 @@ setIslandOptions({searchInclude: ['Nome_Isola','Numero','Codice'],generalInfo: f
     else if(targets.length>1){
         output += '<center><b>Islands</b> ('+targets.length+' Total)</center>';
         
-        output += '<b>Islands by Area: </b>'+printObject(targets.sort(function(t1,t2){
+        output += '<b>Islands by Area: </b></br>';
+        targets.sort(function(t1,t2){
             return t1.Superficie - t2.Superficie;
-        }).map(function(target){
-            return target.Nome_Isola;
-        }))+'';
+        }).forEach(function(target){
+            output += tabs(1) + target.Nome_Isola+': '+target.Superficie+'</br>';
+        });
         
         var areaTotal = targets.reduce(function(t1,t2){
            return t1 + t2.Superficie;
         },0);
         output += '<b>Total Area </b>(m^2): '+areaTotal+'</br></br>';
         
-        output += '<b>Islands by Population: </b>'+printObject(targets.sort(function(t1,t2){
+        output += '<b>Islands by Population: </b></br>';
+        targets.sort(function(t1,t2){
             return t1.sum_pop_11 - t2.sum_pop_11;
-        }).map(function(target){
-            return target.Nome_Isola;
-        }))+'';
+        }).forEach(function(target){
+            output += tabs(1) + target.Nome_Isola+': '+target.sum_pop_11+'</br>';
+        });
         
         var pop_total=targets.reduce(function(t1,t2){
            return t1 + t2.sum_pop_11;
