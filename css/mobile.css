@@ -15,6 +15,10 @@
        display:none;
        visibility:hidden;
       }
+      .leaflet-control-attribution{
+       display:none;
+       visibility:hidden;
+      }
 }
 
 /* ----------- iPhone 5 and 5S ----------- */
@@ -25,6 +29,10 @@
   and (max-device-width: 568px)
   and (-webkit-min-device-pixel-ratio: 2) {
       .info{
+       display:none;
+       visibility:hidden;
+      }
+      .leaflet-control-attribution{
        display:none;
        visibility:hidden;
       }
@@ -42,6 +50,10 @@
        display:none;
        visibility:hidden;
       }
+      .leaflet-control-attribution{
+       display:none;
+       visibility:hidden;
+      }
 
 }
 
@@ -56,6 +68,10 @@
        display:none;
        visibility:hidden;
       }
+      .leaflet-control-attribution{
+       display:none;
+       visibility:hidden;
+      }
 
 }
 
@@ -67,6 +83,10 @@
   and (device-height: 640px) 
   and (-webkit-device-pixel-ratio: 2) {
       .info{
+       display:none;
+       visibility:hidden;
+      }
+      .leaflet-control-attribution{
        display:none;
        visibility:hidden;
       }
@@ -85,6 +105,10 @@
        display:none;
        visibility:hidden;
       }
+      .leaflet-control-attribution{
+       display:none;
+       visibility:hidden;
+      }
 
 }
 
@@ -99,6 +123,10 @@
        display:none;
        visibility:hidden;
       }
+      .leaflet-control-attribution{
+       display:none;
+       visibility:hidden;
+      }
 
 }
 
@@ -110,6 +138,10 @@
   and (device-height: 640px) 
   and (-webkit-device-pixel-ratio: 3) {
       .info{
+       display:none;
+       visibility:hidden;
+      }
+      .leaflet-control-attribution{
        display:none;
        visibility:hidden;
       }
