@@ -70,6 +70,10 @@ var loadingScreen = {
         }
         this.queue = this.queue<0 ? 0 : this.queue;
         this.updateQueue();
+    },
+    
+    init: function(){
+        
     }
 }
 
