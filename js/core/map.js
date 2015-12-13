@@ -603,8 +603,14 @@ function getEntryCallback(statusIndex,options,customArgs,groupURL,groupMSG,msg) 
             featureCollections[options.tag].addData(attachIslands(CKtoGeoJSON(jsonObj),options.useNearest));
         }
         catch(err) {
-            console.error("Could Not Make Valid GeoJSON from CK Data:");
+            console.groupCollapsed("Could Not Make Valid GeoJSON from CK Data:");
+            console.groupCollapsed("Rejected Object:")
             console.log(jsonObj);
+            console.groupEnd();
+            console.groupCollapsed("Error Thrown:");
+            console.log(err);
+            console.groupEnd();
+            console.groupEnd();
         }
     }
 };

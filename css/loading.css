@@ -17,6 +17,18 @@
     position: absolute;
 }
 
+#loadingMini {
+    background: rgba(255, 255, 255, 0);
+    z-index:101;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    font-size: calc(15px + 1vw);
+    position: absolute;
+    bottom: 15px;
+    width: 100%;
+    text-align: center;
+    color: #000000;
+}
+
 #loadingTop{
     z-index:101;
     font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
