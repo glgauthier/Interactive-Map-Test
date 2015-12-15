@@ -37,6 +37,14 @@ var basicLayer = L.tileLayer('https://api.tiles.mapbox.com/v4/mapbox.outdoors/{z
         'Imagery © <a href="http://mapbox.com">Mapbox</a>',
     id: 'mapbox.outdoors'
 });
+
+var pirateLayer = L.tileLayer('https://api.tiles.mapbox.com/v4/mapbox.pirates/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6IjZjNmRjNzk3ZmE2MTcwOTEwMGY0MzU3YjUzOWFmNWZhIn0.Y8bhBaUMqFiPrDRW9hieoQ', {
+        maxZoom: 20, minZoom: 10,
+        attribution: 'Map &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>, ' +
+            '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+            'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+        id: 'mapbox.outdoors'
+    });
 //**********************************************************************************************
 
 function partial(func /*, 0..n args */) {
