@@ -98,3 +98,8 @@ a.Xbutton{
 a.Xbutton:hover{
     border-color: powderblue; 
 }
+
+/*Search Bar Width*/
+.search-input {
+    width: 100px;
+}
