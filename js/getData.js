@@ -337,8 +337,7 @@ getGroup("https://cityknowledge.firebaseio.com/groups/Bell%20Tower%20Page%20Fina
     }},{pointToLayer: function(feature,latlng){
         return new L.marker(latlng, {icon: churchIcon}).bindPopup(
         "<b>" + feature.properties.data["Common name"] + "</b></br>" +
-        "Tower ID: " + feature.properties.data["Bell Tower ID"] + "</br>" +
-        "Tower Height: " + feature.properties.data["Bell Tower ID"] + "</br>"
+        "Tower ID: " + feature.properties.data["Bell Tower ID"]
         );
     },onEachFeature: function(feature,layer){
         layer.on({
