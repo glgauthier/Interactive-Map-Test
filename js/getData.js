@@ -6,7 +6,6 @@
 //groupOptions = { tag: string, filter: boolean function(obj),moreInfo: string(HTML) function(feature)};
 //customArgs = SEE http://leafletjs.com/reference.html#geojson-options
 function getGroup(URL,groupOptions,customArgs){
-    //$.getJSON(URL,partial(getGroupCallback,tag,customArgs,URL));
     $.getJSON(URL,function(msg){
         if(!msg) return;
         getGroupCallback(groupOptions,customArgs,URL,msg);});
