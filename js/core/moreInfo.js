@@ -137,11 +137,20 @@ function overlay(currentLayer) {
     // add in the bottom bar
     $(document.getElementById("inner")).append('<div id="inner2" class="bottomBar">');
     // populate it with the venipedia and cartography links
-    $(document.getElementById("inner2")).append('<a href="" id="venipedia"  target="_blank">'+ '<div id="venipediaImage"></div></a>' + '<a href="" id="cartography" target="_blank">'+ '<div id="cartographyImage"></div></a>');
+    $(document.getElementById("inner2")).append('<a href="" id="venipedia"  target="_blank">'+ '<div id="venipediaImage"></div></a>' + '<a href="" id="zotero"  target="_blank">'+ '<div id="zoteroImage"></div></a>' + '<a href="" id="cartography" target="_blank">'+ '<div id="cartographyImage"></div></a>');
     
     // generate correct venipedia link for associated island
     var link = "http://www.venipedia.org/wiki/index.php?title=Island_of_" + encodeURIComponent(properties.Nome_Isola.replace(/ /g, "_")); 
     document.getElementById("venipedia").href = link;
+    
+    // generate the zotero link
+    if(properties.Categoria == "city"){
+        link = 'https://www.zotero.org/groups/island_bibliography/items/tag/Inner%20City';
+    }else{ 
+        link ='https://www.zotero.org/groups/island_bibliography/items/tag/' + encodeURIComponent(properties.Nome_Isola);
+    }
+    document.getElementById("zotero").href = link;
+    
     
     // now generate the cartography app link
     link = 'http://cartography.veniceprojectcenter.org/index.html?map=debarbari&layer=island&feature=' +

@@ -21,8 +21,8 @@ function lookup(original){
         case 'Tipo':                return "Type";
         case 'Categoria':           return "Category";
         case 'Perimetro':           return "Perimeter";
-        case 'Gndr_Ratio':          return "Genter Ratio (M:F)";
-        case 'Avg_Age':             return "Average Age";
+        case 'Gndr_Ratio':          return "Genter Ratio (M:F) 2011";
+        case 'Avg_Age':             return "Average Age 2011";
         case 'Insula_Num':          return "Insula Number";
         case 'Access_Han':          return "Handicap Access";
         default:                    return original;
