@@ -137,7 +137,7 @@ th {
 #venipediaImage:hover{
     width:33%;
     padding:35px 0px;
-    image: url('../image/venipedia2.png');
+    background-image: url('../image/venipedia2.png');
     background-size:80px 70px;
     background-position: 0px 0px;
     background-repeat: no-repeat;

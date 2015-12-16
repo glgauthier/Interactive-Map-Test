@@ -28,3 +28,27 @@ function lookup(original){
         default:                    return original;
     }
 }
+
+function ses2Group(codice){
+    switch(codice){
+        case 'MU':      return 'Murano';
+        case 'BU':      return 'Burano';
+        case 'MZ':      return 'Mazzorbo';
+        case 'TC':      return 'Torcello';
+        case 'LD':      return 'Lido';
+        case 'PE':      return 'Pellestrina';
+        case 'VG':      return 'Vignole';
+        case 'SE':      return "Sant'Erasmo";
+            
+        case 'CS':      return 'Castello';
+        case 'SC':      return 'Santa Croce';
+        case 'DD':      return 'Dorsoduro';
+        case 'CN':      return 'Cannaregio';
+        case 'SP':      return 'San Polo';
+        case 'SM':      return 'San Marco';
+        case 'GD':      return 'Giudecca';
+            
+        case 'IM':      return 'Isula Minore';
+        default:    return codice;
+    }
+}

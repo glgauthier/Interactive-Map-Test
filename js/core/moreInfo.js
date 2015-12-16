@@ -144,10 +144,19 @@ function overlay(currentLayer) {
     document.getElementById("venipedia").href = link;
     
     // generate the zotero link
-    if(properties.Categoria == "city"){
-        link = 'https://www.zotero.org/groups/island_bibliography/items/tag/Inner%20City';
-    }else{ 
-        link ='https://www.zotero.org/groups/island_bibliography/items/tag/' + encodeURIComponent(properties.Nome_Isola);
+    try{
+        if(properties.Categoria == "city"){
+            link = 'https://www.zotero.org/groups/island_bibliography/items/tag/Inner%20City';
+        }else if(properties.Categoria == "minor"){
+            link = 'https://www.zotero.org/groups/island_bibliography/items/tag/'+encodeURIComponent(properties.Nome_Isola);
+        }else if(properties.Categoria == "major"){
+            link = 'https://www.zotero.org/groups/island_bibliography/items/tag/'+encodeURIComponent(ses2Group(properties.Codice_Ses));
+        }else{
+            link = 'https://www.zotero.org/groups/island_bibliography/items';
+        }
+    }
+    catch(err){
+        link = 'https://www.zotero.org/groups/island_bibliography/items';
     }
     document.getElementById("zotero").href = link;
     
@@ -188,6 +197,10 @@ function makeHTMLinfo(props,id,type){
 function printObject(obj,filter,path){
     path = path || [];
     var output = '';
+    
+    if(obj == null || obj == undefined){
+        return output;
+    }
 
     if(!obj){
         if(!filter || path.some(filter)){
@@ -197,14 +210,16 @@ function printObject(obj,filter,path){
     }
     
     if(obj.constructor === Array){
-        output += "["
-        if(obj.length>0){
-            output+=obj[0];
-            for(var i = 1;i<obj.length;i++){
-                output += ', '+obj[i];
+        if(!filter || path.some(filter)){
+            output += "["
+            if(obj.length>0){
+                output+=obj[0];
+                for(var i = 1;i<obj.length;i++){
+                    output += ', '+obj[i];
+                }
             }
+            output += ']<br />';
         }
-        output += ']<br />';
     }
     else if(typeof obj === 'object'){
         for(var property in obj){
@@ -219,8 +234,8 @@ function printObject(obj,filter,path){
             output = '<br />' + output;
         }
     }
-    else{
-        output += obj + '<br />';
+    else if(!filter || path.some(filter)){
+        output +=  obj + '<br />';
     }
     return output;
 }
